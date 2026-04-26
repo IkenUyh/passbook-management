@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "E6SM3lClK4U=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\hryshi\\source\\repos\\frontend-csharp\\frontend-csharp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hryshi\\.nuget\\packages\\refit\\10.1.6\\refit.10.1.6.nupkg.sha512",
+    "C:\\Users\\hryshi\\.nuget\\packages\\restsharp\\114.0.0\\restsharp.114.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
