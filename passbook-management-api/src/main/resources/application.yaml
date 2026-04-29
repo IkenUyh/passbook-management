@@ -1,3 +1,9 @@
 spring:
-  application:
-    name: passbook-management-api
+  datasource:
+    url: jdbc:mysql://localhost:3306/quan_ly_so_tiet_kiem
+    username: root
+    password: password_cua_ban
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
