@@ -1,0 +1,59 @@
+﻿<Window x:Class="frontend_csharp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:frontend_csharp"
+        mc:Ignorable="d"
+        Title="Quản Lý Sổ Tiết Kiệm" Height="500" Width="900"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+            <Button x:Name="btnLoad" Content="Tải Dữ Liệu Từ API" 
+                    Width="150" Height="35" 
+                    Click="btnLoad_Click" Cursor="Hand" Background="#FFDDDDDD"/>
+            <TextBlock x:Name="txtStatus" VerticalAlignment="Center" Margin="15,0,0,0" 
+                       FontStyle="Italic" Foreground="Gray" FontSize="13"/>
+        </StackPanel>
+
+        <!-- Bảng hiển thị dữ liệu - Tắt AutoGenerateColumns để tự custom cột -->
+        <DataGrid x:Name="dgSoTietKiem" Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  SelectionMode="Single"
+                  HeadersVisibility="All"
+                  RowHeight="30"
+                  FontSize="13"
+                  AlternatingRowBackground="#FFF1F1F1">
+            <DataGrid.Columns>
+                <!-- Binding thẳng vào thuộc tính của Model SoTietKiem -->
+                <DataGridTextColumn Header="Mã Sổ" Binding="{Binding Id}" Width="150"/>
+
+                <!-- Bí quyết lấy tên khách hàng từ object lồng nhau -->
+                <DataGridTextColumn Header="Tên Khách Hàng" Binding="{Binding KhachHang.Ten}" Width="180"/>
+
+                <DataGridTextColumn Header="Loại Tiết Kiệm" Binding="{Binding LoaiTietKiem}" Width="130"/>
+
+                <!-- Format tiền tệ (VD: 5,000,000) -->
+                <DataGridTextColumn Header="Số Dư" Binding="{Binding SoDu, StringFormat=\{0:N0\}}" Width="130">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="Margin" Value="0,0,10,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <!-- Format ngày tháng dd/MM/yyyy -->
+                <DataGridTextColumn Header="Ngày Mở" Binding="{Binding NgayMo, StringFormat=dd/MM/yyyy}" Width="110"/>
+                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding TrangThai}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

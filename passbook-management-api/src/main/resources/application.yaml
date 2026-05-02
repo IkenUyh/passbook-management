@@ -1,9 +1,12 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/quan_ly_so_tiet_kiem
     username: root
-    password: password_cua_ban
+    password: 123456
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
