@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="User" UriSource="/Assets/user.jpg"/>
+    <BitmapImage x:Key="User_Hover" UriSource="/Assets/user_hover.jpg"/>
+    <BitmapImage x:Key="User_Active" UriSource="/Assets/user_active.jpg"/>
+</ResourceDictionary>
