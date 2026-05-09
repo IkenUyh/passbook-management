@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace frontend_csharp.UserControls
 {
     /// <summary>
-    /// Interaction logic for TrangChu.xaml
+    /// Interaction logic for SavingsBookLookup.xaml
     /// </summary>
-    public partial class TrangChu : UserControl
+    public partial class SavingsBookLookup : UserControl
     {
-        public TrangChu()
+        public SavingsBookLookup()
         {
             InitializeComponent();
         }

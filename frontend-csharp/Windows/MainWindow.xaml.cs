@@ -25,10 +25,10 @@ namespace frontend_csharp
             switch (menuName)
             {
                 case "Trang chủ":
-                    MainContent.Content = new TrangChu(); 
+                    MainContent.Content = new Dashboard(); 
                     break;
                 case "Tra cứu sổ":
-                    MainContent.Content = new TraCuuSo();
+                    MainContent.Content = new SavingsBookLookup();
                     break;
                 case "Khách hàng":
                     // MainContent.Content = new KhachHangView();

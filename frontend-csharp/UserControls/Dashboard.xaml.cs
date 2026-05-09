@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace frontend_csharp.UserControls
 {
     /// <summary>
-    /// Interaction logic for TraCuuSo.xaml
+    /// Interaction logic for Dashboard.xaml
     /// </summary>
-    public partial class TraCuuSo : UserControl
+    public partial class Dashboard : UserControl
     {
-        public TraCuuSo()
+        public Dashboard()
         {
             InitializeComponent();
         }
