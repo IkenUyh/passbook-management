@@ -3,10 +3,118 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:frontend_csharp.UserControls"
              mc:Ignorable="d" 
+             Background="White"
              d:DesignHeight="640" d:DesignWidth="790">
-    <Grid>
-        <Grid Background="Red"></Grid>
+    <UserControl.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,15,10,15"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="10,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="🔍" Foreground="#9CA3AF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
+                             FontSize="13" Foreground="#374151" Tag="Tìm kiếm..."/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Margin="10,0,0,0" Padding="12,5" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Cursor="Hand" Background="White">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Y" FontFamily="Segoe UI Symbol" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Text="Bộ lọc" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="White">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="☰" Background="Transparent" BorderThickness="0" FontSize="15" Foreground="#374151" Margin="0,0,8,0" Cursor="Hand"/>
+                    <Button Content="⊞" Background="Transparent" BorderThickness="0" FontSize="17" Foreground="#374151" Margin="0,0,8,0" Cursor="Hand"/>
+                    <Button Content="📅" Background="Transparent" BorderThickness="0" FontSize="13" Foreground="#374151" Cursor="Hand"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Name="dgvSavingsBooks" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
+                  BorderThickness="0" Background="White" RowBackground="White"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  CanUserResizeColumns="False"
+                  CanUserReorderColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Loại tiết kiệm" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Số dư" Binding="{Binding Balance}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Ngày đáo hạn" Binding="{Binding MaturityDate}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Lãi suất" Binding="{Binding InterestRate}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
+
+                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="40">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="&#x2026;" Background="Transparent" BorderThickness="0" 
+                                    FontSize="16" FontWeight="Bold" Foreground="#9CA3AF" 
+                                    Cursor="Hand" ToolTip="Tuỳ chọn" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

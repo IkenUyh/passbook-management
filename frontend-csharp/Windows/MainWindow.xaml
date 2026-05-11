@@ -54,20 +54,22 @@
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="2.25*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
-                        <!-- Vùng Avatar -->
+                    <Grid Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Ellipse Width="200" Height="200" Stroke="White" StrokeThickness="2">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{StaticResource User}" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
                     </Grid>
 
-                    <!-- Đặt x:Name để tham chiếu trong MainWindow.xaml.cs -->
                     <uc:SidePanel x:Name="MenuSidePanel" Grid.Row="1" Margin="0 20 0 20"></uc:SidePanel>
 
                 </Grid>
 
                 <Grid Grid.Column="1" Margin="25">
-                    <!-- Đây là nơi các Views (UserControl khác) sẽ được hiển thị -->
                     <ContentControl x:Name="MainContent" />
                 </Grid>
 

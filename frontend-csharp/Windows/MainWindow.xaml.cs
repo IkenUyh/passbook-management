@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using frontend_csharp.Services; // Nhớ using cái này để dùng ApiService
 using frontend_csharp.UserControls; // Đảm bảo khai báo đúng namespace chứa các Views
@@ -19,13 +20,17 @@ namespace frontend_csharp
             MenuSidePanel.OnMenuChanged += MenuSidePanel_OnMenuChanged;
         }
 
-        private void MenuSidePanel_OnMenuChanged(string menuName)
+        // Đổi thành async void để có thể dùng await
+        private async void MenuSidePanel_OnMenuChanged(string menuName)
         {
+            // Nhường UI thread 300ms để animation của SidePanel chạy mượt mà không bị block
+            //await Task.Delay(300);
+
             // Kiểm tra tên menu và đổi View tương ứng
             switch (menuName)
             {
                 case "Trang chủ":
-                    MainContent.Content = new Dashboard(); 
+                    MainContent.Content = new Dashboard();
                     break;
                 case "Tra cứu sổ":
                     MainContent.Content = new SavingsBookLookup();
