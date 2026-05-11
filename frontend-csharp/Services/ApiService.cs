@@ -13,7 +13,7 @@ namespace frontend_csharp.Services
     {
         private readonly HttpClient _client;
 
-        private const string BaseUrl = "http://localhost:8081/api/";
+        private const string BaseUrl = "https://passbook.kienhuy-dev.name.vn/api/";
 
         public ApiService()
         {
