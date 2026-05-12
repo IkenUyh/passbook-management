@@ -8,10 +8,23 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: quan_ly_so_tiet_kiem
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - passbook_mysql_data:/var/lib/mysql
     restart: unless-stopped
 
+  backend-app:
+    build: .
+    container_name: passbook_backend
+    restart: always
+    ports:
+      - "8082:8081"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/quan_ly_so_tiet_kiem?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+
 volumes:
-  mysql_data:
+  passbook_mysql_data:
