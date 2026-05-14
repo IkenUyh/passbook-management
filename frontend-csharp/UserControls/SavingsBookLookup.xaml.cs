@@ -10,13 +10,11 @@ namespace frontend_csharp.UserControls
         public SavingsBookLookup()
         {
             InitializeComponent();
-            // Đăng ký event Loaded thay vì gọi hàm LoadData() ngay lập tức
             this.Loaded += SavingsBookLookup_Loaded;
         }
 
         private async void SavingsBookLookup_Loaded(object sender, RoutedEventArgs e)
         {
-            // Tránh load lại data nhiều lần nếu tab này đã được load trước đó
             if (dgvSavingsBooks.ItemsSource != null) return;
 
             await LoadDataAsync();
@@ -24,14 +22,8 @@ namespace frontend_csharp.UserControls
 
         private async Task LoadDataAsync()
         {
-            // Chạy việc tạo data/gọi API ở một luồng khác (Background thread) để không làm đơ UI
             var mockData = await Task.Run(() =>
             {
-                // === [GỌI API Ở ĐÂY SAU NÀY] ===
-                // var data = await _apiService.GetSavingsBooksAsync();
-                // return data;
-                // =================================
-
                 var data = new List<SavingsBookModel>();
                 for (int i = 0; i < 15; i++)
                 {
@@ -49,8 +41,9 @@ namespace frontend_csharp.UserControls
                 return data;
             });
 
-            // Gán dữ liệu lên UI Thread
+            // Gán dữ liệu cho cả 2 view
             dgvSavingsBooks.ItemsSource = mockData;
+            icSavingsBooksGrid.ItemsSource = mockData;
         }
     }
 
