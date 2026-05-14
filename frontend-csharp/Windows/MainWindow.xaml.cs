@@ -18,6 +18,8 @@ namespace frontend_csharp
 
             // Đăng ký nhận sự kiện từ SidePanel
             MenuSidePanel.OnMenuChanged += MenuSidePanel_OnMenuChanged;
+
+            MainContent.Content = new Dashboard(); // Mặc định hiển thị Dashboard khi mở app
         }
 
         // Đổi thành async void để có thể dùng await
