@@ -71,7 +71,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="3" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="White">
+            <Border Grid.Column="3" BorderBrush="#FFF3F3F3" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="#FFF3F3F3">
                 <ListBox x:Name="ViewToggleListBox"
                          Background="Transparent" 
                          BorderThickness="0" 
@@ -83,7 +83,7 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
 
-                    <ListBox.Resources>
+                    <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Template">
                                 <Setter.Value>
@@ -96,14 +96,14 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsSelected" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="#E5E7EB"/>
+                                                <Setter TargetName="Border" Property="Background" Value="White"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                         </Style>
-                    </ListBox.Resources>
+                    </ListBox.ItemContainerStyle>
 
                     <ListBoxItem>
                         <materialDesign:PackIcon Kind="FormatListBulleted" Foreground="#374151" VerticalAlignment="Center"/>
