@@ -15,6 +15,36 @@
             <Setter Property="Padding" Value="10,15,10,15"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                                <materialDesign:PackIcon x:Name="SortIcon" Grid.Column="1" Kind="ArrowUp" Width="14" Height="14" Margin="4,0,0,0" Opacity="0" VerticalAlignment="Center" Foreground="#6B7280"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowUp"/>
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowDown"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="DataGridCell">
@@ -123,7 +153,8 @@
                   ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                   ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   CanUserResizeColumns="False"
-                  CanUserReorderColumns="False">
+                  CanUserReorderColumns="False"
+                  CanUserSortColumns="True">
             <DataGrid.Style>
                 <Style TargetType="DataGrid">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -138,13 +169,13 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Loại tiết kiệm" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Loại" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Số dư" Binding="{Binding Balance}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Ngày đáo hạn" Binding="{Binding MaturityDate}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Đáo hạn" Binding="{Binding MaturityDate}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Lãi suất" Binding="{Binding InterestRate}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
 
-                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*">
+                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*" SortMemberPath="Status">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
@@ -154,7 +185,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="40">
+                <DataGridTemplateColumn Width="40" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn">
@@ -167,7 +198,6 @@
         </DataGrid>
 
         <!-- VIEW 2: ITEMSCONTROL (GRID/CARD) -->
-        <!-- Đã sửa VerticalScrollBarVisibility thành Auto và Horizontal thành Disabled để WrapPanel hoạt động đúng -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ScrollViewer.Style>
                 <Style TargetType="ScrollViewer">
