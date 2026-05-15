@@ -221,7 +221,7 @@
                     <DataTemplate>
                         <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,15,15" Width="230" Background="White">
                             <StackPanel>
-                                <Grid>
+                                <Grid Margin="0 -10 0 0">
                                     <TextBlock Text="{Binding CustomerName}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
                                     <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" HorizontalAlignment="Right">
                                         <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>

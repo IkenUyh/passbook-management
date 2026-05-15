@@ -42,7 +42,7 @@
     </Window.Resources>
 
     <Grid Background="Transparent" Margin="15">
-        <Border Background="White" CornerRadius="30">
+        <Border Background="Transparent" CornerRadius="30">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -70,6 +70,9 @@
 
                 </Grid>
 
+                <Grid Grid.Column="1">
+                    <Border CornerRadius="0,30,30,0" Background="White"/>
+                </Grid>
                 <Grid Grid.Column="1" Margin="25">
                     <ContentControl x:Name="MainContent" />
                 </Grid>
