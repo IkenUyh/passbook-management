@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel; // Nhớ using cái này
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,9 +26,14 @@ namespace frontend_csharp.UserControls
 
         private async void SavingsBookLookup_Loaded(object sender, RoutedEventArgs e)
         {
-            // 3. Nghỉ 100ms để UI thread chuyển tab mượt mà xong xuôi
-            await Task.Delay(100);
-            await LoadDataAsync();
+            // Reset về dạng danh sách (DataGrid - Index 0) mỗi khi tab được mở lại
+            ViewToggleListBox.SelectedIndex = 0;
+
+            // Chỉ load lại data nếu danh sách đang trống để tránh spam gọi API khi chuyển tab
+            if (_savingsBooks.Count == 0)
+            {
+                await LoadDataAsync();
+            }
         }
 
         private async Task LoadDataAsync()
