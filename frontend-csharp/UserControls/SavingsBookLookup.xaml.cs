@@ -15,13 +15,13 @@ namespace frontend_csharp.UserControls
 
         private async void SavingsBookLookup_Loaded(object sender, RoutedEventArgs e)
         {
-            if (dgvSavingsBooks.ItemsSource != null) return;
-
+            // Đã xóa dòng kiểm tra null ở đây để luôn gọi dữ liệu mới khi chuyển tab về lại
             await LoadDataAsync();
         }
 
         private async Task LoadDataAsync()
         {
+            // Sau này bạn thay đoạn Task.Run này bằng hàm gọi APIService của bạn
             var mockData = await Task.Run(() =>
             {
                 var data = new List<SavingsBookModel>();
@@ -41,7 +41,7 @@ namespace frontend_csharp.UserControls
                 return data;
             });
 
-            // Gán dữ liệu cho cả 2 view
+            // Gán dữ liệu mới nhất cho cả 2 view
             dgvSavingsBooks.ItemsSource = mockData;
             icSavingsBooksGrid.ItemsSource = mockData;
         }
