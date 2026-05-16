@@ -1,30 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel; // Nhớ using cái này
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace frontend_csharp.UserControls
 {
     public partial class SavingsBookLookup : UserControl
     {
+        // 1. Dùng ObservableCollection thay vì List
+        private ObservableCollection<SavingsBookModel> _savingsBooks;
+
         public SavingsBookLookup()
         {
             InitializeComponent();
+
+            _savingsBooks = new ObservableCollection<SavingsBookModel>();
+
+            // 2. Gán ItemsSource MỘT LẦN DUY NHẤT ở đây
+            dgvSavingsBooks.ItemsSource = _savingsBooks;
+            icSavingsBooksGrid.ItemsSource = _savingsBooks;
+
             this.Loaded += SavingsBookLookup_Loaded;
         }
 
         private async void SavingsBookLookup_Loaded(object sender, RoutedEventArgs e)
         {
-            // Đã xóa dòng kiểm tra null ở đây để luôn gọi dữ liệu mới khi chuyển tab về lại
+            // 3. Nghỉ 100ms để UI thread chuyển tab mượt mà xong xuôi
+            await Task.Delay(100);
             await LoadDataAsync();
         }
 
         private async Task LoadDataAsync()
         {
-            // Sau này bạn thay đoạn Task.Run này bằng hàm gọi APIService của bạn
-            var mockData = await Task.Run(() =>
+            // 1. Giả lập gọi API (Chạy ngầm không ảnh hưởng UI)
+            var newDataFromApi = await Task.Run(() =>
             {
-                var data = new List<SavingsBookModel>();
+                var data = new System.Collections.Generic.List<SavingsBookModel>();
                 for (int i = 0; i < 15; i++)
                 {
                     data.Add(new SavingsBookModel
@@ -41,9 +53,16 @@ namespace frontend_csharp.UserControls
                 return data;
             });
 
-            // Gán dữ liệu mới nhất cho cả 2 view
-            dgvSavingsBooks.ItemsSource = mockData;
-            icSavingsBooksGrid.ItemsSource = mockData;
+            _savingsBooks.Clear();
+
+            // 2. BƠM DỮ LIỆU VÀO UI THREAD Ở CHẾ ĐỘ NỀN (BACKGROUND)
+            foreach (var item in newDataFromApi)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    _savingsBooks.Add(item);
+                }, System.Windows.Threading.DispatcherPriority.Background);
+            }
         }
     }
 
