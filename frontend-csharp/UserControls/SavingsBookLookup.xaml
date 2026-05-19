@@ -1,0 +1,259 @@
+﻿<UserControl x:Class="frontend_csharp.UserControls.SavingsBookLookup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="White"
+             d:DesignHeight="640" d:DesignWidth="790">
+    <UserControl.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,15,10,15"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                                <materialDesign:PackIcon x:Name="SortIcon" Grid.Column="1" Kind="ArrowUp" Width="14" Height="14" Margin="4,0,0,0" Opacity="0" VerticalAlignment="Center" Foreground="#6B7280"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowUp"/>
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowDown"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="10,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="Magnify" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
+                             FontSize="13" Foreground="#374151" Tag="Tìm kiếm..."/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Margin="10,0,0,0" Padding="12,5" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Cursor="Hand" Background="White">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Filter" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Bộ lọc" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" BorderBrush="#FFF3F3F3" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="#FFF3F3F3">
+                <ListBox x:Name="ViewToggleListBox"
+                         Background="Transparent" 
+                         BorderThickness="0" 
+                         SelectionMode="Single"
+                         SelectedIndex="0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Border" 
+                                                Padding="5" 
+                                                Background="Transparent" 
+                                                CornerRadius="4">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                    <ListBoxItem>
+                        <materialDesign:PackIcon Kind="FormatListBulleted" Foreground="#374151" VerticalAlignment="Center"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <materialDesign:PackIcon Kind="ViewGrid" Foreground="#374151" VerticalAlignment="Center"/>
+                    </ListBoxItem>
+                </ListBox>
+            </Border>
+        </Grid>
+
+        <!-- VIEW 1: DATAGRID (LIST) -->
+        <DataGrid Grid.Row="1" Name="dgvSavingsBooks" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
+                  BorderThickness="0" Background="White" RowBackground="White"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  CanUserResizeColumns="False"
+                  CanUserReorderColumns="False"
+                  CanUserSortColumns="True">
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <!-- Hiện khi ListBox chọn Index 0 (FormatListBulleted) -->
+                        <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Loại" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Số dư" Binding="{Binding Balance}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Đáo hạn" Binding="{Binding MaturityDate}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Lãi suất" Binding="{Binding InterestRate}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
+
+                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*" SortMemberPath="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="40" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn">
+                                <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- VIEW 2: ITEMSCONTROL (GRID/CARD) -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <!-- Hiện khi ListBox chọn Index 1 (ViewGrid) -->
+                        <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
+
+            <ItemsControl Name="icSavingsBooksGrid">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" Margin="0,0,-15,0"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,15,15" Width="230" Background="White">
+                            <StackPanel>
+                                <Grid Margin="0 -10 0 0">
+                                    <TextBlock Text="{Binding CustomerName}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
+                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" HorizontalAlignment="Right">
+                                        <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
+                                    </Button>
+                                </Grid>
+                                <TextBlock Text="{Binding Id, StringFormat='Mã số: {0}'}" FontSize="12" Foreground="#9CA3AF" Margin="0,2,0,10"/>
+
+                                <TextBlock Text="{Binding Balance}" FontWeight="Bold" FontSize="16" Foreground="#10B981" Margin="0,0,0,10"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Loại: " FontSize="13" Foreground="#9CA3AF"/>
+                                    <TextBlock Text="{Binding SavingsType}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Lãi suất: " FontSize="13" Foreground="#9CA3AF"/>
+                                    <TextBlock Text="{Binding InterestRate}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <TextBlock Text="Đáo hạn: " FontSize="13" Foreground="#9CA3AF"/>
+                                    <TextBlock Text="{Binding MaturityDate}" FontSize="13" Foreground="#374151"/>
+                                </StackPanel>
+
+                                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

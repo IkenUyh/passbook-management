@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using frontend_csharp.Services; // Đã thêm để gọi ApiService
 
-namespace frontend_csharp.Views
+namespace frontend_csharp.Windows
 {
     public partial class LoginWindow : Window
     {
