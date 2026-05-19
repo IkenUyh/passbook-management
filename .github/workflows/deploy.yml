@@ -14,6 +14,7 @@ jobs:
           host: ${{ secrets.VPS_IP }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
+          command_timeout: 30m
           script: |
             cd /root/passbook-management/passbook-management-api
             git checkout develop
