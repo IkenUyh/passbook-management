@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using frontend_csharp.Services; // Nhớ using cái này để dùng ApiService
-using frontend_csharp.UserControls; // Đảm bảo khai báo đúng namespace chứa các Views
+using frontend_csharp.Services;
+using frontend_csharp.UserControls;
 
 namespace frontend_csharp
 {
@@ -14,6 +14,7 @@ namespace frontend_csharp
         // 1. Khai báo sẵn các biến chứa UserControl
         private readonly Dashboard _dashboard;
         private readonly SavingsBookLookup _savingsBookLookup;
+        private readonly Regulation _regulation;
         // private readonly KhachHangView _khachHangView;
         // private readonly BaoCaoView _baoCaoView;
         // private readonly QuyDinhView _quyDinhView;
@@ -25,6 +26,7 @@ namespace frontend_csharp
             // 2. Khởi tạo tất cả UserControl (Load sẵn)
             _dashboard = new Dashboard();
             _savingsBookLookup = new SavingsBookLookup();
+            _regulation = new Regulation();
             // _khachHangView = new KhachHangView();
             // _baoCaoView = new BaoCaoView();
             // _quyDinhView = new QuyDinhView();
@@ -58,7 +60,7 @@ namespace frontend_csharp
                     // MainContent.Content = _baoCaoView;
                     break;
                 case "Quy định":
-                    // MainContent.Content = _quyDinhView;
+                    MainContent.Content = _regulation;
                     break;
             }
         }
@@ -67,6 +69,16 @@ namespace frontend_csharp
         {
             Application.Current.Shutdown();
             // Hoặc this.Close(); nếu bạn chỉ muốn đóng cửa sổ này
+        }
+        public void ShowPopup(UIElement content)
+        {
+            GlobalPopupContent.Content = content;
+            GlobalPopupOverlay.Visibility = Visibility.Visible;
+        }
+        public void HidePopup()
+        {
+            GlobalPopupOverlay.Visibility = Visibility.Collapsed;
+            GlobalPopupContent.Content = null;
         }
     }
 }
