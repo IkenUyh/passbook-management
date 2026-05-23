@@ -15,7 +15,7 @@ namespace frontend_csharp
         private readonly Dashboard _dashboard;
         private readonly SavingsBookLookup _savingsBookLookup;
         // private readonly KhachHangView _khachHangView;
-        // private readonly BaoCaoView _baoCaoView;
+        private readonly ReportsManagement _reportsManagement;
         // private readonly QuyDinhView _quyDinhView;
 
         public MainWindow()
@@ -26,7 +26,7 @@ namespace frontend_csharp
             _dashboard = new Dashboard();
             _savingsBookLookup = new SavingsBookLookup();
             // _khachHangView = new KhachHangView();
-            // _baoCaoView = new BaoCaoView();
+            _reportsManagement = new ReportsManagement();
             // _quyDinhView = new QuyDinhView();
 
             // Đăng ký nhận sự kiện từ SidePanel
@@ -55,7 +55,7 @@ namespace frontend_csharp
                     // MainContent.Content = _khachHangView;
                     break;
                 case "Báo cáo":
-                    // MainContent.Content = _baoCaoView;
+                    MainContent.Content = _reportsManagement;
                     break;
                 case "Quy định":
                     // MainContent.Content = _quyDinhView;
