@@ -17,7 +17,7 @@ namespace frontend_csharp
         private readonly CustomerManagement _customerManagement;
         private readonly Regulation _regulation;
         // private readonly KhachHangView _khachHangView;
-        // private readonly BaoCaoView _baoCaoView;
+        private readonly ReportsManagement _reportsManagement;
         // private readonly QuyDinhView _quyDinhView;
 
         public MainWindow()
@@ -30,7 +30,7 @@ namespace frontend_csharp
             _customerManagement = new CustomerManagement();
             _regulation = new Regulation();
             // _khachHangView = new KhachHangView();
-            // _baoCaoView = new BaoCaoView();
+            _reportsManagement = new ReportsManagement();
             // _quyDinhView = new QuyDinhView();
 
             // Đăng ký nhận sự kiện từ SidePanel
@@ -59,7 +59,7 @@ namespace frontend_csharp
                     MainContent.Content = _customerManagement;
                     break;
                 case "Báo cáo":
-                    // MainContent.Content = _baoCaoView;
+                    MainContent.Content = _reportsManagement;
                     break;
                 case "Quy định":
                     MainContent.Content = _regulation;
