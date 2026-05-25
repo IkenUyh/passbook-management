@@ -14,6 +14,7 @@ namespace frontend_csharp
         // 1. Khai báo sẵn các biến chứa UserControl
         private readonly Dashboard _dashboard;
         private readonly SavingsBookLookup _savingsBookLookup;
+        private readonly CustomerManagement _customerManagement;
         private readonly Regulation _regulation;
         // private readonly KhachHangView _khachHangView;
         // private readonly BaoCaoView _baoCaoView;
@@ -26,6 +27,7 @@ namespace frontend_csharp
             // 2. Khởi tạo tất cả UserControl (Load sẵn)
             _dashboard = new Dashboard();
             _savingsBookLookup = new SavingsBookLookup();
+            _customerManagement = new CustomerManagement();
             _regulation = new Regulation();
             // _khachHangView = new KhachHangView();
             // _baoCaoView = new BaoCaoView();
@@ -54,7 +56,7 @@ namespace frontend_csharp
                     MainContent.Content = _savingsBookLookup;
                     break;
                 case "Khách hàng":
-                    // MainContent.Content = _khachHangView;
+                    MainContent.Content = _customerManagement;
                     break;
                 case "Báo cáo":
                     // MainContent.Content = _baoCaoView;
