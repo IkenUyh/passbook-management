@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   backend-app:
-    build: .
+    image: ikenuyh/passbook-backend:latest
     container_name: passbook_backend
     restart: always
     ports:

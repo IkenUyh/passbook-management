@@ -5,7 +5,7 @@ using SkiaSharp;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace frontend_csharp.UserControls
+namespace frontend_csharp.ViewModels
 {
     public class DashboardViewModel
     {

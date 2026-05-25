@@ -5,7 +5,33 @@ on:
     branches: [ "develop", "main" ]
 
 jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dang nhap Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build va push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./passbook-management-api
+          file: ./passbook-management-api/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/passbook-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   deploy:
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: SSH vao VPS va Deploy Passbook
@@ -14,9 +40,13 @@ jobs:
           host: ${{ secrets.VPS_IP }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
-          command_timeout: 30m
           script: |
             cd /root/passbook-management/passbook-management-api
             git checkout develop
             git pull origin develop
-            sudo docker compose -p passbook-api up -d --build
+            
+            # Keo image moi tu Docker Hub ve
+            sudo docker compose -p passbook-api pull
+            
+            # Run container moi len thay the con cu
+            sudo docker compose -p passbook-api up -d
