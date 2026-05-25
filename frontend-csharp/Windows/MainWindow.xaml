@@ -80,6 +80,10 @@
             </Grid>
         </Border>
 
+        <Border x:Name="GlobalPopupOverlay" Background="#99000000" Visibility="Collapsed" Panel.ZIndex="99" CornerRadius="30">
+            <ContentControl x:Name="GlobalPopupContent" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
         <Button Style="{StaticResource CloseBtnStyle}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
