@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
+using System.Windows.Data;
 
 namespace frontend_csharp.UserControls
 {
@@ -28,6 +30,21 @@ namespace frontend_csharp.UserControls
         {
             // Reset về dạng danh sách (DataGrid - Index 0) mỗi khi tab được mở lại
             ViewToggleListBox.SelectedIndex = 0;
+
+            // Xóa sạch trạng thái Sort cũ khi chuyển tab quay lại
+            if (dgvSavingsBooks.ItemsSource != null)
+            {
+                ICollectionView view = CollectionViewSource.GetDefaultView(dgvSavingsBooks.ItemsSource);
+                if (view != null && view.SortDescriptions.Count > 0)
+                {
+                    view.SortDescriptions.Clear();
+                }
+
+                foreach (var column in dgvSavingsBooks.Columns)
+                {
+                    column.SortDirection = null;
+                }
+            }
 
             // Chỉ load lại data nếu danh sách đang trống để tránh spam gọi API khi chuyển tab
             if (_savingsBooks.Count == 0)
