@@ -1,24 +1,21 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.ComponentModel;
+using frontend_csharp.ViewModels;
 
 namespace frontend_csharp.UserControls
 {
     public partial class CustomerManagement : UserControl
     {
-        private ObservableCollection<CustomerModel> _customers;
+        private readonly CustomerManagementViewModel _viewModel;
 
         public CustomerManagement()
         {
             InitializeComponent();
 
-            _customers = new ObservableCollection<CustomerModel>();
-
-            dgvCustomers.ItemsSource = _customers;
-            icCustomersGrid.ItemsSource = _customers;
+            _viewModel = new CustomerManagementViewModel();
+            this.DataContext = _viewModel;
 
             this.Loaded += CustomerManagement_Loaded;
         }
@@ -27,7 +24,7 @@ namespace frontend_csharp.UserControls
         {
             ViewToggleListBox.SelectedIndex = 0;
 
-            // Xóa sạch trạng thái Sort cũ khi chuyển tab quay lại
+            // Giữ nguyên xử lý giao diện: Xóa sạch trạng thái Sort cũ của DataGrid
             if (dgvCustomers.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvCustomers.ItemsSource);
@@ -42,49 +39,11 @@ namespace frontend_csharp.UserControls
                 }
             }
 
-            if (_customers.Count == 0)
+            // Gọi hàm xử lý logic từ ViewModel
+            if (_viewModel.Customers.Count == 0)
             {
-                await LoadDataAsync();
+                await _viewModel.LoadDataAsync();
             }
         }
-
-        private async Task LoadDataAsync()
-        {
-            var newData = await Task.Run(() =>
-            {
-                var list = new System.Collections.Generic.List<CustomerModel>();
-                for (int i = 1; i <= 12; i++)
-                {
-                    list.Add(new CustomerModel
-                    {
-                        Id = $"KH-{1000 + i}",
-                        FullName = $"Nguyễn Văn Thuận {i}",
-                        CitizenId = $"07920400{1234 + i}",
-                        PhoneNumber = $"090312345{i:D2}",
-                        TotalBooks = i % 3 + 1
-                    });
-                }
-                return list;
-            });
-
-            _customers.Clear();
-
-            foreach (var customer in newData)
-            {
-                await Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    _customers.Add(customer);
-                }, System.Windows.Threading.DispatcherPriority.Background);
-            }
-        }
-    }
-
-    public class CustomerModel
-    {
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string CitizenId { get; set; }
-        public string PhoneNumber { get; set; }
-        public int TotalBooks { get; set; }
     }
 }

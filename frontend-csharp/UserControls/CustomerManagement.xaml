@@ -136,7 +136,7 @@
             </Border>
         </Grid>
 
-        <DataGrid Grid.Row="1" Name="dgvCustomers" AutoGenerateColumns="False" 
+        <DataGrid Grid.Row="1" Name="dgvCustomers" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" 
                   CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
                   BorderThickness="0" Background="White" RowBackground="White"
@@ -161,9 +161,7 @@
                 <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Số CCCD" Binding="{Binding CitizenId}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151"/>
                 <DataGridTextColumn Header="Số điện thoại" Binding="{Binding PhoneNumber}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151"/>
-
                 <DataGridTextColumn Header="Sở hữu" Binding="{Binding TotalBooks, StringFormat='{}{0} sổ'}" FontWeight="Bold" Width="1*" IsReadOnly="True" FontSize="13" Foreground="#10B981"/>
-
                 <DataGridTemplateColumn Width="40" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -188,7 +186,7 @@
                 </Style>
             </ScrollViewer.Style>
 
-            <ItemsControl Name="icCustomersGrid">
+            <ItemsControl Name="icCustomersGrid" ItemsSource="{Binding Customers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" Margin="0,0,-15,0"/>
