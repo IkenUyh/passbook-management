@@ -145,8 +145,8 @@
             </Border>
         </Grid>
 
-        <!-- VIEW 1: DATAGRID (LIST) -->
         <DataGrid Grid.Row="1" Name="dgvSavingsBooks" AutoGenerateColumns="False" 
+                  ItemsSource="{Binding SavingsBooks}"
                   CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
                   BorderThickness="0" Background="White" RowBackground="White"
@@ -159,7 +159,6 @@
                 <Style TargetType="DataGrid">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <!-- Hiện khi ListBox chọn Index 0 (FormatListBulleted) -->
                         <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="0">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
@@ -197,13 +196,11 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- VIEW 2: ITEMSCONTROL (GRID/CARD) -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ScrollViewer.Style>
                 <Style TargetType="ScrollViewer">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <!-- Hiện khi ListBox chọn Index 1 (ViewGrid) -->
                         <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
@@ -211,7 +208,7 @@
                 </Style>
             </ScrollViewer.Style>
 
-            <ItemsControl Name="icSavingsBooksGrid">
+            <ItemsControl Name="icSavingsBooksGrid" ItemsSource="{Binding SavingsBooks}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" Margin="0,0,-15,0"/>
