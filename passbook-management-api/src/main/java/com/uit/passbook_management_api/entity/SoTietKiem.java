@@ -18,8 +18,9 @@ public class SoTietKiem {
     @JoinColumn(name = "khach_hang_id", nullable = false)
     private KhachHang khachHang;
 
-    @Column(name = "loai_tiet_kiem")
-    private String loaiTietKiem;
+    @ManyToOne
+    @JoinColumn(name = "ma_loai_tk")
+    private LoaiTietKiem loaiTietKiem;
 
     @Column(name = "so_du")
     private BigDecimal soDu;
