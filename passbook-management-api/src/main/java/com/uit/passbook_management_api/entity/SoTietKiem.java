@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Table(name = "so_tiet_kiem")
 public class SoTietKiem {
     @Id
+    @Column(length = 50)
     // Bỏ @GeneratedValue đi vì đây là chuỗi VARCHAR(50) bạn tự quản lý
     private String id;
 
