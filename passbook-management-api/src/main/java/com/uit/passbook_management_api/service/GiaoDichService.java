@@ -17,15 +17,18 @@ public class GiaoDichService {
     private final PhieuGuiTienRepository phieuGuiTienRepository;
     private final PhieuRutTienRepository phieuRutTienRepository;
     private final ThamSoRepository thamSoRepository;
+    private final AuditLogService auditLogService;
 
     public GiaoDichService(SoTietKiemRepository soTietKiemRepository,
                            PhieuGuiTienRepository phieuGuiTienRepository,
                            PhieuRutTienRepository phieuRutTienRepository,
-                           ThamSoRepository thamSoRepository) {
+                           ThamSoRepository thamSoRepository,
+                           AuditLogService auditLogService) {
         this.soTietKiemRepository = soTietKiemRepository;
         this.phieuGuiTienRepository = phieuGuiTienRepository;
         this.phieuRutTienRepository = phieuRutTienRepository;
         this.thamSoRepository = thamSoRepository;
+        this.auditLogService = auditLogService;
     }
 
     // ==================== FR2: GỬI TIỀN ====================
@@ -66,6 +69,9 @@ public class GiaoDichService {
         stk.setSoDu(stk.getSoDu().add(request.getSoTienGui()));
         soTietKiemRepository.save(stk);
 
+        // --- GHI LOG HỆ THỐNG ---
+        auditLogService.ghiLog("GỬI TIỀN", "Mã sổ: " + stk.getId() + " | Số tiền gửi: " + request.getSoTienGui() + "đ");
+
         return "Gửi tiền thành công! Đã cộng " + request.getSoTienGui() + "đ vào sổ.";
     }
 
@@ -101,9 +107,6 @@ public class GiaoDichService {
             }
         }
 
-        // TODO: Phần tính toán Tiền Lãi có thể bổ sung sau nếu Frontend yêu cầu trả về chi tiết.
-        // Ở đây mình ưu tiên luồng trừ tiền và lưu phiếu trước.
-
         // Tạo phiếu rút
         PhieuRutTien phieu = new PhieuRutTien();
         phieu.setSoTienRut(request.getSoTienRut());
@@ -121,6 +124,9 @@ public class GiaoDichService {
         }
 
         soTietKiemRepository.save(stk);
+
+        // --- GHI LOG HỆ THỐNG ---
+        auditLogService.ghiLog("RÚT TIỀN", "Mã sổ: " + stk.getId() + " | Số tiền rút: " + request.getSoTienRut() + "đ");
 
         return "Rút tiền thành công! Số dư còn lại: " + stk.getSoDu() + "đ";
     }
