@@ -35,4 +35,14 @@ public class SoTietKiemController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // =========================================================
+    // API dành cho FR8: Lấy danh sách sổ sắp đáo hạn để WPF hiện Popup
+    // Test Postman: GET http://localhost:8083/api/v1/so-tiet-kiem/sap-dao-han?soNgayBaoTruoc=3
+    // =========================================================
+    @GetMapping("/sap-dao-han")
+    public ResponseEntity<List<SoTietKiem>> layDanhSachSapDaoHan(
+            @RequestParam(defaultValue = "3") int soNgayBaoTruoc) {
+        return ResponseEntity.ok(soTietKiemService.layDanhSachSapDaoHan(soNgayBaoTruoc));
+    }
 }
