@@ -1,24 +1,21 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.ComponentModel;
+using frontend_csharp.ViewModels;
 
 namespace frontend_csharp.UserControls
 {
     public partial class CustomerManagement : UserControl
     {
-        private ObservableCollection<CustomerModel> _customers;
+        private readonly CustomerManagementViewModel _viewModel;
 
         public CustomerManagement()
         {
             InitializeComponent();
 
-            _customers = new ObservableCollection<CustomerModel>();
-
-            dgvCustomers.ItemsSource = _customers;
-            icCustomersGrid.ItemsSource = _customers;
+            _viewModel = new CustomerManagementViewModel();
+            this.DataContext = _viewModel;
 
             this.Loaded += CustomerManagement_Loaded;
         }
@@ -27,7 +24,6 @@ namespace frontend_csharp.UserControls
         {
             ViewToggleListBox.SelectedIndex = 0;
 
-            // Xóa sạch trạng thái Sort cũ khi chuyển tab quay lại
             if (dgvCustomers.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvCustomers.ItemsSource);
@@ -42,49 +38,112 @@ namespace frontend_csharp.UserControls
                 }
             }
 
-            if (_customers.Count == 0)
+            if (_viewModel.Customers.Count == 0)
             {
-                await LoadDataAsync();
+                await _viewModel.LoadDataAsync();
             }
         }
 
-        private async Task LoadDataAsync()
+        private void OpenAddCustomerPopup_Click(object sender, RoutedEventArgs e)
         {
-            var newData = await Task.Run(() =>
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
             {
-                var list = new System.Collections.Generic.List<CustomerModel>();
-                for (int i = 1; i <= 12; i++)
-                {
-                    list.Add(new CustomerModel
-                    {
-                        Id = $"KH-{1000 + i}",
-                        FullName = $"Nguyễn Văn Thuận {i}",
-                        CitizenId = $"07920400{1234 + i}",
-                        PhoneNumber = $"090312345{i:D2}",
-                        TotalBooks = i % 3 + 1
-                    });
-                }
-                return list;
-            });
+                _viewModel.ResetForm();
 
-            _customers.Clear();
+                var popupUI = (FrameworkElement)this.FindResource("AddCustomerPopupUI");
+                popupUI.DataContext = _viewModel;
 
-            foreach (var customer in newData)
-            {
-                await Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    _customers.Add(customer);
-                }, System.Windows.Threading.DispatcherPriority.Background);
+                mainWindow.ShowPopup(popupUI);
             }
         }
-    }
 
-    public class CustomerModel
-    {
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string CitizenId { get; set; }
-        public string PhoneNumber { get; set; }
-        public int TotalBooks { get; set; }
+        private void CloseAddCustomerPopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.HidePopup();
+            }
+        }
+
+        private void ConfirmAddCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmAdd())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
+            }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void EditCustomerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareEdit(customer);
+
+                    var popupUI = (FrameworkElement)this.FindResource("EditCustomerPopupUI");
+                    popupUI.DataContext = _viewModel;
+
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void AddSavingsBookMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareAddSavingsBook(customer);
+
+                    var popupUI = (FrameworkElement)this.FindResource("AddSavingsBookPopupUI");
+                    popupUI.DataContext = _viewModel;
+
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void ConfirmEditCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmEdit())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
+            }
+        }
+
+        private void ConfirmAddSavingsBook_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmAddSavingsBook())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
+            }
+        }
     }
 }
