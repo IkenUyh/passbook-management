@@ -78,5 +78,14 @@ namespace frontend_csharp.UserControls
                 }
             }
         }
+
+        private void Placeholder_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tb = sender as TextBox;
+            if (tb?.Parent is Grid grid && grid.Children[0] is TextBlock placeholder)
+            {
+                placeholder.Visibility = string.IsNullOrEmpty(tb.Text) ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
     }
 }

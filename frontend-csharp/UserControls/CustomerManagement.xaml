@@ -8,6 +8,71 @@
              Background="White"
              d:DesignHeight="640" d:DesignWidth="790">
     <UserControl.Resources>
+        <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="White" CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GreenButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#10B981"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#059669"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GrayButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F3F4F6"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E5E7EB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#6B7280"/>
@@ -67,21 +132,10 @@
             </Style.Triggers>
         </Style>
 
-        <!-- KHỐI POPUP ĐƯỢC LƯU TRONG RESOURCES ĐỂ ĐIỀU HƯỚNG SANG MAINWINDOW (Giống trang Kỳ hạn) -->
-        <Border x:Key="AddCustomerPopupUI" Background="White" CornerRadius="12" Width="420" Padding="25" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="15" Color="Black" Opacity="0.15" ShadowDepth="2"/>
-            </Border.Effect>
+        <Border x:Key="AddCustomerPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
-                <!-- Popup Header -->
-                <Grid Margin="0,0,0,20">
-                    <TextBlock Text="Thêm Khách Hàng Mới" FontSize="18" FontWeight="Bold" Foreground="#1F2937"/>
-                    <Button HorizontalAlignment="Right" Click="CloseAddCustomerPopup_Click" Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand">
-                        <materialDesign:PackIcon Kind="Close" Foreground="#6B7280" Width="20" Height="20"/>
-                    </Button>
-                </Grid>
+                <TextBlock Text="Thêm khách hàng mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
 
-                <!-- Thông báo lỗi đầu vào -->
                 <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -97,32 +151,25 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <!-- Các trường biểu mẫu thông tin -->
-                <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,6"/>
-                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,15">
-                    <TextBox Text="{Binding NewFullName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" FontSize="14" Foreground="#1F2937"/>
-                </Border>
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewFullName, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
 
-                <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,6"/>
-                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,15">
-                    <TextBox Text="{Binding NewCitizenId, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" FontSize="14" Foreground="#1F2937"/>
-                </Border>
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewCitizenId, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
 
-                <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,6"/>
-                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,25">
-                    <TextBox Text="{Binding NewPhoneNumber, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" FontSize="14" Foreground="#1F2937"/>
-                </Border>
+                <StackPanel Margin="0,0,0,24">
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewPhoneNumber, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
 
-                <!-- Các nút xác nhận và hủy bỏ hành động -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="12"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Click="CloseAddCustomerPopup_Click" Content="Hủy bỏ" Background="#F3F4F6" Foreground="#374151" BorderThickness="0" Height="38" materialDesign:ButtonAssist.CornerRadius="6" Cursor="Hand"/>
-                    <Button Grid.Column="2" Click="ConfirmAddCustomer_Click" Content="Xác nhận" Background="#10B981" Foreground="White" BorderThickness="0" Height="38" materialDesign:ButtonAssist.CornerRadius="6" FontWeight="SemiBold" Cursor="Hand"/>
-                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseAddCustomerPopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Thêm" Click="ConfirmAddCustomer_Click" Width="100"/>
+                </StackPanel>
             </StackPanel>
         </Border>
     </UserControl.Resources>
@@ -163,7 +210,14 @@
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Column="3" BorderBrush="#FFF3F3F3" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="#FFF3F3F3">
+                <Button Grid.Column="3" Style="{StaticResource GreenButtonStyle}" Click="OpenAddCustomerPopup_Click" Padding="12,5" Height="34">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Plus" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" Width="16" Height="16"/>
+                        <TextBlock Text="Thêm khách hàng" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Border Grid.Column="5" BorderBrush="#FFF3F3F3" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="#FFF3F3F3">
                     <ListBox x:Name="ViewToggleListBox" Background="Transparent" BorderThickness="0" SelectionMode="Single" SelectedIndex="0">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -196,16 +250,6 @@
                         </ListBoxItem>
                     </ListBox>
                 </Border>
-
-                <!-- Nút bấm kích hoạt Sự kiện Click tương tự như chức năng trang kỳ hạn -->
-                <Button Grid.Column="5" Click="OpenAddCustomerPopup_Click" 
-                        Background="#10B981" BorderThickness="0" 
-                        materialDesign:ButtonAssist.CornerRadius="8" Padding="12,5" Height="34" Cursor="Hand">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" Width="16" Height="16"/>
-                        <TextBlock Text="Thêm khách hàng" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
             </Grid>
 
             <DataGrid Grid.Row="1" Name="dgvCustomers" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" 
