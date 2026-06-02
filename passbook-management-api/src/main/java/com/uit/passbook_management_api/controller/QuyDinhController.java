@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/quy-dinh")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class QuyDinhController {
 
     private final QuyDinhService quyDinhService;
@@ -24,7 +25,7 @@ public class QuyDinhController {
     }
 
     @PutMapping("/tham-so")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> capNhatThamSo(@RequestBody CapNhatThamSoRequest request) {
         try {
             return ResponseEntity.ok(quyDinhService.capNhatThamSo(request));
@@ -40,7 +41,7 @@ public class QuyDinhController {
     }
 
     @PostMapping("/loai-tiet-kiem")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> themHoacSuaLoaiTietKiem(@RequestBody LoaiTietKiemRequest request) {
         try {
             return ResponseEntity.ok(quyDinhService.luuLoaiTietKiem(request));

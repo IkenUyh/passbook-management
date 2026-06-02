@@ -3,10 +3,12 @@ package com.uit.passbook_management_api.controller;
 import com.uit.passbook_management_api.dto.request.KhachHangRequest;
 import com.uit.passbook_management_api.service.KhachHangService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/khach-hang")
+@PreAuthorize("hasRole('NHAN_VIEN')")
 public class KhachHangController {
 
     private final KhachHangService khachHangService;

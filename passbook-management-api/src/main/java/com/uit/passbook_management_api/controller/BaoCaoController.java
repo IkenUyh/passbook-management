@@ -4,6 +4,7 @@ import com.uit.passbook_management_api.dto.response.BaoCaoNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoThangDTO;
 import com.uit.passbook_management_api.service.BaoCaoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/bao-cao")
+@PreAuthorize("hasRole('ADMIN')")
 public class BaoCaoController {
 
     private final BaoCaoService baoCaoService;

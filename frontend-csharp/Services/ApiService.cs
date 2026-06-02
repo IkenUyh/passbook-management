@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers; 
-using System.Text;            
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using frontend_csharp.Models;
@@ -12,12 +12,20 @@ namespace frontend_csharp.Services
     public class ApiService
     {
         private readonly HttpClient _client;
+        private readonly JsonSerializerOptions _jsonOptions;
 
-        private const string BaseUrl = "https://passbook.kienhuy-dev.name.vn/api/";
+        private const string BaseUrl = "http://localhost:8083/api/";
+        // private const string BaseUrl = "https://passbook.kienhuy-dev.name.vn/api/";
 
         public ApiService()
         {
             _client = new HttpClient();
+
+            // Cấu hình đọc JSON không phân biệt hoa thường để tránh lỗi lệch kiểu ký tự với Java
+            _jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
         }
 
         // --- 1. HÀM ĐĂNG NHẬP ---
@@ -34,45 +42,56 @@ namespace frontend_csharp.Services
 
             try
             {
-                // Gọi tới http://localhost:8081/api/auth/login
                 HttpResponseMessage response = await _client.PostAsync($"{BaseUrl}auth/login", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     string responseString = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<AuthResponse>(responseString);
+                    var authResult = JsonSerializer.Deserialize<AuthResponse>(responseString, _jsonOptions);
+
+                    if (authResult != null)
+                    {
+                        AppSession.CurrentToken = authResult.Token;
+                        AppSession.LoggedInUsername = authResult.Username;
+                        AppSession.CurrentRole = authResult.Role; 
+                    }
+
+                    return authResult;
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi kết nối: {ex.Message}");
+                Console.WriteLine($"Lỗi kết nối API Đăng nhập: {ex.Message}");
                 return null;
             }
         }
 
-        // --- 2. 
+        // --- 2. LẤY DANH SÁCH SỔ TIẾT KIỆM ---
         public async Task<List<SoTietKiem>> GetDanhSachSoTietKiemAsync()
         {
-            // BỔ SUNG: Kiểm tra xem đã có Token lưu trong Session chưa
-            if (!string.IsNullOrEmpty(AppSession.CurrentToken))
+            try
             {
-                // Nhét Token vào Header của request dưới dạng Bearer Token
-                _client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", AppSession.CurrentToken);
+                // BỔ SUNG: Kiểm tra và đính kèm Token hợp lệ vào Header trước khi bắn request
+                if (!string.IsNullOrEmpty(AppSession.CurrentToken))
+                {
+                         _client.DefaultRequestHeaders.Authorization =
+                          new AuthenticationHeaderValue("Bearer", AppSession.CurrentToken);
+                }
+
+                var response = await _client.GetAsync($"{BaseUrl}v1/so-tiet-kiem");
+
+                // Nếu Backend trả về 403 Forbidden hoặc 401 Unauthorized, dòng này sẽ quăng Exception ngay
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<SoTietKiem>>(json, _jsonOptions) ?? new List<SoTietKiem>();
             }
-
-            // Gọi GET request tới http://localhost:8081/api/v1/so-tiet-kiem
-            var response = await _client.GetAsync($"{BaseUrl}v1/so-tiet-kiem");
-
-            // Hàm này sẽ ném ra lỗi (Exception) nếu API trả về 401 hoặc 500
-            response.EnsureSuccessStatusCode();
-
-            // Đọc JSON trả về
-            var json = await response.Content.ReadAsStringAsync();
-
-            // Convert JSON thành List object C#. Nếu mảng [] thì nó tự hiểu là List rỗng (Count = 0).
-            return JsonSerializer.Deserialize<List<SoTietKiem>>(json) ?? new List<SoTietKiem>();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi lấy danh sách sổ: {ex.Message}");
+                return new List<SoTietKiem>(); // Trả về list rỗng để giao diện không bị crash dữ liệu
+            }
         }
     }
 }
