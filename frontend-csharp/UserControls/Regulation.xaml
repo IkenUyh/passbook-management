@@ -114,136 +114,120 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-
     </UserControl.Resources>
+
 
     <Grid Margin="10" x:Name="MainContent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,0,0,16">
-            <TextBlock Text="Hệ Thống Quản Lý Sổ Tiết Kiệm"
-                       FontSize="18" FontWeight="Bold" FontFamily="Segoe UI"
-                       VerticalAlignment="Center" Foreground="#111827"/>
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0">
+            <StackPanel>
+                <TextBlock Text="Quy định chung" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,0,0,24" Foreground="#111827"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Ellipse Width="36" Height="36">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="/Assets/user_active.jpg" Stretch="UniformToFill"/>
-                    </Ellipse.Fill>
-                </Ellipse>
-            </StackPanel>
-        </Grid>
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Margin="0">
-
-                <Border Style="{StaticResource CardStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Quy định chung" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,0,0,24" Foreground="#111827"/>
-
-                        <Grid Margin="0,0,0,24">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Số tiền gửi tối thiểu ban đầu (VNĐ)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
-                                <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.TienGuiToiThieu, StringFormat={}{0:N0}}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="Số tiền gửi thêm tối thiểu (VNĐ)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
-                                <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.TienGuiThemToiThieu, StringFormat={}{0:N0}}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="4">
-                                <TextBlock Text="Thời gian gửi tối thiểu để được rút (Ngày)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
-                                <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.ThoiGianGuiToiThieuNgay}"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <Button Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Right">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="ContentSaveOutline" Width="18" Height="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Lưu thay đổi" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Số tiền gửi tối thiểu ban đầu (VNĐ)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.TienGuiToiThieu, StringFormat={}{0:N0}}"/>
                     </StackPanel>
-                </Border>
 
-                <Border Style="{StaticResource CardStyle}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Số tiền gửi thêm tối thiểu (VNĐ)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.TienGuiThemToiThieu, StringFormat={}{0:N0}}"/>
+                    </StackPanel>
 
-                        <Grid Grid.Row="0" Margin="0,0,0,24">
-                            <TextBlock Text="Cấu hình Kỳ hạn &amp; Lãi suất" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center" Foreground="#111827"/>
-                            <Button Style="{StaticResource GreenButtonStyle}" Click="OpenAddTermPopup_Click" HorizontalAlignment="Right" Padding="12,8">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Plus" Width="18" Height="18" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Thêm kỳ hạn" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                        </Grid>
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="Thời gian gửi tối thiểu để được rút (Ngày)" FontSize="12" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding RegulationInfo.ThoiGianGuiToiThieuNgay}"/>
+                    </StackPanel>
+                </Grid>
 
-                        <Grid Grid.Row="1" Margin="0,0,0,16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="STT" FontSize="12" FontWeight="Bold" Foreground="#6B7280"/>
-                            <TextBlock Grid.Column="1" Text="Kỳ hạn (Tháng)" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
-                            <TextBlock Grid.Column="2" Text="Lãi suất (%/năm)" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
-                            <TextBlock Grid.Column="3" Text="Ghi chú" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
-                            <TextBlock Grid.Column="4" Text="Thao tác" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
-                        </Grid>
-
-                        <ItemsControl Grid.Row="2" ItemsSource="{Binding DanhSachKyHan}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,16,0,16">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="1.5*"/>
-                                            <ColumnDefinition Width="1.5*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="100"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock Grid.Column="0" Text="{Binding STT}" FontSize="13" Foreground="#9CA3AF" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding TenKyHan}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding LaiSuat}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
-                                        <TextBlock Grid.Column="3" Text="{Binding GhiChu}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
-
-                                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,12,0" Cursor="Hand" Foreground="#111827">
-                                                <materialDesign:PackIcon Kind="Pencil" Width="18" Height="18"/>
-                                            </Button>
-                                            <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" Foreground="#111827">
-                                                <materialDesign:PackIcon Kind="TrashCanOutline" Width="18" Height="18"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-                </Border>
+                <Button Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSaveOutline" Width="18" Height="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Lưu thay đổi" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
-        </ScrollViewer>
+        </Border>
 
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,24">
+                    <TextBlock Text="Cấu hình Kỳ hạn &amp; Lãi suất" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center" Foreground="#111827"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Click="OpenAddTermPopup_Click" HorizontalAlignment="Right" Padding="12,8">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Plus" Width="18" Height="18" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Thêm kỳ hạn" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,0,16,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="STT" FontSize="12" FontWeight="Bold" Foreground="#6B7280"/>
+                    <TextBlock Grid.Column="1" Text="Kỳ hạn (Tháng)" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Grid.Column="2" Text="Lãi suất (%/năm)" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Grid.Column="3" Text="Ghi chú" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Grid.Column="4" Text="Thao tác" FontSize="12" FontWeight="Bold" Foreground="#111827"/>
+                </Grid>
+
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding DanhSachKyHan}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,10,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="{Binding STT}" FontSize="13" Foreground="#9CA3AF" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding TenKyHan}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding LaiSuat}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding GhiChu}" FontSize="13" VerticalAlignment="Center" Foreground="#111827" FontWeight="Medium"/>
+
+                                    <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,12,0" Cursor="Hand" Foreground="#111827">
+                                            <materialDesign:PackIcon Kind="Pencil" Width="18" Height="18"/>
+                                        </Button>
+                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" Foreground="#111827">
+                                            <materialDesign:PackIcon Kind="TrashCanOutline" Width="18" Height="18"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
