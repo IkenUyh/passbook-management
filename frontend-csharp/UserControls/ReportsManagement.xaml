@@ -113,14 +113,33 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Text="Loại:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#374151"/>
 
-                    <ComboBox Width="120" Margin="0,0,15,0" VerticalAlignment="Center" FontSize="13" 
-                              ItemsSource="{Binding SavingsTypes}" 
-                              SelectedItem="{Binding SelectedSavingsType, UpdateSourceTrigger=PropertyChanged}"/>
+                    <ComboBox 
+                        Width="120" Margin="0,0,15,0" VerticalAlignment="Center" FontSize="13" 
+                        ItemsSource="{Binding SavingsTypes}" 
+                        SelectedItem="{Binding SelectedSavingsType, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <TextBlock Text="Tháng:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#374151"/>
-
-                    <DatePicker Width="120" VerticalAlignment="Center" FontSize="13" 
-                                SelectedDate="{Binding SelectedMonthlyDate, UpdateSourceTrigger=PropertyChanged}"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ComboBox 
+                            Width="55" FontSize="13" Padding="6,2,0,2"
+                            MaxDropDownHeight="350"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                            ItemsSource="{Binding Months}" 
+                            SelectedItem="{Binding SelectedMonth, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="MinHeight" Value="22"/>
+                                    <Setter Property="Padding" Value="0,3"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
+                        <TextBlock Text="/" Margin="4,0,4,2" VerticalAlignment="Center" FontSize="15" Foreground="#9CA3AF" FontWeight="SemiBold"/>
+                        <ComboBox
+                            Width="70" FontSize="13" Padding="6,2,0,2"
+                            ItemsSource="{Binding Years}" 
+                            SelectedItem="{Binding SelectedYear, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 

@@ -17,6 +17,11 @@ namespace frontend_csharp.ViewModels
 
         public List<string> SavingsTypes { get; set; } = new List<string> { "Tất cả", "Không kỳ hạn", "3 tháng", "6 tháng", "12 tháng" };
 
+        // 1. Chia lại danh sách siêu ngắn: 12 tháng (dạng chuỗi cho đẹp) và vài năm
+        public ObservableCollection<string> Months { get; set; } = new ObservableCollection<string>
+        { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
+        public ObservableCollection<int> Years { get; set; } = new ObservableCollection<int>();
+
         public ISeries[] BarSeries { get; set; }
         public Axis[] BarXAxes { get; set; }
         public Axis[] BarYAxes { get; set; }
@@ -33,26 +38,60 @@ namespace frontend_csharp.ViewModels
             {
                 _selectedSavingsType = value;
                 OnPropertyChanged();
-                _ = LoadMonthlyDataAsync(value, SelectedMonthlyDate);
+                TriggerDataLoad();
             }
         }
 
-        private DateTime _selectedMonthlyDate = DateTime.Now;
-        public DateTime SelectedMonthlyDate
+        // 2. Thuộc tính riêng cho Tháng
+        private string _selectedMonth;
+        public string SelectedMonth
         {
-            get => _selectedMonthlyDate;
+            get => _selectedMonth;
             set
             {
-                _selectedMonthlyDate = value;
+                _selectedMonth = value;
                 OnPropertyChanged();
-                _ = LoadMonthlyDataAsync(SelectedSavingsType, value);
+                TriggerDataLoad();
+            }
+        }
+
+        // 3. Thuộc tính riêng cho Năm
+        private int _selectedYear;
+        public int SelectedYear
+        {
+            get => _selectedYear;
+            set
+            {
+                _selectedYear = value;
+                OnPropertyChanged();
+                TriggerDataLoad();
             }
         }
 
         public ReportsManagementViewModel()
         {
+            // Nạp vài năm gần đây (vd: từ 2 năm trước đến 2 năm sau)
+            int currentYear = DateTime.Now.Year;
+            for (int y = currentYear - 2; y <= currentYear + 2; y++)
+            {
+                Years.Add(y);
+            }
+
+            // Đặt mặc định là Tháng / Năm hiện tại
+            _selectedMonth = DateTime.Now.ToString("MM");
+            _selectedYear = currentYear;
+
             SetupChart();
-            _ = LoadMonthlyDataAsync(SelectedSavingsType, SelectedMonthlyDate);
+            TriggerDataLoad();
+        }
+
+        // 4. Hàm hỗ trợ để tự động load dữ liệu mỗi khi đổi tháng hoặc năm
+        private void TriggerDataLoad()
+        {
+            if (int.TryParse(SelectedMonth, out int month) && SelectedYear > 0)
+            {
+                _ = LoadMonthlyDataAsync(SelectedSavingsType, new DateTime(SelectedYear, month, 1));
+            }
         }
 
         private void SetupChart()
@@ -64,6 +103,12 @@ namespace frontend_csharp.ViewModels
                 new ColumnSeries<double> { Values = MoSoValues, Name = "Mở sổ", Fill = new SolidColorPaint(moSoColor), MaxBarWidth = 10 },
                 new ColumnSeries<double> { Values = DongSoValues, Name = "Đóng sổ", Fill = new SolidColorPaint(dongSoColor), MaxBarWidth = 10 }
             };
+        }
+
+        public void PlayAnimation()
+        {
+            SetupChart();
+            OnPropertyChanged(nameof(BarSeries));
         }
 
         private async Task LoadMonthlyDataAsync(string savingsType, DateTime month)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using frontend_csharp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -26,7 +27,15 @@ namespace frontend_csharp.UserControls
 
         private async void ReportsManagement_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_isLoaded) return;
+            if (_isLoaded)
+            {
+                var viewModel = this.Resources["ChartViewModel"] as ReportsManagementViewModel;
+                if (viewModel != null)
+                {
+                    viewModel.PlayAnimation();
+                }
+                return;
+            }
 
             dpDailyDate.SelectedDate = DateTime.Now;
 
