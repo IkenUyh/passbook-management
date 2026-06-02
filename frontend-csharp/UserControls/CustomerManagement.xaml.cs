@@ -79,12 +79,70 @@ namespace frontend_csharp.UserControls
             }
         }
 
-        private void Placeholder_TextChanged(object sender, TextChangedEventArgs e)
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var tb = sender as TextBox;
-            if (tb?.Parent is Grid grid && grid.Children[0] is TextBlock placeholder)
+            if (sender is Button button && button.ContextMenu != null)
             {
-                placeholder.Visibility = string.IsNullOrEmpty(tb.Text) ? Visibility.Visible : Visibility.Hidden;
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void EditCustomerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareEdit(customer);
+
+                    var popupUI = (FrameworkElement)this.FindResource("EditCustomerPopupUI");
+                    popupUI.DataContext = _viewModel;
+
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void AddSavingsBookMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareAddSavingsBook(customer);
+
+                    var popupUI = (FrameworkElement)this.FindResource("AddSavingsBookPopupUI");
+                    popupUI.DataContext = _viewModel;
+
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void ConfirmEditCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmEdit())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
+            }
+        }
+
+        private void ConfirmAddSavingsBook_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmAddSavingsBook())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
             }
         }
     }

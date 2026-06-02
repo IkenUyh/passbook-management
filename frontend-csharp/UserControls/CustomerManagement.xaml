@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Background="White"
@@ -132,6 +132,57 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="ModernContextMenuStyle" TargetType="ContextMenu">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8"
+                                SnapsToDevicePixels="True">
+                            <Grid Grid.IsSharedSizeScope="True" Margin="0,4">
+                                <ItemsPresenter />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="Foreground" Value="#374151"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="MenuItem">
+                                <Border x:Name="BgBorder" Background="Transparent" CornerRadius="6" Margin="4,2" Padding="{TemplateBinding Padding}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="MenuIconGroup"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ContentPresenter x:Name="IconHost" Grid.Column="0" ContentSource="Icon" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BgBorder" Property="Background" Value="#F3F4F6"/>
+                                        <Setter Property="Foreground" Value="#111827"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+
         <Border x:Key="AddCustomerPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm khách hàng mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
@@ -172,6 +223,83 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+
+        <Border x:Key="EditCustomerPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Chỉnh sửa thông tin" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditFullName, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditCitizenId, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,24">
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditPhoneNumber, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseAddCustomerPopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Lưu" Click="ConfirmEditCustomer_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="AddSavingsBookPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Thêm sổ tiết kiệm mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Chọn loại tiết kiệm" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <ComboBox ItemsSource="{Binding SavingsTypes}" SelectedItem="{Binding SelectedSavingsType}" Height="40" VerticalContentAlignment="Center" Padding="12,0"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,24">
+                    <TextBlock Text="Số tiền gửi ban đầu (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding InitialDeposit, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseAddCustomerPopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Thêm sổ" Click="ConfirmAddSavingsBook_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </UserControl.Resources>
 
     <Grid>
@@ -199,7 +327,8 @@
                         </Grid.ColumnDefinitions>
                         <materialDesign:PackIcon Kind="Magnify" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
-                             FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."/>
+                                 FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Border>
 
@@ -263,10 +392,10 @@
                   CanUserSortColumns="True">
                 <DataGrid.Style>
                     <Style TargetType="DataGrid">
-                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="0">
-                                <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
+                                <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -281,8 +410,22 @@
                     <DataGridTemplateColumn Width="40" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tùy chọn khách hàng">
+                                <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tùy chọn khách hàng" Click="SettingsButton_Click">
                                     <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
+                                    <Button.ContextMenu>
+                                        <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                            <MenuItem Header="Sửa thông tin" Click="EditCustomerMenu_Click">
+                                                <MenuItem.Icon>
+                                                    <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Header="Thêm sổ" Click="AddSavingsBookMenu_Click">
+                                                <MenuItem.Icon>
+                                                    <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -314,8 +457,22 @@
                                 <StackPanel>
                                     <Grid Margin="0,-10,0,0">
                                         <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
-                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tùy chọn" HorizontalAlignment="Right">
+                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tùy chọn" HorizontalAlignment="Right" Click="SettingsButton_Click">
                                             <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
+                                            <Button.ContextMenu>
+                                                <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                                    <MenuItem Header="Sửa thông tin" Click="EditCustomerMenu_Click">
+                                                        <MenuItem.Icon>
+                                                            <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem Header="Thêm sổ" Click="AddSavingsBookMenu_Click">
+                                                        <MenuItem.Icon>
+                                                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
                                         </Button>
                                     </Grid>
 
