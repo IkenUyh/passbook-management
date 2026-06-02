@@ -35,5 +35,8 @@ public class SoTietKiem {
     @Column(name = "trang_thai")
     private String trangThai;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
     // TODO: Thêm Getters / Setters
 }

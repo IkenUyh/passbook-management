@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -105,6 +106,21 @@ public class GiaoDichService {
             if (request.getSoTienRut().compareTo(stk.getSoDu()) > 0) {
                 throw new RuntimeException("Số tiền rút vượt quá số dư hiện tại!");
             }
+        }
+
+        BigDecimal tienLai = BigDecimal.ZERO;
+        long soNgayDaGui = ChronoUnit.DAYS.between(stk.getNgayMo(), request.getNgayRut());
+
+        if (stk.getLoaiTietKiem().getKyHan() > 0) {
+            // Sổ CÓ kỳ hạn: Lãi = Số dư * (Lãi suất / 100) * (Kỳ hạn / 12)
+            BigDecimal laiSuat = stk.getLoaiTietKiem().getLaiSuat().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
+            BigDecimal thoiGian = BigDecimal.valueOf(stk.getLoaiTietKiem().getKyHan()).divide(BigDecimal.valueOf(12), 4, RoundingMode.HALF_UP);
+            tienLai = stk.getSoDu().multiply(laiSuat).multiply(thoiGian);
+        } else {
+            // Sổ KHÔNG kỳ hạn: Lãi = Số dư * (Lãi suất / 100) * (Số ngày gửi / 365)
+            BigDecimal laiSuat = stk.getLoaiTietKiem().getLaiSuat().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
+            BigDecimal thoiGian = BigDecimal.valueOf(soNgayDaGui).divide(BigDecimal.valueOf(365), 4, RoundingMode.HALF_UP);
+            tienLai = stk.getSoDu().multiply(laiSuat).multiply(thoiGian);
         }
 
         // Tạo phiếu rút
