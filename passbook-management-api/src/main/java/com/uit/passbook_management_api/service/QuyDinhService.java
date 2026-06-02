@@ -16,10 +16,14 @@ public class QuyDinhService {
 
     private final ThamSoRepository thamSoRepository;
     private final LoaiTietKiemRepository loaiTietKiemRepository;
+    private final AuditLogService auditLogService;
 
-    public QuyDinhService(ThamSoRepository thamSoRepository, LoaiTietKiemRepository loaiTietKiemRepository) {
+    public QuyDinhService(ThamSoRepository thamSoRepository,
+                          LoaiTietKiemRepository loaiTietKiemRepository,
+                          AuditLogService auditLogService) {
         this.thamSoRepository = thamSoRepository;
         this.loaiTietKiemRepository = loaiTietKiemRepository;
+        this.auditLogService = auditLogService;
     }
 
     // 1. Xem và Cập nhật Tham Số Chung
@@ -34,7 +38,13 @@ public class QuyDinhService {
         thamSo.setTienGuiBanDauToiThieu(request.getTienGuiBanDauToiThieu());
         thamSo.setTienGuiThemToiThieu(request.getTienGuiThemToiThieu());
         thamSo.setSoNgayGuiToiThieu(request.getSoNgayGuiToiThieu());
-        return thamSoRepository.save(thamSo);
+
+        ThamSo savedThamSo = thamSoRepository.save(thamSo);
+
+        // --- GHI LOG HỆ THỐNG ---
+        auditLogService.ghiLog("THAY ĐỔI QUY ĐỊNH", "Cập nhật tham số hệ thống: Tiền tối thiểu " + request.getTienGuiBanDauToiThieu());
+
+        return savedThamSo;
     }
 
     // 2. Xem và Quản lý Loại Tiết Kiệm (QĐ1: Thêm/Sửa số lượng kỳ hạn)
@@ -52,6 +62,11 @@ public class QuyDinhService {
         loaiTk.setKyHan(request.getKyHan());
         loaiTk.setLaiSuat(request.getLaiSuat());
 
-        return loaiTietKiemRepository.save(loaiTk);
+        LoaiTietKiem savedLoaiTk = loaiTietKiemRepository.save(loaiTk);
+
+        // --- GHI LOG HỆ THỐNG ---
+        auditLogService.ghiLog("THAY ĐỔI LOẠI TIẾT KIỆM", "Lưu loại kỳ hạn: " + request.getMaLoaiTk() + " | Lãi suất: " + request.getLaiSuat() + "%");
+
+        return savedLoaiTk;
     }
 }

@@ -4,6 +4,7 @@ import com.uit.passbook_management_api.dto.request.CapNhatThamSoRequest;
 import com.uit.passbook_management_api.dto.request.LoaiTietKiemRequest;
 import com.uit.passbook_management_api.service.QuyDinhService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class QuyDinhController {
     }
 
     @PutMapping("/tham-so")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> capNhatThamSo(@RequestBody CapNhatThamSoRequest request) {
         try {
             return ResponseEntity.ok(quyDinhService.capNhatThamSo(request));
@@ -38,6 +40,7 @@ public class QuyDinhController {
     }
 
     @PostMapping("/loai-tiet-kiem")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> themHoacSuaLoaiTietKiem(@RequestBody LoaiTietKiemRequest request) {
         try {
             return ResponseEntity.ok(quyDinhService.luuLoaiTietKiem(request));
