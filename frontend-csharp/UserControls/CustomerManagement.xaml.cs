@@ -24,7 +24,6 @@ namespace frontend_csharp.UserControls
         {
             ViewToggleListBox.SelectedIndex = 0;
 
-            // Giữ nguyên xử lý giao diện: Xóa sạch trạng thái Sort cũ của DataGrid
             if (dgvCustomers.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvCustomers.ItemsSource);
@@ -39,10 +38,44 @@ namespace frontend_csharp.UserControls
                 }
             }
 
-            // Gọi hàm xử lý logic từ ViewModel
             if (_viewModel.Customers.Count == 0)
             {
                 await _viewModel.LoadDataAsync();
+            }
+        }
+
+        private void OpenAddCustomerPopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                _viewModel.ResetForm();
+
+                var popupUI = (FrameworkElement)this.FindResource("AddCustomerPopupUI");
+                popupUI.DataContext = _viewModel;
+
+                mainWindow.ShowPopup(popupUI);
+            }
+        }
+
+        private void CloseAddCustomerPopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.HidePopup();
+            }
+        }
+
+        private void ConfirmAddCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmAdd())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    mainWindow.HidePopup();
+                }
             }
         }
     }
