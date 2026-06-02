@@ -29,6 +29,13 @@ public class SoTietKiemService {
         this.thamSoRepository = thamSoRepository;
     }
 
+    // Lấy danh sách sổ sắp đáo hạn cho FR8
+    public List<SoTietKiem> layDanhSachSapDaoHan(int soNgayBaoTruoc) {
+        LocalDate homNay = LocalDate.now();
+        LocalDate ngayMucTieu = homNay.plusDays(soNgayBaoTruoc);
+        return soTietKiemRepository.timSoSapDaoHan(homNay, ngayMucTieu);
+    }
+
     // FR4: Tra cứu danh sách sổ
     public List<SoTietKiem> layDanhSachSoTietKiem() {
         return soTietKiemRepository.findAll();
