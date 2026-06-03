@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,7 +15,6 @@ namespace frontend_csharp.UserControls
         {
             InitializeComponent();
 
-            // Khởi tạo và liên kết DataContext, XAML sẽ tự động nhận diện dữ liệu thông qua Binding
             _viewModel = new SavingsBookLookupViewModel();
             this.DataContext = _viewModel;
 
@@ -23,10 +23,8 @@ namespace frontend_csharp.UserControls
 
         private async void SavingsBookLookup_Loaded(object sender, RoutedEventArgs e)
         {
-            // [Giao diện] Reset về DataGrid khi mở lại tab
             ViewToggleListBox.SelectedIndex = 0;
 
-            // [Giao diện] Xoá bộ lọc sắp xếp cũ
             if (dgvSavingsBooks.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvSavingsBooks.ItemsSource);
@@ -41,11 +39,75 @@ namespace frontend_csharp.UserControls
                 }
             }
 
-            // Gọi API nạp dữ liệu từ ViewModel
             if (_viewModel.SavingsBooks.Count == 0)
             {
                 await _viewModel.LoadDataAsync();
             }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void DepositMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is SavingsBookModel savingsBook)
+            {
+                _viewModel.PrepareTransaction(savingsBook);
+
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    var popupUI = (FrameworkElement)this.FindResource("DepositPopupUI");
+                    popupUI.DataContext = _viewModel;
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void WithdrawMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is SavingsBookModel savingsBook)
+            {
+                _viewModel.PrepareTransaction(savingsBook);
+
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    var popupUI = (FrameworkElement)this.FindResource("WithdrawPopupUI");
+                    popupUI.DataContext = _viewModel;
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void ConfirmDeposit_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmDeposit())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.HidePopup();
+            }
+        }
+
+        private void ConfirmWithdraw_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmWithdraw())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.HidePopup();
+            }
+        }
+
+        private void ClosePopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            mainWindow?.HidePopup();
         }
     }
 }
