@@ -23,7 +23,24 @@ public class KhachHangService {
         return khachHangRepository.findAll();
     }
 
-    // 2. Cập nhật thông tin khách hàng
+    //2. Thêm khách hàng mới
+    @Transactional
+    public KhachHang themKhachHang(KhachHangRequest request) {
+        // Kiểm tra CMND/CCCD đã tồn tại chưa
+        if (khachHangRepository.findByCmnd(request.getCmnd()).isPresent()) {
+            throw new RuntimeException("Số CMND/CCCD này đã tồn tại trên hệ thống!");
+        }
+
+        KhachHang kh = new KhachHang();
+        kh.setTen(request.getTen());
+        kh.setCmnd(request.getCmnd());
+        kh.setDiaChi(request.getDiaChi());
+        kh.setSdt(request.getSdt());
+
+        return khachHangRepository.save(kh);
+    }
+
+    // 3. Cập nhật thông tin khách hàng
     @Transactional
     public KhachHang capNhatKhachHang(Long id, KhachHangRequest request) {
         KhachHang kh = khachHangRepository.findById(id)
@@ -37,7 +54,7 @@ public class KhachHangService {
         return khachHangRepository.save(kh);
     }
 
-    // 3. Xóa khách hàng
+    // 4. Xóa khách hàng
     @Transactional
     public void xoaKhachHang(Long id) {
         KhachHang kh = khachHangRepository.findById(id)

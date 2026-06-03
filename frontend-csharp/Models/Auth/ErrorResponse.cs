@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace frontend_csharp.Models
+namespace frontend_csharp.Models.Auth
 {
     public class ErrorResponse
     {

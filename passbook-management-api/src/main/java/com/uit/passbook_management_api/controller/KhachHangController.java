@@ -22,6 +22,15 @@ public class KhachHangController {
         return ResponseEntity.ok(khachHangService.layDanhSachKhachHang());
     }
 
+    @PostMapping
+    public ResponseEntity<?> themKhachHang(@RequestBody KhachHangRequest request) {
+        try {
+            return ResponseEntity.ok(khachHangService.themKhachHang(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> capNhatKhachHang(@PathVariable Long id, @RequestBody KhachHangRequest request) {
         try {

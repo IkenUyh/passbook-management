@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 @RestController
-@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 @RequestMapping("/api/auth")
 public class AuthController {
 

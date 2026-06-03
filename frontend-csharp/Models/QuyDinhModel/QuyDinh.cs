@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace frontend_csharp.Models
+namespace frontend_csharp.Models.QuyDinhModel
 {
     public class QuyDinh
     {
