@@ -8,7 +8,7 @@ namespace frontend_csharp.Models.NhanVienModel
     public class NhanVien
     {
         [JsonPropertyName("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [JsonPropertyName("hoTen")]
         public string HoTen { get; set; }
