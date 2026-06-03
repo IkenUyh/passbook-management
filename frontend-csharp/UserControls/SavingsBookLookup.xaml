@@ -318,17 +318,17 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Loại" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Số dư" Binding="{Binding Balance}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Đáo hạn" Binding="{Binding MaturityDate}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Lãi suất" Binding="{Binding InterestRate}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Loại" Binding="{Binding LoaiTietKiem.TenLoaiTk}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Khách hàng" Binding="{Binding KhachHang.Ten}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Số dư" Binding="{Binding SoDu, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Đáo hạn" Binding="{Binding NgayDaoHan, StringFormat='{}{0:dd/MM/yyyy}'}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Lãi suất" Binding="{Binding LoaiTietKiem.LaiSuat, StringFormat='{}{0}%/năm'}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
 
-                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*" SortMemberPath="Status">
+                <DataGridTemplateColumn Header="Trạng thái" Width="1.1*" SortMemberPath="TrangThai">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="{Binding TrangThai}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -383,9 +383,10 @@
                         <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,15,15" Width="230" Background="White">
                             <StackPanel>
                                 <Grid Margin="0 -10 0 0">
-                                    <TextBlock Text="{Binding CustomerName}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
+                                    <TextBlock Text="{Binding KhachHang.Ten}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
 
-                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" HorizontalAlignment="Right" Click="SettingsButton_Click">
+                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" 
+                                            HorizontalAlignment="Right" Click="SettingsButton_Click">
                                         <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
                                         <Button.ContextMenu>
                                             <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
@@ -405,25 +406,25 @@
                                 </Grid>
 
                                 <TextBlock Text="{Binding Id, StringFormat='Mã số: {0}'}" FontSize="12" Foreground="#9CA3AF" Margin="0,2,0,10"/>
-                                <TextBlock Text="{Binding Balance}" FontWeight="Bold" FontSize="16" Foreground="#10B981" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding SoDu, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" FontSize="16" Foreground="#10B981" Margin="0,0,0,10"/>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                     <TextBlock Text="Loại: " FontSize="13" Foreground="#9CA3AF"/>
-                                    <TextBlock Text="{Binding SavingsType}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                                    <TextBlock Text="{Binding LoaiTietKiem.TenLoaiTk}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                     <TextBlock Text="Lãi suất: " FontSize="13" Foreground="#9CA3AF"/>
-                                    <TextBlock Text="{Binding InterestRate}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                                    <TextBlock Text="{Binding LoaiTietKiem.LaiSuat, StringFormat='{}{0}%/năm'}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                     <TextBlock Text="Đáo hạn: " FontSize="13" Foreground="#9CA3AF"/>
-                                    <TextBlock Text="{Binding MaturityDate}" FontSize="13" Foreground="#374151"/>
+                                    <TextBlock Text="{Binding NgayDaoHan, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="13" Foreground="#374151"/>
                                 </StackPanel>
 
                                 <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                                    <TextBlock Text="{Binding TrangThai}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
                                 </Border>
                             </StackPanel>
                         </Border>

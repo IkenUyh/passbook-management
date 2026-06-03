@@ -12,6 +12,6 @@ namespace frontend_csharp.Models.GiaoDichModel
         public decimal SoTienGui { get; set; }
 
         [JsonPropertyName("ngayGui")]
-        public DateTime NgayGui { get; set; }
+        public String NgayGui { get; set; }
     }
 }

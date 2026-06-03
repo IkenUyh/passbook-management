@@ -1,5 +1,5 @@
 CREATE TABLE nhan_vien (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id VARCHAR(20) PRIMARY KEY,
     ho_ten VARCHAR(255) NOT NULL,
     so_dien_thoai VARCHAR(20),
     cccd VARCHAR(20) UNIQUE,

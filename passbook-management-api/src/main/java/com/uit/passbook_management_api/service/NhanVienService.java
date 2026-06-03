@@ -1,6 +1,7 @@
 package com.uit.passbook_management_api.service;
 
 import com.uit.passbook_management_api.dto.request.NhanVienRequest;
+import com.uit.passbook_management_api.dto.response.NhanVienResponse;
 import com.uit.passbook_management_api.entity.AppUser;
 import com.uit.passbook_management_api.entity.NhanVien;
 import com.uit.passbook_management_api.repository.AppUserRepository;
@@ -9,7 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class NhanVienService {
@@ -31,26 +34,79 @@ public class NhanVienService {
     }
 
     @Transactional
-    public NhanVien themNhanVienMoi(NhanVienRequest request) {
-        // 1. Kiểm tra trùng tài khoản
-        if (appUserRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Tên tài khoản đăng nhập này đã tồn tại!");
+    public NhanVienResponse themNhanVienMoi(NhanVienRequest request) {
+        if (nhanVienRepository.existsByCccd(request.getCccd())) {
+            throw new RuntimeException("Số CCCD này đã tồn tại trong hệ thống!");
         }
 
-        // 2. Tạo tài khoản hệ thống (Mã hóa mật khẩu)
+        String lastId = nhanVienRepository.findLastId();
+        String nextId = "NV1"; // Mặc định nếu DB chưa có nhân viên nào
+        if (lastId != null) {
+            // Cắt bỏ 2 ký tự "NV", lấy phần số đổi sang kiểu Int và cộng thêm 1
+            int currentNumber = Integer.parseInt(lastId.substring(2));
+            nextId = "NV" + (currentNumber + 1);
+        }
+        // 1. Tự động sinh Username từ Họ và Tên
+        String baseUsername = chuyenDoiHotenThanhUsername(request.getHoTen());
+        String finalUsername = baseUsername;
+        int count = 1;
+
+        // Vòng lặp kiểm tra trùng tài khoản: nếu trùng sẽ tự động thêm số (ví dụ: nguyenan, nguyenan1, nguyenan2...)
+        while (appUserRepository.findByUsername(finalUsername).isPresent()) {
+            finalUsername = baseUsername + count;
+            count++;
+        }
+
+        // 2. Định nghĩa mật khẩu mặc định
+        String macDinhPassword = "123456";
+
+        // 3. Tạo tài khoản hệ thống (Mã hóa mật khẩu)
         AppUser user = new AppUser();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setUsername(finalUsername);
+        user.setPassword(passwordEncoder.encode(macDinhPassword));
         user.setRole(request.getRole());
         user = appUserRepository.save(user);
 
-        // 3. Tạo hồ sơ nhân viên rút gọn
+        // 4. Tạo hồ sơ nhân viên
         NhanVien nv = new NhanVien();
+        nv.setId(nextId);
         nv.setHoTen(request.getHoTen());
         nv.setSoDienThoai(request.getSoDienThoai());
         nv.setCccd(request.getCccd());
         nv.setAppUser(user);
+        nhanVienRepository.save(nv);
 
-        return nhanVienRepository.save(nv);
+        // 5. Trả về thông tin kèm theo tài khoản mật khẩu dạng tường minh (Plain text)
+        return NhanVienResponse.builder()
+                .hoTen(nv.getHoTen())
+                .soDienThoai(nv.getSoDienThoai())
+                .cccd(nv.getCccd())
+                .username(finalUsername)
+                .password(macDinhPassword)
+                .role(user.getRole())
+                .build();
+    }
+
+
+    private String chuyenDoiHotenThanhUsername(String hoTen) {
+        if (hoTen == null || hoTen.trim().isEmpty()) {
+            throw new RuntimeException("Họ tên nhân viên không được để trống!");
+        }
+
+        // Loại bỏ dấu tiếng Việt
+        String temp = Normalizer.normalize(hoTen, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String cleanString = pattern.matcher(temp).replaceAll("")
+                .replace('đ', 'd')
+                .replace('Đ', 'd');
+
+        // Tách các từ dựa trên khoảng trắng
+        String[] words = cleanString.trim().toLowerCase().split("\\s+");
+
+        if (words.length == 1) {
+            return words[0];
+        }
+
+        return words[words.length - 1] + words[0];
     }
 }

@@ -25,6 +25,7 @@ public class NhanVienController {
     @PostMapping
     public ResponseEntity<?> addNhanVien(@RequestBody NhanVienRequest request) {
         try {
+            // Service bây giờ sẽ trả về NhanVienResponse chứa username mới sinh và password "123456"
             return ResponseEntity.ok(nhanVienService.themNhanVienMoi(request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

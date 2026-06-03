@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using frontend_csharp.ViewModels;
+using frontend_csharp.Models.SoTietKiemModel;
 
 namespace frontend_csharp.UserControls
 {
@@ -56,7 +57,7 @@ namespace frontend_csharp.UserControls
 
         private void DepositMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.DataContext is SavingsBookModel savingsBook)
+            if (sender is MenuItem menuItem && menuItem.DataContext is SoTietKiem savingsBook)
             {
                 _viewModel.PrepareTransaction(savingsBook);
 
@@ -72,7 +73,7 @@ namespace frontend_csharp.UserControls
 
         private void WithdrawMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.DataContext is SavingsBookModel savingsBook)
+            if (sender is MenuItem menuItem && menuItem.DataContext is SoTietKiem savingsBook)
             {
                 _viewModel.PrepareTransaction(savingsBook);
 
@@ -86,18 +87,18 @@ namespace frontend_csharp.UserControls
             }
         }
 
-        private void ConfirmDeposit_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmDeposit_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmDeposit())
+            if (await _viewModel.ConfirmDepositAsync())
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
                 mainWindow?.HidePopup();
             }
         }
 
-        private void ConfirmWithdraw_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmWithdraw_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmWithdraw())
+            if (await _viewModel.ConfirmWithdrawAsync())
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
                 mainWindow?.HidePopup();
