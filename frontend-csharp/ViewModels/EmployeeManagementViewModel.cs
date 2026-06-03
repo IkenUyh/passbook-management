@@ -5,15 +5,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using frontend_csharp.Services;
+using frontend_csharp.Models.NhanVienModel;
 
 namespace frontend_csharp.ViewModels
 {
     public class EmployeeManagementViewModel : INotifyPropertyChanged
     {
-        private List<EmployeeModel> _allEmployees = new List<EmployeeModel>();
+        private readonly ApiService _apiService;
+        private List<NhanVien> _allEmployees = new List<NhanVien>();
 
-        private ObservableCollection<EmployeeModel> _employees;
-        public ObservableCollection<EmployeeModel> Employees
+        private ObservableCollection<NhanVien> _employees;
+        public ObservableCollection<NhanVien> Employees
         {
             get => _employees;
             set
@@ -58,7 +61,7 @@ namespace frontend_csharp.ViewModels
         }
 
         // Edit Properties
-        private EmployeeModel _editingEmployee;
+        private NhanVien _editingEmployee;
 
         private string _editFullName;
         public string EditFullName
@@ -90,49 +93,66 @@ namespace frontend_csharp.ViewModels
 
         public EmployeeManagementViewModel()
         {
-            Employees = new ObservableCollection<EmployeeModel>();
+            _apiService = new ApiService();
+            Employees = new ObservableCollection<NhanVien>();
         }
 
+        /// <summary>
+        /// Tải danh sách nhân viên từ API và cập nhật lên giao diện
+        /// </summary>
         public async Task LoadDataAsync()
         {
-            var newData = await Task.Run(() =>
+            try
             {
-                var list = new List<EmployeeModel>();
-                for (int i = 1; i <= 10; i++)
-                {
-                    list.Add(new EmployeeModel
-                    {
-                        Id = $"NV-{1000 + i}",
-                        FullName = $"Nguyễn Văn Nhân Viên {i}",
-                        CitizenId = $"07920400{5678 + i}",
-                        PhoneNumber = $"091412345{i:D2}"
-                    });
-                }
-                return list;
-            });
+                ErrorMessage = string.Empty;
 
-            _allEmployees = newData;
-            ApplyFilter();
+                // Gọi API lấy danh sách gốc từ backend
+                List<NhanVien> apiData = await _apiService.GetDanhSachNhanVienAsync();
+
+                if (apiData == null)
+                {
+                    throw new InvalidOperationException("Không thể kết nối đến máy chủ hoặc dữ liệu trả về trống.");
+                }
+
+                // Cập nhật bất biến (Immutable update): Sử dụng trực tiếp danh sách NhanVien từ API
+                _allEmployees = apiData.Select(n => new NhanVien
+                {
+                    Id = n.Id,
+                    HoTen = n.HoTen,
+                    Cccd = n.Cccd,
+                    SoDienThoai = n.SoDienThoai,
+                    Username = n.Username,
+                    Role = n.Role
+                }).ToList();
+
+                ApplyFilter();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi tải danh sách nhân viên: {ex.Message}";
+                Console.WriteLine($"[ERROR] LoadDataAsync thất bại: {ex}");
+                throw;
+            }
         }
 
         private void ApplyFilter()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                Employees = new ObservableCollection<EmployeeModel>(_allEmployees);
+                Employees = new ObservableCollection<NhanVien>(_allEmployees);
                 return;
             }
 
             var query = SearchText.Trim().ToLower();
 
             var filteredList = _allEmployees.Where(e =>
-                (!string.IsNullOrEmpty(e.Id) && e.Id.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(e.FullName) && e.FullName.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(e.CitizenId) && e.CitizenId.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(e.PhoneNumber) && e.PhoneNumber.ToLower().Contains(query))
+                e.Id.ToString().Contains(query) ||
+                (!string.IsNullOrEmpty(e.HoTen) && e.HoTen.ToLower().Contains(query)) ||
+                (!string.IsNullOrEmpty(e.Cccd) && e.Cccd.ToLower().Contains(query)) ||
+                (!string.IsNullOrEmpty(e.SoDienThoai) && e.SoDienThoai.ToLower().Contains(query))
             ).ToList();
 
-            Employees = new ObservableCollection<EmployeeModel>(filteredList);
+            Employees = new ObservableCollection<NhanVien>(filteredList);
         }
 
         public void ResetForm()
@@ -155,12 +175,12 @@ namespace frontend_csharp.ViewModels
 
             ErrorMessage = string.Empty;
 
-            var newEmployee = new EmployeeModel
+            var newEmployee = new NhanVien
             {
-                Id = $"NV-{1000 + _allEmployees.Count + 1}",
-                FullName = NewFullName.Trim(),
-                CitizenId = NewCitizenId.Trim(),
-                PhoneNumber = NewPhoneNumber.Trim()
+                Id = _allEmployees.Count + 1,
+                HoTen = NewFullName.Trim(),
+                Cccd = NewCitizenId.Trim(),
+                SoDienThoai = NewPhoneNumber.Trim()
             };
 
             _allEmployees.Add(newEmployee);
@@ -169,12 +189,12 @@ namespace frontend_csharp.ViewModels
             return true;
         }
 
-        public void PrepareEdit(EmployeeModel employee)
+        public void PrepareEdit(NhanVien employee)
         {
             _editingEmployee = employee;
-            EditFullName = employee.FullName;
-            EditCitizenId = employee.CitizenId;
-            EditPhoneNumber = employee.PhoneNumber;
+            EditFullName = employee.HoTen;
+            EditCitizenId = employee.Cccd;
+            EditPhoneNumber = employee.SoDienThoai;
             ErrorMessage = string.Empty;
         }
 
@@ -200,12 +220,14 @@ namespace frontend_csharp.ViewModels
             if (index >= 0)
             {
                 // Cập nhật bất biến (Immutable update) thay vì sửa trực tiếp phần tử cũ
-                _allEmployees[index] = new EmployeeModel
+                _allEmployees[index] = new NhanVien
                 {
                     Id = _editingEmployee.Id,
-                    FullName = EditFullName.Trim(),
-                    CitizenId = EditCitizenId.Trim(),
-                    PhoneNumber = EditPhoneNumber.Trim()
+                    HoTen = EditFullName.Trim(),
+                    Cccd = EditCitizenId.Trim(),
+                    SoDienThoai = EditPhoneNumber.Trim(),
+                    Username = _editingEmployee.Username,
+                    Role = _editingEmployee.Role
                 };
                 ApplyFilter();
             }
@@ -218,13 +240,5 @@ namespace frontend_csharp.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class EmployeeModel
-    {
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string CitizenId { get; set; }
-        public string PhoneNumber { get; set; }
     }
 }
