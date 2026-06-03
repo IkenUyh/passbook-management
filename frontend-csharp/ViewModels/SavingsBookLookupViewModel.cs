@@ -66,31 +66,13 @@ namespace frontend_csharp.ViewModels
             try
             {
                 ErrorMessage = string.Empty;
-                List<SoTietKiem> apiData = await _apiService.GetDanhSachSoTietKiemAsync();
-
-                if (apiData == null)
-                {
-                    throw new InvalidOperationException("Không thể kết nối đến máy chủ hoặc dữ liệu trả về trống.");
-                }
-
-                _allSavingsBooks = apiData.Select(s => new SoTietKiem
-                {
-                    Id = s.Id,
-                    KhachHang = s.KhachHang,
-                    LoaiTietKiem = s.LoaiTietKiem,
-                    SoDu = s.SoDu,
-                    NgayMo = s.NgayMo,
-                    NgayDaoHan = s.NgayDaoHan,
-                    TrangThai = s.TrangThai,
-                    Version = s.Version
-                }).ToList();
-
+                var data = await _apiService.GetDanhSachSoTietKiemAsync();
+                _allSavingsBooks = data ?? new List<SoTietKiem>();
                 ApplyFilter();
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Lỗi lấy danh sách sổ: {ex.Message}";
-                Console.WriteLine($"[ERROR] LoadDataAsync sổ tiết kiệm thất bại: {ex}");
+                ErrorMessage = $"Lỗi lấy danh sách sổ tiết kiệm: {ex.Message}";
             }
         }
 
@@ -106,8 +88,7 @@ namespace frontend_csharp.ViewModels
 
             var filteredList = _allSavingsBooks.Where(b =>
                 (!string.IsNullOrEmpty(b.Id) && b.Id.ToLower().Contains(query)) ||
-                (b.KhachHang != null && !string.IsNullOrEmpty(b.KhachHang.Ten) && b.KhachHang.Ten.ToLower().Contains(query)) ||
-                (b.KhachHang != null && !string.IsNullOrEmpty(b.KhachHang.Cmnd) && b.KhachHang.Cmnd.ToLower().Contains(query))
+                (b.KhachHang != null && !string.IsNullOrEmpty(b.KhachHang.Ten) && b.KhachHang.Ten.ToLower().Contains(query))
             ).ToList();
 
             SavingsBooks = new ObservableCollection<SoTietKiem>(filteredList);
@@ -132,14 +113,14 @@ namespace frontend_csharp.ViewModels
             };
 
             bool success = await _apiService.GuiTienAsync(request);
-            if (!success)
+            if (success)
             {
-                ErrorMessage = "Giao dịch gửi tiền không thành công. Hãy kiểm tra lại quy định gửi thêm.";
-                return false;
+                await LoadDataAsync();
+                return true;
             }
 
-            await LoadDataAsync();
-            return true;
+            ErrorMessage = "Giao dịch gửi thêm tiền thất bại.";
+            return false;
         }
 
         public async Task<bool> ConfirmWithdrawAsync()
@@ -160,14 +141,14 @@ namespace frontend_csharp.ViewModels
             };
 
             bool success = await _apiService.RutTienAsync(request);
-            if (!success)
+            if (success)
             {
-                ErrorMessage = "Giao dịch rút tiền thất bại. Hãy kiểm tra lại thời gian gửi tối thiểu.";
-                return false;
+                await LoadDataAsync();
+                return true;
             }
 
-            await LoadDataAsync();
-            return true;
+            ErrorMessage = "Giao dịch rút tiền/Tất toán thất bại.";
+            return false;
         }
 
         private bool ValidateTransaction(out decimal amount)
@@ -181,13 +162,13 @@ namespace frontend_csharp.ViewModels
 
             if (string.IsNullOrWhiteSpace(TransactionAmount))
             {
-                ErrorMessage = "Vui lòng cung cấp số tiền thực hiện giao dịch!";
+                ErrorMessage = "Vui lòng nhập số tiền thực hiện!";
                 return false;
             }
 
             if (!decimal.TryParse(TransactionAmount, out amount) || amount <= 0)
             {
-                ErrorMessage = "Giá trị số tiền nhập vào không hợp lệ!";
+                ErrorMessage = "Số tiền nhập vào không hợp lệ!";
                 return false;
             }
 
