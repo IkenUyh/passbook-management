@@ -1,7 +1,5 @@
 package com.uit.passbook_management_api.security;
 
-import com.uit.passbook_management_api.entity.AppUser;
-import com.uit.passbook_management_api.repository.AppUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,9 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Tiêm thêm Repository để lấy thông tin chức vụ của User
-    @Autowired
-    private AppUserRepository appUserRepository;
+    // ĐÃ LOẠI BỎ: Không cần AppUserRepository ở đây nữa để tránh truy vấn DB liên tục
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -53,13 +49,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Kiểm tra Token có đúng không
             if (jwtUtil.validateToken(jwtToken)) {
 
-                // Lấy thông tin user từ Database
-                AppUser user = appUserRepository.findByUsername(username).orElse(null);
+                // ĐÃ CẬP NHẬT: Lấy thẳng role từ JWT ra, cực kỳ nhanh gọn và tối ưu
+                String role = jwtUtil.extractRole(jwtToken);
+
                 List<GrantedAuthority> authorities = new ArrayList<>();
 
-                // Gắn chức vụ (Role) vào thẻ xanh nếu user tồn tại
-                if (user != null && user.getRole() != null) {
-                    authorities.add(new SimpleGrantedAuthority(user.getRole())); // VD: "ADMIN"
+                // ĐÃ CẬP NHẬT: Gắn tiền tố "ROLE_" vào trước role lấy từ JWT
+                // Ví dụ: Từ "ADMIN" trong token sẽ chuyển thành "ROLE_ADMIN" để khớp với hasRole('ADMIN')
+                if (role != null) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
                 }
 
                 // Xác thực thành công -> Cấp thẻ xanh kèm danh sách quyền (authorities)

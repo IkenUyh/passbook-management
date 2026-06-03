@@ -4,6 +4,7 @@ import com.uit.passbook_management_api.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; // <-- 1. THÊM IMPORT NÀY
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // <-- 2. THÊM ANNOTATION NÀY ĐỂ KÍCH HOẠT @PreAuthorize Ở CONTROLLER
 public class SecurityConfig {
 
     // Tiêm JwtFilter vừa tạo vào đây
@@ -32,7 +34,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Cho phép API đăng nhập không cần token
-                        .anyRequest().authenticated()                // Các API khác (kể cả lấy danh sách sổ) phải có token
+                        .anyRequest().authenticated()                // Các API khác phải có token (quyền cụ thể check ở Controller)
                 )
                 // QUAN TRỌNG: Thêm Filter kiểm tra Token vào trước quá trình xác thực mặc định
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

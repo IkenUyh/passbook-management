@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/nhan-vien")
+@PreAuthorize("hasRole('ADMIN')")
 public class NhanVienController {
 
     private final NhanVienService nhanVienService;
@@ -17,13 +18,11 @@ public class NhanVienController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')") // Chỉ admin mới xem được danh sách nhân viên
     public ResponseEntity<?> xemDanhSachNhanVien() {
         return ResponseEntity.ok(nhanVienService.layDanhSachNhanVien());
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')") // Chỉ admin mới được thêm nhân viên mới vào hệ thống
     public ResponseEntity<?> addNhanVien(@RequestBody NhanVienRequest request) {
         try {
             return ResponseEntity.ok(nhanVienService.themNhanVienMoi(request));

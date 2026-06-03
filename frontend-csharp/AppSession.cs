@@ -8,6 +8,8 @@ namespace frontend_csharp
     {
         public static string CurrentToken { get; set; }
         public static string LoggedInUsername { get; set; }
+        public static string CurrentRole { get; set; }
+
 
         public static bool IsLoggedIn => !string.IsNullOrEmpty(CurrentToken);
 
@@ -15,6 +17,7 @@ namespace frontend_csharp
         {
             CurrentToken = null;
             LoggedInUsername = null;
+            CurrentRole = null;
         }
     }
 }

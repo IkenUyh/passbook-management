@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableScheduling
@@ -11,7 +12,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 public class PassbookManagementApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PassbookManagementApiApplication.class, args);
+
+        String passwordTho = "123456";
+        String chuoiMahoaChuan = new BCryptPasswordEncoder(12).encode("123456");
+        System.out.println("====== CHUỖI MÃ HÓA CHUẨN TRÊN MÁY BẠN LÀ: " + chuoiMahoaChuan);
+        SpringApplication.run(PassbookManagementApiApplication.class, args);
+
 	}
 
 }

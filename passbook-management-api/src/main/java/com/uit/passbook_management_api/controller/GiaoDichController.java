@@ -4,10 +4,12 @@ import com.uit.passbook_management_api.dto.request.GuiTienRequest;
 import com.uit.passbook_management_api.dto.request.RutTienRequest;
 import com.uit.passbook_management_api.service.GiaoDichService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/giao-dich")
+@PreAuthorize("hasRole('NHAN_VIEN')")
 public class GiaoDichController {
 
     private final GiaoDichService giaoDichService;

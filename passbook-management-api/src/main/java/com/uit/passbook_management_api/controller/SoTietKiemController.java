@@ -4,12 +4,14 @@ import com.uit.passbook_management_api.dto.request.MoSoRequest;
 import com.uit.passbook_management_api.entity.SoTietKiem;
 import com.uit.passbook_management_api.service.SoTietKiemService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/so-tiet-kiem")
+@PreAuthorize("hasRole('NHAN_VIEN')")
 public class SoTietKiemController {
 
     private final SoTietKiemService soTietKiemService;

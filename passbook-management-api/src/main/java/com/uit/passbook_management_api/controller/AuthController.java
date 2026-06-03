@@ -13,6 +13,7 @@ import com.uit.passbook_management_api.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @RestController
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -46,9 +48,11 @@ public class AuthController {
 
             // So sánh mật khẩu người dùng nhập vào với mật khẩu đã băm trong DB
             if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                // 3. Đúng mật khẩu -> Sinh ra JWT Token
-                String token = jwtUtil.generateToken(user.getUsername());
-                return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
+                // 3. Đúng mật khẩu -> Sinh ra JWT Token (ĐÃ CẬP NHẬT TRUYỀN THÊM ROLE)
+                String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+
+                // Trả về AuthResponse kèm cả Role cho phía WPF nhận biết
+                return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getRole()));
             }
         }
 
@@ -77,10 +81,12 @@ public class AuthController {
                 Optional<AppUser> userOptional = appUserRepository.findByUsername(email);
 
                 if (userOptional.isPresent()) {
-                    // Email đã được cấp phép -> Sinh token JWT của hệ thống
+                    // Email đã được cấp phép -> Sinh token JWT của hệ thống (ĐÃ CẬP NHẬT TRUYỀN THÊM ROLE)
                     AppUser user = userOptional.get();
-                    String token = jwtUtil.generateToken(user.getUsername());
-                    return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
+                    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+
+                    // Trả về AuthResponse kèm cả Role
+                    return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getRole()));
                 } else {
                     // Email chưa được cấp phép -> Báo lỗi 403 Forbidden
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
