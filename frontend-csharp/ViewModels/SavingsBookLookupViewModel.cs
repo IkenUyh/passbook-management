@@ -10,7 +10,6 @@ namespace frontend_csharp.ViewModels
 {
     public class SavingsBookLookupViewModel : INotifyPropertyChanged
     {
-        // Danh sách gốc lưu toàn bộ sổ tiết kiệm lấy từ database/API
         private List<SavingsBookModel> _allSavingsBooks = new List<SavingsBookModel>();
 
         private ObservableCollection<SavingsBookModel> _savingsBooks;
@@ -24,7 +23,6 @@ namespace frontend_csharp.ViewModels
             }
         }
 
-        // Thuộc tính nhận từ ô TextBox tìm kiếm
         private string _searchText;
         public string SearchText
         {
@@ -33,8 +31,25 @@ namespace frontend_csharp.ViewModels
             {
                 _searchText = value;
                 OnPropertyChanged();
-                ApplyFilter(); // Tự động lọc khi người dùng nhập dữ liệu
+                ApplyFilter();
             }
+        }
+
+        // State quản lý giao dịch Gửi / Rút tiền
+        private SavingsBookModel _transactionTargetBook;
+
+        private string _transactionAmount;
+        public string TransactionAmount
+        {
+            get => _transactionAmount;
+            set { _transactionAmount = value; OnPropertyChanged(); }
+        }
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set { _errorMessage = value; OnPropertyChanged(); }
         }
 
         public SavingsBookLookupViewModel()
@@ -67,9 +82,6 @@ namespace frontend_csharp.ViewModels
             ApplyFilter();
         }
 
-        /// <summary>
-        /// Bộ lọc tìm kiếm theo Mã số sổ và Tên khách hàng
-        /// </summary>
         private void ApplyFilter()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
@@ -85,8 +97,111 @@ namespace frontend_csharp.ViewModels
                 (!string.IsNullOrEmpty(b.CustomerName) && b.CustomerName.ToLower().Contains(query))
             ).ToList();
 
-            // Thay thế bất biến tập hợp hiển thị giúp UI cập nhật đồng bộ chính xác cả DataGrid lẫn Cards View
             SavingsBooks = new ObservableCollection<SavingsBookModel>(filteredList);
+        }
+
+        public void PrepareTransaction(SavingsBookModel savingsBook)
+        {
+            _transactionTargetBook = savingsBook ?? throw new ArgumentNullException(nameof(savingsBook), "Sổ tiết kiệm không hợp lệ.");
+            TransactionAmount = string.Empty;
+            ErrorMessage = string.Empty;
+        }
+
+        public bool ConfirmDeposit()
+        {
+            if (!ValidateTransaction(out decimal amount)) return false;
+
+            int index = _allSavingsBooks.FindIndex(b => b.Id == _transactionTargetBook.Id);
+            if (index >= 0)
+            {
+                var target = _allSavingsBooks[index];
+
+                // Trích xuất số dư hiện tại để tính toán (Ví dụ chuỗi "500.000 VNĐ" -> 500000)
+                decimal currentBalance = ParseBalanceString(target.Balance);
+                decimal newBalance = currentBalance + amount;
+
+                // Cập nhật bất biến (Immutable update) thay vì biến đổi trực tiếp phần tử cũ
+                _allSavingsBooks[index] = new SavingsBookModel
+                {
+                    Id = target.Id,
+                    SavingsType = target.SavingsType,
+                    CustomerName = target.CustomerName,
+                    Balance = $"{newBalance:N0} VNĐ".Replace(',', '.'),
+                    MaturityDate = target.MaturityDate,
+                    InterestRate = target.InterestRate,
+                    Status = target.Status
+                };
+
+                ApplyFilter();
+            }
+            return true;
+        }
+
+        public bool ConfirmWithdraw()
+        {
+            if (!ValidateTransaction(out decimal amount)) return false;
+
+            int index = _allSavingsBooks.FindIndex(b => b.Id == _transactionTargetBook.Id);
+            if (index >= 0)
+            {
+                var target = _allSavingsBooks[index];
+                decimal currentBalance = ParseBalanceString(target.Balance);
+
+                if (amount > currentBalance)
+                {
+                    ErrorMessage = "Số dư trong sổ không đủ để thực hiện rút tiền!";
+                    return false;
+                }
+
+                decimal newBalance = currentBalance - amount;
+
+                // Cập nhật bất biến (Immutable update)
+                _allSavingsBooks[index] = new SavingsBookModel
+                {
+                    Id = target.Id,
+                    SavingsType = target.SavingsType,
+                    CustomerName = target.CustomerName,
+                    Balance = $"{newBalance:N0} VNĐ".Replace(',', '.'),
+                    MaturityDate = target.MaturityDate,
+                    InterestRate = target.InterestRate,
+                    Status = newBalance == 0 ? "Đã tất toán" : target.Status
+                };
+
+                ApplyFilter();
+            }
+            return true;
+        }
+
+        private bool ValidateTransaction(out decimal amount)
+        {
+            amount = 0;
+            if (_transactionTargetBook == null)
+            {
+                ErrorMessage = "Không tìm thấy thông tin sổ tiết kiệm!";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(TransactionAmount))
+            {
+                ErrorMessage = "Vui lòng nhập số tiền thực hiện!";
+                return false;
+            }
+
+            if (!decimal.TryParse(TransactionAmount, out amount) || amount <= 0)
+            {
+                ErrorMessage = "Số tiền nhập vào không hợp lệ!";
+                return false;
+            }
+
+            ErrorMessage = string.Empty;
+            return true;
+        }
+
+        private decimal ParseBalanceString(string balanceStr)
+        {
+            if (string.IsNullOrEmpty(balanceStr)) return 0;
+            string cleanString = balanceStr.Replace("VNĐ", "").Replace(".", "").Trim();
+            return decimal.TryParse(cleanString, out decimal result) ? result : 0;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
