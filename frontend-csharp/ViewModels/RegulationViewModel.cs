@@ -1,4 +1,4 @@
-﻿using frontend_csharp.Models;
+﻿using frontend_csharp.Models.QuyDinhModel;
 using System.Collections.ObjectModel;
 
 namespace frontend_csharp.ViewModels

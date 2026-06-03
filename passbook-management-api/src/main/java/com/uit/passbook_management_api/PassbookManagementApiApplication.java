@@ -12,10 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class PassbookManagementApiApplication {
 
 	public static void main(String[] args) {
-
-        String passwordTho = "123456";
-        String chuoiMahoaChuan = new BCryptPasswordEncoder(12).encode("123456");
-        System.out.println("====== CHUỖI MÃ HÓA CHUẨN TRÊN MÁY BẠN LÀ: " + chuoiMahoaChuan);
         SpringApplication.run(PassbookManagementApiApplication.class, args);
 
 	}

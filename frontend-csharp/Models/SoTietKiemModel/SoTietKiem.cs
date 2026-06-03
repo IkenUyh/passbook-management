@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using frontend_csharp.Models.KhachHangModel;
+using frontend_csharp.Models.SoTietKiemModel;
 
-namespace frontend_csharp.Models
+namespace frontend_csharp.Models.SoTietKiemModel
 {
     public class SoTietKiem
     {
-        // Bên Java gán bằng String nên C# cũng là string
         [JsonPropertyName("id")]
         public string Id { get; set; }
 
-        // Mapping thẳng object KhachHang vào đây
         [JsonPropertyName("khachHang")]
         public KhachHang KhachHang { get; set; }
 
+        // Sửa từ string thành Object để khớp với @ManyToOne ở backend
         [JsonPropertyName("loaiTietKiem")]
-        public string LoaiTietKiem { get; set; }
+        public Models.SoTietKiem.SoTietKiemModel.LoaiTietKiem LoaiTietKiem { get; set; }
 
         [JsonPropertyName("soDu")]
         public decimal SoDu { get; set; }
@@ -27,5 +28,8 @@ namespace frontend_csharp.Models
 
         [JsonPropertyName("trangThai")]
         public string TrangThai { get; set; }
+
+        [JsonPropertyName("version")]
+        public long? Version { get; set; }
     }
 }
