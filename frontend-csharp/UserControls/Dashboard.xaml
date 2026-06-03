@@ -47,7 +47,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Tổng thu trong ngày" FontSize="13" Foreground="#666" FontFamily="Segoe UI"/>
-                    <TextBlock Grid.Row="1" Text="45.678.000 VNĐ" FontSize="24" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Text="{Binding TongThuString}" FontSize="24" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
@@ -58,7 +58,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Tổng chi trong ngày" FontSize="13" Foreground="#666" FontFamily="Segoe UI"/>
-                    <TextBlock Grid.Row="1" Text="15.500.000 VNĐ" FontSize="24" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Text="{Binding TongChiString}" FontSize="24" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
@@ -69,7 +69,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Số lượng sổ đang mở" FontSize="13" Foreground="#666" FontFamily="Segoe UI"/>
-                    <TextBlock Grid.Row="1" Text="50" FontSize="36" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Text="{Binding SoLuongSoString}" FontSize="36" FontWeight="Bold" FontFamily="Segoe UI" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
         </Grid>
@@ -88,11 +88,46 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Biến động số dư" FontSize="14" FontWeight="SemiBold" FontFamily="Segoe UI" Margin="0,0,0,0" Panel.ZIndex="1"/>
-                    <lvc:CartesianChart Grid.Row="1" MinHeight="180" Margin="0,-10,0,-5"
-                                        Background="Transparent"
-                                        Series="{Binding LineSeries}" 
-                                        XAxes="{Binding LineXAxes}" 
-                                        YAxes="{Binding LineYAxes}"/>
+
+                    <Grid Grid.Row="1">
+                        <lvc:CartesianChart MinHeight="180" Margin="0,-10,0,-5"
+                                Background="Transparent"
+                                Series="{Binding LineSeries}" 
+                                XAxes="{Binding LineXAxes}" 
+                                YAxes="{Binding LineYAxes}">
+                            <lvc:CartesianChart.Style>
+                                <Style TargetType="lvc:CartesianChart">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLineDataEmpty}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </lvc:CartesianChart.Style>
+                        </lvc:CartesianChart>
+
+                        <TextBlock
+                            Text="Không có dữ liệu" 
+                            Foreground="#999" 
+                            FontSize="13"
+                            FontWeight="Bold"
+                            FontFamily="Segoe UI" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Margin="0,0,0,20">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLineDataEmpty}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
                 </Grid>
             </Border>
 
@@ -106,28 +141,43 @@
                     <TextBlock Text="Sổ sắp đến hạn" FontSize="14" FontWeight="SemiBold" FontFamily="Segoe UI" Margin="0,0,0,10"/>
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-                        <StackPanel>
-                            <StackPanel Margin="0,0,0,14">
-                                <TextBlock FontSize="13" FontFamily="Segoe UI"><Run FontWeight="SemiBold" Text="STK001"/><Run Text=" - Nguyễn Văn A"/></TextBlock>
-                                <TextBlock Text="Đáo hạn: 15/04/2026" FontSize="12" Foreground="#888"/>
-                            </StackPanel>
-                            <StackPanel Margin="0,0,0,14">
-                                <TextBlock FontSize="13" FontFamily="Segoe UI"><Run FontWeight="SemiBold" Text="STK001"/><Run Text=" - Nguyễn Văn A"/></TextBlock>
-                                <TextBlock Text="Đáo hạn: 15/04/2026" FontSize="12" Foreground="#888"/>
-                            </StackPanel>
-                            <StackPanel Margin="0,0,0,14">
-                                <TextBlock FontSize="13" FontFamily="Segoe UI"><Run FontWeight="SemiBold" Text="STK001"/><Run Text=" - Nguyễn Văn A"/></TextBlock>
-                                <TextBlock Text="Đáo hạn: 15/04/2026" FontSize="12" Foreground="#888"/>
-                            </StackPanel>
-                            <StackPanel Margin="0,0,0,14">
-                                <TextBlock FontSize="13" FontFamily="Segoe UI"><Run FontWeight="SemiBold" Text="STK001"/><Run Text=" - Nguyễn Văn A"/></TextBlock>
-                                <TextBlock Text="Đáo hạn: 15/04/2026" FontSize="12" Foreground="#888"/>
-                            </StackPanel>
-                            <StackPanel Margin="0,0,0,0">
-                                <TextBlock FontSize="13" FontFamily="Segoe UI"><Run FontWeight="SemiBold" Text="STK001"/><Run Text=" - Nguyễn Văn A"/></TextBlock>
-                                <TextBlock Text="Đáo hạn: 15/04/2026" FontSize="12" Foreground="#888"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <Grid>
+                            <ItemsControl x:Name="SoSapDenHanCtrl" ItemsSource="{Binding SoSapDenHanList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,14">
+                                            <TextBlock FontSize="13" FontFamily="Segoe UI">
+                            <Run FontWeight="SemiBold" Text="{Binding Id}"/>
+                            <Run Text=" - "/>
+                            <Run Text="{Binding TenKhachHang}"/>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding NgayDaoHanText}" FontSize="12" Foreground="#888"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock
+                                Text="Không có dữ liệu" 
+                                Foreground="#999" 
+                                FontSize="13"
+                                FontWeight="Bold"
+                                FontFamily="Segoe UI" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Margin="0,0,0,40">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasItems, ElementName=SoSapDenHanCtrl}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
                     </ScrollViewer>
                 </Grid>
             </Border>
@@ -150,102 +200,49 @@
 
                     <TextBlock Text="Sổ tiết kiệm mới nhất" FontSize="14" FontWeight="SemiBold" FontFamily="Segoe UI" Margin="0,0,0,10"/>
 
-                    <Grid Grid.Row="1" Margin="0,0,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Khách hàng" FontSize="12" FontWeight="SemiBold" Foreground="#666"/>
-                        <TextBlock Grid.Column="1" Text="Mã số" FontSize="12" FontWeight="SemiBold" Foreground="#666" TextAlignment="Center"/>
-                        <TextBlock Grid.Column="2" Text="Số dư" FontSize="12" FontWeight="SemiBold" Foreground="#666" TextAlignment="Right"/>
-                    </Grid>
-
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden">
-                        <StackPanel>
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="4321" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
+                        <Grid>
+                            <ItemsControl x:Name="SoMoiNhatCtrl" ItemsSource="{Binding SoMoiNhatList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Grid Margin="0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="70"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding TenKhachHang}" FontSize="12"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="12" TextAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding SoDuText}" FontSize="12" TextAlignment="Right"/>
+                                            </Grid>
+                                            <Border Height="1" Background="#F0F0F0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="4033" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
-
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="3128" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
-
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="2104" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
-
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="2003" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
-
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="1894" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                            <Border Height="1" Background="#F0F0F0"/>
-
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="70"/>
-                                    <ColumnDefinition Width="100"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Nguyễn Văn A" FontSize="12"/>
-                                <TextBlock Grid.Column="1" Text="405" FontSize="12" TextAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="50.000.000đ" FontSize="12" TextAlignment="Right"/>
-                            </Grid>
-                        </StackPanel>
+                            <TextBlock
+                                Text="Không có dữ liệu" 
+                                Foreground="#999" 
+                                FontSize="12"
+                                FontWeight="Bold"
+                                FontFamily="Segoe UI" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Margin="0,0,0,20">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasItems, ElementName=SoMoiNhatCtrl}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
                     </ScrollViewer>
                 </Grid>
             </Border>
@@ -260,6 +257,16 @@
                     <TextBlock Text="Biểu đồ Mở/Đóng sổ theo tháng" FontSize="14" FontWeight="SemiBold" FontFamily="Segoe UI" Margin="0,0,0,0" Panel.ZIndex="1"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,5,0" Panel.ZIndex="1">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBarDataEmpty}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
                         <Ellipse Width="7" Height="7" Fill="#2DB87F" Margin="0,0,4,0" VerticalAlignment="Center"/>
                         <TextBlock Text="Mở sổ" FontSize="10" Foreground="#666" Margin="0,0,12,0"/>
                         <Ellipse Width="7" Height="7" Fill="#2D3436" Margin="0,0,4,0" VerticalAlignment="Center"/>
@@ -267,17 +274,61 @@
                     </StackPanel>
 
                     <TextBlock Text="2026" Grid.Row="1" FontSize="10" FontWeight="SemiBold" Foreground="#999" 
-                               HorizontalAlignment="Left" VerticalAlignment="Bottom" 
-                               Margin="5,0,0,10" Panel.ZIndex="1"/>
+                   HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                   Margin="5,0,0,10" Panel.ZIndex="1">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBarDataEmpty}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
 
-                    <lvc:CartesianChart Grid.Row="1"
-                                        LegendPosition="Hidden"
-                                        TooltipPosition="Right"
-                                        Margin="0,-10,0,10"
-                                        Background="Transparent"
-                                        Series="{Binding BarSeries}" 
-                                        XAxes="{Binding BarXAxes}" 
-                                        YAxes="{Binding BarYAxes}"/>
+                    <Grid Grid.Row="1">
+                        <lvc:CartesianChart LegendPosition="Hidden"
+                                TooltipPosition="Right"
+                                Margin="0,-10,0,10"
+                                Background="Transparent"
+                                Series="{Binding BarSeries}" 
+                                XAxes="{Binding BarXAxes}" 
+                                YAxes="{Binding BarYAxes}">
+                            <lvc:CartesianChart.Style>
+                                <Style TargetType="lvc:CartesianChart">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBarDataEmpty}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </lvc:CartesianChart.Style>
+                        </lvc:CartesianChart>
+
+                        <TextBlock
+                            Text="Không có dữ liệu" 
+                            Foreground="#999" 
+                            FontSize="13"
+                            FontWeight="Bold"
+                            FontFamily="Segoe UI" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Margin="0,0,0,10">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsBarDataEmpty}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
