@@ -58,12 +58,17 @@
                         <RowDefinition Height="2.25*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Ellipse Width="200" Height="200" Stroke="White" StrokeThickness="2">
+                    <Grid Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Height="200">
+                        <Ellipse Width="150" Height="150"
+                                 Stroke="White" StrokeThickness="2" Margin="0,-30,0,0">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{StaticResource User}" Stretch="UniformToFill"/>
                             </Ellipse.Fill>
                         </Ellipse>
+
+                        <Grid VerticalAlignment="Bottom">
+                            
+                        </Grid>
                     </Grid>
 
                     <uc:SidePanel x:Name="MenuSidePanel" Grid.Row="1" Margin="0 20 0 20"></uc:SidePanel>

@@ -1,0 +1,108 @@
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using frontend_csharp.ViewModels;
+
+namespace frontend_csharp.UserControls
+{
+    public partial class EmployeeManagement : UserControl
+    {
+        private readonly EmployeeManagementViewModel _viewModel;
+
+        public EmployeeManagement()
+        {
+            InitializeComponent();
+
+            _viewModel = new EmployeeManagementViewModel();
+            this.DataContext = _viewModel;
+
+            this.Loaded += EmployeeManagement_Loaded;
+        }
+
+        private async void EmployeeManagement_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewToggleListBox.SelectedIndex = 0;
+
+            if (dgvEmployees.ItemsSource != null)
+            {
+                ICollectionView view = CollectionViewSource.GetDefaultView(dgvEmployees.ItemsSource);
+                // Thêm điều kiện kiểm tra SortDescriptions giống hệt Khách hàng và Tra cứu sổ
+                if (view != null && view.SortDescriptions.Count > 0)
+                {
+                    view.SortDescriptions.Clear();
+                }
+
+                foreach (var column in dgvEmployees.Columns)
+                {
+                    column.SortDirection = null;
+                }
+            }
+
+            if (_viewModel.Employees.Count == 0)
+            {
+                await _viewModel.LoadDataAsync();
+            }
+        }
+
+        private void OpenAddEmployeePopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow != null)
+            {
+                _viewModel.ResetForm();
+                var popupUI = (FrameworkElement)this.FindResource("AddEmployeePopupUI");
+                popupUI.DataContext = _viewModel;
+                mainWindow.ShowPopup(popupUI);
+            }
+        }
+
+        private void CloseEmployeePopup_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            mainWindow?.HidePopup();
+        }
+
+        private void ConfirmAddEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmAdd())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.HidePopup();
+            }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void EditEmployeeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is EmployeeModel employee)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareEdit(employee);
+                    var popupUI = (FrameworkElement)this.FindResource("EditEmployeePopupUI");
+                    popupUI.DataContext = _viewModel;
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private void ConfirmEditEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.ConfirmEdit())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.HidePopup();
+            }
+        }
+    }
+}

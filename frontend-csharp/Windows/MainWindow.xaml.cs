@@ -13,12 +13,11 @@ namespace frontend_csharp
     {
         // 1. Khai báo sẵn các biến chứa UserControl
         private readonly Dashboard _dashboard;
+        private readonly EmployeeManagement _employeeManagement;
         private readonly SavingsBookLookup _savingsBookLookup;
         private readonly CustomerManagement _customerManagement;
         private readonly Regulation _regulation;
-        // private readonly KhachHangView _khachHangView;
         private readonly ReportsManagement _reportsManagement;
-        // private readonly QuyDinhView _quyDinhView;
 
         public MainWindow()
         {
@@ -26,12 +25,11 @@ namespace frontend_csharp
 
             // 2. Khởi tạo tất cả UserControl (Load sẵn)
             _dashboard = new Dashboard();
+            _employeeManagement = new EmployeeManagement();
             _savingsBookLookup = new SavingsBookLookup();
             _customerManagement = new CustomerManagement();
             _regulation = new Regulation();
-            // _khachHangView = new KhachHangView();
             _reportsManagement = new ReportsManagement();
-            // _quyDinhView = new QuyDinhView();
 
             // Đăng ký nhận sự kiện từ SidePanel
             MenuSidePanel.OnMenuChanged += MenuSidePanel_OnMenuChanged;
@@ -40,7 +38,7 @@ namespace frontend_csharp
             MainContent.Content = _dashboard;
         }
 
-        // Đổi thành async void để có thể dùng await
+        // Khôi phục lại async void để không block UI thread của SidePanel Animation
         private async void MenuSidePanel_OnMenuChanged(string menuName)
         {
             // Nhường UI thread 300ms để animation của SidePanel chạy mượt mà không bị block
@@ -51,6 +49,9 @@ namespace frontend_csharp
             {
                 case "Trang chủ":
                     MainContent.Content = _dashboard;
+                    break;
+                case "Nhân viên":
+                    MainContent.Content = _employeeManagement;
                     break;
                 case "Tra cứu sổ":
                     MainContent.Content = _savingsBookLookup;
@@ -70,13 +71,14 @@ namespace frontend_csharp
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-            // Hoặc this.Close(); nếu bạn chỉ muốn đóng cửa sổ này
         }
+
         public void ShowPopup(UIElement content)
         {
             GlobalPopupContent.Content = content;
             GlobalPopupOverlay.Visibility = Visibility.Visible;
         }
+
         public void HidePopup()
         {
             GlobalPopupOverlay.Visibility = Visibility.Collapsed;
