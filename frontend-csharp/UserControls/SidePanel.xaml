@@ -55,7 +55,6 @@
                                       HorizontalAlignment="Left"
                                       Margin="0,0,0,0">
 
-
                                     <Border x:Name="Highlighter"
                                             Height="35"
                                             Width="300"
@@ -70,7 +69,6 @@
                                              Fill="White"
                                              HorizontalAlignment="Right"
                                              VerticalAlignment="Center" />
-
 
                                     <TextBlock x:Name="UpperCase_Text"
                                                Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
@@ -146,8 +144,8 @@
                                     <BeginStoryboard x:Name="Lock_Indicator">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             From="185" To="185" Duration="0:0:0.3" />
+                                                                                   Storyboard.TargetProperty="Width"
+                                                                                   From="185" To="185" Duration="0:0:0.3" />
 
                                             <ColorAnimation Storyboard.TargetName="ActiveCircle"
                                                             Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
@@ -159,8 +157,8 @@
                                     <BeginStoryboard x:Name="Release_Indicator">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             From="185" To="160" Duration="0:0:0" />
+                                                                  Storyboard.TargetProperty="Width"
+                                                                  From="185" To="160" Duration="0:0:0" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                     <BeginStoryboard x:Name="Stop_Indicator">
@@ -190,6 +188,12 @@
         <StackPanel Orientation="Vertical" Margin="0,20,0,0" HorizontalAlignment="Left">
 
             <RadioButton Content="Trang chủ" Style="{StaticResource SidePanelStyle}" IsChecked="True"
+                         Checked="Menu_Checked"
+                         CommandParameter="{StaticResource User}" 
+                         Tag="{StaticResource User_Hover}" 
+                         DataContext="{StaticResource User_Active}"/>
+
+            <RadioButton Content="Nhân viên" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource User}" 
                          Tag="{StaticResource User_Hover}" 
