@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using frontend_csharp.ViewModels;
+using frontend_csharp.Models.NhanVienModel;
 
 namespace frontend_csharp.UserControls
 {
@@ -27,7 +28,6 @@ namespace frontend_csharp.UserControls
             if (dgvEmployees.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvEmployees.ItemsSource);
-                // Thêm điều kiện kiểm tra SortDescriptions giống hệt Khách hàng và Tra cứu sổ
                 if (view != null && view.SortDescriptions.Count > 0)
                 {
                     view.SortDescriptions.Clear();
@@ -83,7 +83,7 @@ namespace frontend_csharp.UserControls
 
         private void EditEmployeeMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.DataContext is EmployeeModel employee)
+            if (sender is MenuItem menuItem && menuItem.DataContext is NhanVien employee)
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
                 if (mainWindow != null)

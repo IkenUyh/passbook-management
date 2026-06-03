@@ -21,8 +21,8 @@ namespace frontend_csharp.Services
         private readonly HttpClient _client;
         private readonly JsonSerializerOptions _jsonOptions;
 
-        private const string BaseUrl = "http://localhost:8083/api/";
-        // private const string BaseUrl = "https://passbook.kienhuy-dev.name.vn/api/";
+        //private const string BaseUrl = "http://localhost:8083/api/";
+        private const string BaseUrl = "https://passbook.kienhuy-dev.name.vn/api/";
 
         public ApiService()
         {

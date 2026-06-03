@@ -357,9 +357,9 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã NV" Binding="{Binding Id}" Width="90" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
-                <DataGridTextColumn Header="Họ và tên" Binding="{Binding FullName}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
-                <DataGridTextColumn Header="Số CCCD" Binding="{Binding CitizenId}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
-                <DataGridTextColumn Header="Số điện thoại" Binding="{Binding PhoneNumber}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Số CCCD" Binding="{Binding Cccd}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Số điện thoại" Binding="{Binding SoDienThoai}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
 
                 <DataGridTemplateColumn Width="40" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
@@ -405,7 +405,7 @@
                         <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,15,15" Width="230" Background="White">
                             <StackPanel>
                                 <Grid Margin="0,-10,0,0">
-                                    <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
+                                    <TextBlock Text="{Binding HoTen}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
                                     <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" HorizontalAlignment="Right" Click="SettingsButton_Click">
                                         <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
                                         <Button.ContextMenu>
@@ -428,7 +428,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <materialDesign:PackIcon Grid.Column="0" Kind="CardAccountDetails" Foreground="#9CA3AF" Width="16" Height="16" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding CitizenId}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Cccd}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
                                 </Grid>
 
                                 <Grid Margin="0,0,0,4">
@@ -437,7 +437,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <materialDesign:PackIcon Grid.Column="0" Kind="Phone" Foreground="#9CA3AF" Width="16" Height="16" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding PhoneNumber}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SoDienThoai}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
                                 </Grid>
                             </StackPanel>
                         </Border>
