@@ -18,13 +18,14 @@ services:
     container_name: passbook_backend
     restart: always
     ports:
-      - "8082:8081"
+      - "8082:8083"
     depends_on:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/quan_ly_so_tiet_kiem?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=123456
+      - JAVA_OPTS=-Xmx256m -Xms128m
 
 volumes:
   passbook_mysql_data:
