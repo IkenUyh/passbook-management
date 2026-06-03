@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.ComponentModel;
 using frontend_csharp.ViewModels;
+using frontend_csharp.Models.KhachHangModel;
 
 namespace frontend_csharp.UserControls
 {
@@ -13,10 +14,8 @@ namespace frontend_csharp.UserControls
         public CustomerManagement()
         {
             InitializeComponent();
-
             _viewModel = new CustomerManagementViewModel();
             this.DataContext = _viewModel;
-
             this.Loaded += CustomerManagement_Loaded;
         }
 
@@ -27,15 +26,8 @@ namespace frontend_csharp.UserControls
             if (dgvCustomers.ItemsSource != null)
             {
                 ICollectionView view = CollectionViewSource.GetDefaultView(dgvCustomers.ItemsSource);
-                if (view != null && view.SortDescriptions.Count > 0)
-                {
-                    view.SortDescriptions.Clear();
-                }
-
-                foreach (var column in dgvCustomers.Columns)
-                {
-                    column.SortDirection = null;
-                }
+                if (view != null && view.SortDescriptions.Count > 0) view.SortDescriptions.Clear();
+                foreach (var column in dgvCustomers.Columns) column.SortDirection = null;
             }
 
             if (_viewModel.Customers.Count == 0)
@@ -46,36 +38,25 @@ namespace frontend_csharp.UserControls
 
         private void OpenAddCustomerPopup_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Window.GetWindow(this) as MainWindow;
-            if (mainWindow != null)
+            if (Window.GetWindow(this) is MainWindow mainWindow)
             {
                 _viewModel.ResetForm();
-
                 var popupUI = (FrameworkElement)this.FindResource("AddCustomerPopupUI");
                 popupUI.DataContext = _viewModel;
-
                 mainWindow.ShowPopup(popupUI);
             }
         }
 
         private void CloseAddCustomerPopup_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Window.GetWindow(this) as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.HidePopup();
-            }
+            (Window.GetWindow(this) as MainWindow)?.HidePopup();
         }
 
-        private void ConfirmAddCustomer_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmAddCustomer_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmAdd())
+            if (await _viewModel.ConfirmAddAsync())
             {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.HidePopup();
-                }
+                (Window.GetWindow(this) as MainWindow)?.HidePopup();
             }
         }
 
@@ -90,16 +71,13 @@ namespace frontend_csharp.UserControls
 
         private void EditCustomerMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            if (sender is MenuItem menuItem && menuItem.DataContext is KhachHang customer)
             {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                if (mainWindow != null)
+                if (Window.GetWindow(this) is MainWindow mainWindow)
                 {
                     _viewModel.PrepareEdit(customer);
-
                     var popupUI = (FrameworkElement)this.FindResource("EditCustomerPopupUI");
                     popupUI.DataContext = _viewModel;
-
                     mainWindow.ShowPopup(popupUI);
                 }
             }
@@ -107,42 +85,31 @@ namespace frontend_csharp.UserControls
 
         private void AddSavingsBookMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.DataContext is CustomerModel customer)
+            if (sender is MenuItem menuItem && menuItem.DataContext is KhachHang customer)
             {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                if (mainWindow != null)
+                if (Window.GetWindow(this) is MainWindow mainWindow)
                 {
                     _viewModel.PrepareAddSavingsBook(customer);
-
                     var popupUI = (FrameworkElement)this.FindResource("AddSavingsBookPopupUI");
                     popupUI.DataContext = _viewModel;
-
                     mainWindow.ShowPopup(popupUI);
                 }
             }
         }
 
-        private void ConfirmEditCustomer_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmEditCustomer_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmEdit())
+            if (await _viewModel.ConfirmEditAsync())
             {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.HidePopup();
-                }
+                (Window.GetWindow(this) as MainWindow)?.HidePopup();
             }
         }
 
-        private void ConfirmAddSavingsBook_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmAddSavingsBook_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmAddSavingsBook())
+            if (await _viewModel.ConfirmAddSavingsBookAsync())
             {
-                var mainWindow = Window.GetWindow(this) as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.HidePopup();
-                }
+                (Window.GetWindow(this) as MainWindow)?.HidePopup();
             }
         }
     }

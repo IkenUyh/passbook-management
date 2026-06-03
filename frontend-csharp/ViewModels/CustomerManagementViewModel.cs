@@ -5,36 +5,29 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using frontend_csharp.Services;
+using frontend_csharp.Models.KhachHangModel;
+using frontend_csharp.Models.SoTietKiem.SoTietKiemModel;
 
 namespace frontend_csharp.ViewModels
 {
     public class CustomerManagementViewModel : INotifyPropertyChanged
     {
-        // Danh sách gốc lưu trữ toàn bộ dữ liệu từ CSDL/API
-        private List<CustomerModel> _allCustomers = new List<CustomerModel>();
+        private readonly ApiService _apiService;
+        private List<KhachHang> _allCustomers = new List<KhachHang>();
 
-        private ObservableCollection<CustomerModel> _customers;
-        public ObservableCollection<CustomerModel> Customers
+        private ObservableCollection<KhachHang> _customers;
+        public ObservableCollection<KhachHang> Customers
         {
             get => _customers;
-            set
-            {
-                _customers = value;
-                OnPropertyChanged();
-            }
+            set { _customers = value; OnPropertyChanged(); }
         }
 
-        // Thuộc tính phục vụ ô tìm kiếm
         private string _searchText;
         public string SearchText
         {
             get => _searchText;
-            set
-            {
-                _searchText = value;
-                OnPropertyChanged();
-                ApplyFilter(); // Tự động lọc mỗi khi người dùng gõ chữ
-            }
+            set { _searchText = value; OnPropertyChanged(); ApplyFilter(); }
         }
 
         private string _newFullName;
@@ -58,8 +51,7 @@ namespace frontend_csharp.ViewModels
             set { _newPhoneNumber = value; OnPropertyChanged(); }
         }
 
-        // Edit Properties
-        private CustomerModel _editingCustomer;
+        private KhachHang _editingCustomer;
 
         private string _editFullName;
         public string EditFullName
@@ -82,15 +74,9 @@ namespace frontend_csharp.ViewModels
             set { _editPhoneNumber = value; OnPropertyChanged(); }
         }
 
-        // Add Savings Book Properties
-        private CustomerModel _savingsBookTargetCustomer;
+        private KhachHang _savingsBookTargetCustomer;
 
-        public ObservableCollection<string> SavingsTypes { get; } = new ObservableCollection<string>
-        {
-            "3 tháng",
-            "6 tháng",
-            "Không kỳ hạn"
-        };
+        public ObservableCollection<string> SavingsTypes { get; } = new ObservableCollection<string> { "KKH", "3T", "6T" };
 
         private string _selectedSavingsType;
         public string SelectedSavingsType
@@ -115,54 +101,45 @@ namespace frontend_csharp.ViewModels
 
         public CustomerManagementViewModel()
         {
-            Customers = new ObservableCollection<CustomerModel>();
+            _apiService = new ApiService();
+            Customers = new ObservableCollection<KhachHang>();
         }
 
         public async Task LoadDataAsync()
         {
-            var newData = await Task.Run(() =>
+            try
             {
-                var list = new List<CustomerModel>();
-                for (int i = 1; i <= 12; i++)
-                {
-                    list.Add(new CustomerModel
-                    {
-                        Id = $"KH-{1000 + i}",
-                        FullName = $"Nguyễn Văn Thuận {i}",
-                        CitizenId = $"07920400{1234 + i}",
-                        PhoneNumber = $"090312345{i:D2}",
-                        TotalBooks = i % 3 + 1
-                    });
-                }
-                return list;
-            });
+                ErrorMessage = string.Empty;
+                var apiData = await _apiService.GetDanhSachKhachHangAsync();
 
-            _allCustomers = newData;
-            ApplyFilter();
+                if (apiData == null) throw new InvalidOperationException("Lỗi kết nối máy chủ.");
+
+                _allCustomers = apiData.ToList();
+                ApplyFilter();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi: {ex.Message}";
+            }
         }
 
-        /// <summary>
-        /// Logic lọc dữ liệu đa năng: Mã, Tên, CCCD, Số điện thoại
-        /// </summary>
         private void ApplyFilter()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                Customers = new ObservableCollection<CustomerModel>(_allCustomers);
+                Customers = new ObservableCollection<KhachHang>(_allCustomers);
                 return;
             }
 
             var query = SearchText.Trim().ToLower();
-
-            var filteredList = _allCustomers.Where(c =>
-                (!string.IsNullOrEmpty(c.Id) && c.Id.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(c.FullName) && c.FullName.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(c.CitizenId) && c.CitizenId.ToLower().Contains(query)) ||
-                (!string.IsNullOrEmpty(c.PhoneNumber) && c.PhoneNumber.ToLower().Contains(query))
+            var filtered = _allCustomers.Where(c =>
+                c.Id.ToString().Contains(query) ||
+                (!string.IsNullOrEmpty(c.Ten) && c.Ten.ToLower().Contains(query)) ||
+                (!string.IsNullOrEmpty(c.Cmnd) && c.Cmnd.ToLower().Contains(query)) ||
+                (!string.IsNullOrEmpty(c.Sdt) && c.Sdt.ToLower().Contains(query))
             ).ToList();
 
-            // Cập nhật bất biến tập hợp hiển thị để WPF Grid/Cards đồng bộ chính xác
-            Customers = new ObservableCollection<CustomerModel>(filteredList);
+            Customers = new ObservableCollection<KhachHang>(filtered);
         }
 
         public void ResetForm()
@@ -173,129 +150,97 @@ namespace frontend_csharp.ViewModels
             ErrorMessage = string.Empty;
         }
 
-        public bool ConfirmAdd()
+        public async Task<bool> ConfirmAddAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewFullName) ||
-                string.IsNullOrWhiteSpace(NewCitizenId) ||
-                string.IsNullOrWhiteSpace(NewPhoneNumber))
+            if (string.IsNullOrWhiteSpace(NewFullName) || string.IsNullOrWhiteSpace(NewCitizenId) || string.IsNullOrWhiteSpace(NewPhoneNumber))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
+                ErrorMessage = "Vui lòng nhập đủ thông tin!";
                 return false;
             }
 
-            ErrorMessage = string.Empty;
-
-            var newCustomer = new CustomerModel
+            var request = new KhachHangRequest
             {
-                Id = $"KH-{1000 + _allCustomers.Count + 1}",
-                FullName = NewFullName.Trim(),
-                CitizenId = NewCitizenId.Trim(),
-                PhoneNumber = NewPhoneNumber.Trim(),
-                TotalBooks = 0
+                Ten = NewFullName.Trim(),
+                Cmnd = NewCitizenId.Trim(),
+                Sdt = NewPhoneNumber.Trim(),
+                DiaChi = ""
             };
 
-            _allCustomers.Add(newCustomer);
-            ApplyFilter(); // Làm mới danh sách hiển thị sau khi thêm
+            if (!await _apiService.CreateKhachHangAsync(request))
+            {
+                ErrorMessage = "Thêm mới thất bại.";
+                return false;
+            }
 
+            await LoadDataAsync();
             return true;
         }
 
-        public void PrepareEdit(CustomerModel customer)
+        public void PrepareEdit(KhachHang customer)
         {
             _editingCustomer = customer;
-            EditFullName = customer.FullName;
-            EditCitizenId = customer.CitizenId;
-            EditPhoneNumber = customer.PhoneNumber;
+            EditFullName = customer.Ten;
+            EditCitizenId = customer.Cmnd;
+            EditPhoneNumber = customer.Sdt;
             ErrorMessage = string.Empty;
         }
 
-        public bool ConfirmEdit()
+        public async Task<bool> ConfirmEditAsync()
         {
-            if (_editingCustomer == null)
+            if (_editingCustomer == null || string.IsNullOrWhiteSpace(EditFullName))
             {
-                ErrorMessage = "Không tìm thấy thông tin khách hàng cần chỉnh sửa!";
+                ErrorMessage = "Thông tin không hợp lệ!";
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(EditFullName) ||
-                string.IsNullOrWhiteSpace(EditCitizenId) ||
-                string.IsNullOrWhiteSpace(EditPhoneNumber))
+            var request = new KhachHangRequest
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
+                Ten = EditFullName.Trim(),
+                Cmnd = EditCitizenId.Trim(),
+                Sdt = EditPhoneNumber.Trim(),
+                DiaChi = _editingCustomer.DiaChi
+            };
+
+            if (!await _apiService.UpdateKhachHangAsync(_editingCustomer.Id, request))
+            {
+                ErrorMessage = "Cập nhật thất bại.";
                 return false;
             }
 
-            ErrorMessage = string.Empty;
-
-            int index = _allCustomers.FindIndex(c => c.Id == _editingCustomer.Id);
-            if (index >= 0)
-            {
-                _allCustomers[index] = new CustomerModel
-                {
-                    Id = _editingCustomer.Id,
-                    FullName = EditFullName.Trim(),
-                    CitizenId = EditCitizenId.Trim(),
-                    PhoneNumber = EditPhoneNumber.Trim(),
-                    TotalBooks = _editingCustomer.TotalBooks
-                };
-                ApplyFilter(); // Làm mới danh sách hiển thị sau khi sửa
-            }
-
+            await LoadDataAsync();
             return true;
         }
 
-        public void PrepareAddSavingsBook(CustomerModel customer)
+        public void PrepareAddSavingsBook(KhachHang customer)
         {
             _savingsBookTargetCustomer = customer;
-            SelectedSavingsType = "3 tháng";
+            SelectedSavingsType = "KKH";
             InitialDeposit = string.Empty;
             ErrorMessage = string.Empty;
         }
 
-        public bool ConfirmAddSavingsBook()
+        public async Task<bool> ConfirmAddSavingsBookAsync()
         {
-            if (_savingsBookTargetCustomer == null)
+            if (_savingsBookTargetCustomer == null || !decimal.TryParse(InitialDeposit, out decimal amount) || amount <= 0)
             {
-                ErrorMessage = "Không tìm thấy khách hàng cần thêm sổ!";
+                ErrorMessage = "Số tiền không hợp lệ!";
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(InitialDeposit))
+            var request = new MoSoRequest
             {
-                ErrorMessage = "Vui lòng nhập số tiền gửi ban đầu!";
+                TenKhachHang = _savingsBookTargetCustomer.Ten,
+                Cmnd = _savingsBookTargetCustomer.Cmnd,
+                DiaChi = _savingsBookTargetCustomer.DiaChi ?? "",
+                LoaiTietKiem = SelectedSavingsType,
+                SoTienGuiBanDau = amount
+            };
+
+            if (!await _apiService.MoSoTietKiemAsync(request))
+            {
+                ErrorMessage = "Mở sổ thất bại.";
                 return false;
             }
-
-            if (!decimal.TryParse(InitialDeposit, out decimal depositAmount) || depositAmount <= 0)
-            {
-                ErrorMessage = "Số tiền gửi ban đầu không hợp lệ!";
-                return false;
-            }
-
-            ErrorMessage = string.Empty;
-
-            int index = _allCustomers.FindIndex(c => c.Id == _savingsBookTargetCustomer.Id);
-            if (index >= 0)
-            {
-                _allCustomers[index] = new CustomerModel
-                {
-                    Id = _savingsBookTargetCustomer.Id,
-                    FullName = _savingsBookTargetCustomer.FullName,
-                    CitizenId = _savingsBookTargetCustomer.CitizenId,
-                    PhoneNumber = _savingsBookTargetCustomer.PhoneNumber,
-                    TotalBooks = _savingsBookTargetCustomer.TotalBooks + 1
-                };
-                ApplyFilter(); // Làm mới danh sách hiển thị sau khi tăng số sổ
-            }
-
-            /* * TODO: Kết nối API gọi xuống Cơ sở dữ liệu bảng LOAITIETKIEM & SỐ TIẾT KIỆM tại đây.
-             * Ví dụ: 
-             * var response = await _apiService.CreateSavingsBookAsync(new { 
-             * CustomerId = _savingsBookTargetCustomer.Id, 
-             * Type = SelectedSavingsType, 
-             * Amount = depositAmount 
-             * });
-             */
 
             return true;
         }
@@ -305,14 +250,5 @@ namespace frontend_csharp.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class CustomerModel
-    {
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string CitizenId { get; set; }
-        public string PhoneNumber { get; set; }
-        public int TotalBooks { get; set; }
     }
 }
