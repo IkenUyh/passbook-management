@@ -177,7 +177,6 @@ namespace frontend_csharp.ViewModels
 
             var newEmployee = new NhanVien
             {
-                Id = _allEmployees.Count + 1,
                 HoTen = NewFullName.Trim(),
                 Cccd = NewCitizenId.Trim(),
                 SoDienThoai = NewPhoneNumber.Trim()
