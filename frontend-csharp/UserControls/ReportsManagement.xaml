@@ -41,6 +41,19 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="15">
@@ -51,7 +64,7 @@
         </Grid.RowDefinitions>
 
         <!-- Doanh số ngày -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" DataContext="{StaticResource ChartViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -65,11 +78,13 @@
                 <TextBlock Text="Doanh số hoạt động ngày" FontSize="16" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Text="Ngày:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#374151"/>
-                    <DatePicker x:Name="dpDailyDate" Width="150" VerticalAlignment="Center" FontSize="13" SelectedDateChanged="dpDailyDate_SelectedDateChanged"/>
+
+                    <DatePicker Width="150" VerticalAlignment="Center" FontSize="13" 
+                                SelectedDate="{Binding SelectedDailyDate, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </Grid>
 
-            <DataGrid x:Name="dgvDailyReport" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single" 
+            <DataGrid Grid.Row="1" ItemsSource="{Binding DailyReports}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single" 
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
                       BorderThickness="0" Background="White" RowBackground="White"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
