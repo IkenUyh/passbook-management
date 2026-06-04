@@ -1,5 +1,6 @@
 package com.uit.passbook_management_api.service;
 
+import com.uit.passbook_management_api.dto.request.CapNhatNhanVienRequest;
 import com.uit.passbook_management_api.dto.request.NhanVienRequest;
 import com.uit.passbook_management_api.dto.response.NhanVienResponse;
 import com.uit.passbook_management_api.entity.AppUser;
@@ -86,6 +87,27 @@ public class NhanVienService {
                 .role(user.getRole())
                 .build();
     }
+
+    @Transactional
+    public NhanVien capNhatThongTin(String id, CapNhatNhanVienRequest request) {
+        // 1. Kiểm tra nhân viên có tồn tại không
+        NhanVien nv = nhanVienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên có mã: " + id));
+
+        // 2. Kiểm tra trùng CCCD với các tài khoản khác trong hệ thống
+        if (nhanVienRepository.existsByCccdAndIdNot(request.getCccd(), id)) {
+            throw new RuntimeException("Số CCCD này đã tồn tại ở một hồ sơ nhân viên khác!");
+        }
+
+        // 3. Cập nhật các thông tin cá nhân được phép
+        nv.setHoTen(request.getHoTen());
+        nv.setSoDienThoai(request.getSoDienThoai());
+        nv.setCccd(request.getCccd());
+
+        // 4. Lưu lại vào DB và trả về đối tượng hồ sơ sau khi sửa
+        return nhanVienRepository.save(nv);
+    }
+
 
 
     private String chuyenDoiHotenThanhUsername(String hoTen) {
