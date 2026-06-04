@@ -257,6 +257,35 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+
+        <Border x:Key="AddEmployeeSuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Thêm thành công!" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="Thông tin đăng nhập mặc định:" Foreground="#6B7280" FontSize="13" Margin="0,0,0,12" FontStyle="Italic"/>
+
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="Tài khoản:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Text="{Binding NewUsername}" HorizontalAlignment="Right" Foreground="#111827" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+
+                        <Grid>
+                            <TextBlock Text="Mật khẩu:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Text="{Binding NewPassword}" HorizontalAlignment="Right" Foreground="#10B981" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="CloseEmployeePopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </UserControl.Resources>
 
     <Grid Margin="15">
