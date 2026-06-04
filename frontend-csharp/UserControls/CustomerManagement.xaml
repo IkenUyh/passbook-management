@@ -20,7 +20,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
+                               BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="White" CornerRadius="4">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
@@ -86,7 +86,7 @@
                     <ControlTemplate TargetType="DataGridColumnHeader">
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -327,7 +327,7 @@
                         </Grid.ColumnDefinitions>
                         <materialDesign:PackIcon Kind="Magnify" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
-                                 FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."
+                                  FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."
                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Border>
@@ -387,7 +387,7 @@
                       BorderThickness="0" Background="White" RowBackground="White"
                       ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                       ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                      CanUserResizeColumns="False"
+                       CanUserResizeColumns="False"
                       CanUserReorderColumns="False"
                       CanUserSortColumns="True">
                 <DataGrid.Style>
@@ -408,7 +408,26 @@
                     <DataGridTextColumn Header="Họ và tên" Binding="{Binding Ten}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
                     <DataGridTextColumn Header="Số CCCD" Binding="{Binding Cmnd}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151"/>
                     <DataGridTextColumn Header="Số điện thoại" Binding="{Binding Sdt}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151"/>
-                    <DataGridTextColumn Header="Sở hữu" Binding="{Binding TotalBooks, StringFormat='{}{0} sổ'}" FontWeight="Bold" Width="1*" IsReadOnly="True" FontSize="13" Foreground="#10B981"/>
+
+                    <DataGridTemplateColumn Header="Sở hữu" Width="1*" SortMemberPath="TotalBooks">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock FontWeight="Bold" FontSize="13" Text="{Binding TotalBooks, StringFormat='{}{0} sổ'}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#10B981"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TotalBooks}" Value="0">
+                                                    <Setter Property="Foreground" Value="#EF4444"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                     <DataGridTemplateColumn Width="40" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -502,8 +521,29 @@
 
                                     <Grid>
                                         <TextBlock Text="Số sổ sở hữu:" FontSize="12" Foreground="#6B7280" VerticalAlignment="Center"/>
-                                        <Border Background="#E6F4EA" CornerRadius="10" Padding="8,2" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding TotalBooks, StringFormat='{}{0} sổ'}" FontSize="11" FontWeight="Bold" Foreground="#137333" VerticalAlignment="Center"/>
+                                        <Border CornerRadius="10" Padding="8,2" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#E6F4EA"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding TotalBooks}" Value="0">
+                                                            <Setter Property="Background" Value="#FEE2E2"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding TotalBooks, StringFormat='{}{0} sổ'}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="#137333"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding TotalBooks}" Value="0">
+                                                                <Setter Property="Foreground" Value="#DC2626"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
                                         </Border>
                                     </Grid>
                                 </StackPanel>

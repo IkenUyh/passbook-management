@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using frontend_csharp.Services;
 using frontend_csharp.Models.KhachHangModel;
 using frontend_csharp.Models.SoTietKiem.SoTietKiemModel;
+using frontend_csharp.Models.SoTietKiemModel;
 
 namespace frontend_csharp.ViewModels
 {
@@ -17,6 +18,7 @@ namespace frontend_csharp.ViewModels
         private List<KhachHang> _allCustomers = new List<KhachHang>();
 
         private ObservableCollection<KhachHang> _customers;
+        public static event Action OnSavingsBookAdded;
         public ObservableCollection<KhachHang> Customers
         {
             get => _customers;
@@ -85,7 +87,6 @@ namespace frontend_csharp.ViewModels
 
         private KhachHang _savingsBookTargetCustomer;
 
-        // Quản lý danh mục loại tiết kiệm động lấy từ CSDL mẫu chuẩn LoaiTietKiem
         private ObservableCollection<LoaiTietKiem> _savingsTypes;
         public ObservableCollection<LoaiTietKiem> SavingsTypes
         {
@@ -127,12 +128,26 @@ namespace frontend_csharp.ViewModels
             {
                 ErrorMessage = string.Empty;
 
-                // Tải danh sách khách hàng thực tế
-                var data = await _apiService.GetDanhSachKhachHangAsync();
+                // Tải song song danh sách khách hàng và sổ tiết kiệm để tối ưu thời gian phản hồi
+                var khachHangTask = _apiService.GetDanhSachKhachHangAsync();
+                var soTietKiemTask = _apiService.GetDanhSachSoTietKiemAsync();
+
+                await Task.WhenAll(khachHangTask, soTietKiemTask);
+
+                var data = await khachHangTask;
+                var danhSachSo = await soTietKiemTask ?? new List<SoTietKiem>();
+
                 _allCustomers = data ?? new List<KhachHang>();
+
+                // Tính toán số sổ sở hữu động dựa vào Id khách hàng
+                foreach (var customer in _allCustomers)
+                {
+                    customer.TotalBooks = danhSachSo.Count(s => s.KhachHang != null && s.KhachHang.Id == customer.Id);
+                }
+
                 ApplyFilter();
 
-                // Tải động danh mục các loại kỳ hạn tiết kiệm từ database backend
+                // Tải danh mục các loại kỳ hạn tiết kiệm
                 var loaiTkData = await _apiService.GetDanhSachLoaiTietKiemAsync();
                 SavingsTypes = new ObservableCollection<LoaiTietKiem>(loaiTkData ?? new List<LoaiTietKiem>());
 
@@ -290,7 +305,7 @@ namespace frontend_csharp.ViewModels
                 TenKhachHang = _savingsBookTargetCustomer.Ten,
                 Cmnd = _savingsBookTargetCustomer.Cmnd,
                 DiaChi = _savingsBookTargetCustomer.DiaChi ?? string.Empty,
-                LoaiTietKiem = SelectedSavingsType, // Chuỗi mã loại động (Ví dụ: KKH, 3T...)
+                LoaiTietKiem = SelectedSavingsType,
                 SoTienGuiBanDau = depositAmount
             };
 
@@ -298,6 +313,8 @@ namespace frontend_csharp.ViewModels
             if (success)
             {
                 await LoadDataAsync();
+                // Kích hoạt sự kiện thông báo cho màn hình tra cứu
+                OnSavingsBookAdded?.Invoke();
                 return true;
             }
 
