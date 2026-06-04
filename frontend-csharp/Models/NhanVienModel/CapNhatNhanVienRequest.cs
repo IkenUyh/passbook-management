@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace frontend_csharp.Models.NhanVienModel
 {
-    public class NhanVienRequest
+    public class CapNhatNhanVienRequest
     {
         [JsonPropertyName("hoTen")]
         public string HoTen { get; set; }
@@ -15,8 +15,5 @@ namespace frontend_csharp.Models.NhanVienModel
 
         [JsonPropertyName("cccd")]
         public string Cccd { get; set; }
-
-        [JsonPropertyName("role")]
-        public string Role { get; set; } // "ADMIN" hoặc "NHAN_VIEN"
     }
 }
