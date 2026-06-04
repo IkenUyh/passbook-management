@@ -30,4 +30,8 @@ public class AuditLogService {
 
         auditLogRepository.save(log);
     }
+
+    public java.util.List<AuditLog> layToanBoLog() {
+        return auditLogRepository.findAllByOrderByThoiGianDesc();
+    }
 }

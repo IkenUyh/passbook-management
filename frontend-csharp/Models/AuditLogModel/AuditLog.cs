@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace frontend_csharp.Models
+namespace frontend_csharp.Models.AuditLogModel
 {
     public class AuditLog
     {
