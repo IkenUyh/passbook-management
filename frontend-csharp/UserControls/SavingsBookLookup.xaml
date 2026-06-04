@@ -323,7 +323,7 @@
                 <DataGridTextColumn Header="Khách hàng" Binding="{Binding KhachHang.Ten}" FontWeight="SemiBold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Số dư" Binding="{Binding SoDu, StringFormat='{}{0:N0} VNĐ'}" FontWeight="Bold" Width="1.2*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Đáo hạn" Binding="{Binding NgayDaoHan, StringFormat='{}{0:dd/MM/yyyy}'}" Foreground="#6B7280" Width="1.1*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Lãi suất" Binding="{Binding LoaiTietKiem.LaiSuat, StringFormat='{}{0}%/năm'}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Lãi suất" Binding="{Binding LoaiTietKiem.LaiSuat, StringFormat='{}{0}%'}" FontWeight="SemiBold" Width="0.8*" IsReadOnly="True" FontSize="13"/>
 
                 <DataGridTemplateColumn Header="Trạng thái" Width="1.1*" SortMemberPath="TrangThai">
                     <DataGridTemplateColumn.CellTemplate>
