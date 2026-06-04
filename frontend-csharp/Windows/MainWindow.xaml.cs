@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using frontend_csharp.Services;
+using frontend_csharp.Windows;
 using frontend_csharp.UserControls;
 
 namespace frontend_csharp
@@ -66,6 +67,26 @@ namespace frontend_csharp
                     MainContent.Content = _regulation;
                     break;
             }
+        }
+
+        // Sự kiện click nút đăng xuất ở góc dưới bên trái
+        private void LogoutBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteLogout();
+        }
+
+        private void ExecuteLogout()
+        {
+            // 1. Xóa thông tin phiên đăng nhập hiện tại
+            AppSession.CurrentToken = null;
+            AppSession.LoggedInUsername = null;
+
+            // 2. Khởi tạo và hiển thị lại màn hình LoginWindow
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+
+            // 3. Đóng màn hình chính hiện tại
+            this.Close();
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
