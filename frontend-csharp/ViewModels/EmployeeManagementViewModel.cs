@@ -60,6 +60,21 @@ namespace frontend_csharp.ViewModels
             set { _newPhoneNumber = value; OnPropertyChanged(); }
         }
 
+        // Properties hiển thị popup kết quả
+        private string _newUsername;
+        public string NewUsername
+        {
+            get => _newUsername;
+            set { _newUsername = value; OnPropertyChanged(); }
+        }
+
+        private string _newPassword;
+        public string NewPassword
+        {
+            get => _newPassword;
+            set { _newPassword = value; OnPropertyChanged(); }
+        }
+
         // Edit Properties
         private NhanVien _editingEmployee;
 
@@ -97,16 +112,11 @@ namespace frontend_csharp.ViewModels
             Employees = new ObservableCollection<NhanVien>();
         }
 
-        /// <summary>
-        /// Tải danh sách nhân viên từ API và cập nhật lên giao diện
-        /// </summary>
         public async Task LoadDataAsync()
         {
             try
             {
                 ErrorMessage = string.Empty;
-
-                // Gọi API lấy danh sách gốc từ backend
                 List<NhanVien> apiData = await _apiService.GetDanhSachNhanVienAsync();
 
                 if (apiData == null)
@@ -114,7 +124,6 @@ namespace frontend_csharp.ViewModels
                     throw new InvalidOperationException("Không thể kết nối đến máy chủ hoặc dữ liệu trả về trống.");
                 }
 
-                // Cập nhật bất biến (Immutable update): Sử dụng trực tiếp danh sách NhanVien từ API
                 _allEmployees = apiData.Select(n => new NhanVien
                 {
                     Id = n.Id,
@@ -163,7 +172,7 @@ namespace frontend_csharp.ViewModels
             ErrorMessage = string.Empty;
         }
 
-        public bool ConfirmAdd()
+        public async Task<bool> ConfirmAddAsync()
         {
             if (string.IsNullOrWhiteSpace(NewFullName) ||
                 string.IsNullOrWhiteSpace(NewCitizenId) ||
@@ -175,16 +184,26 @@ namespace frontend_csharp.ViewModels
 
             ErrorMessage = string.Empty;
 
-            var newEmployee = new NhanVien
+            var request = new NhanVienRequest
             {
                 HoTen = NewFullName.Trim(),
                 Cccd = NewCitizenId.Trim(),
-                SoDienThoai = NewPhoneNumber.Trim()
+                SoDienThoai = NewPhoneNumber.Trim(),
+                Role = "NHAN_VIEN"
             };
 
-            _allEmployees.Add(newEmployee);
-            ApplyFilter();
+            var response = await _apiService.CreateNhanVienAsync(request);
+            if (response == null)
+            {
+                ErrorMessage = "Thêm nhân viên thất bại. Vui lòng kiểm tra trùng lặp dữ liệu SĐT/CCCD.";
+                return false;
+            }
 
+            // Đồng bộ dữ liệu tài khoản từ Server gửi về để điền vào Popup
+            NewUsername = response.Username;
+            NewPassword = response.Password;
+
+            await LoadDataAsync();
             return true;
         }
 
@@ -197,7 +216,7 @@ namespace frontend_csharp.ViewModels
             ErrorMessage = string.Empty;
         }
 
-        public bool ConfirmEdit()
+        public async Task<bool> ConfirmEditAsync()
         {
             if (_editingEmployee == null)
             {
@@ -215,22 +234,21 @@ namespace frontend_csharp.ViewModels
 
             ErrorMessage = string.Empty;
 
-            int index = _allEmployees.FindIndex(e => e.Id == _editingEmployee.Id);
-            if (index >= 0)
+            var request = new CapNhatNhanVienRequest
             {
-                // Cập nhật bất biến (Immutable update) thay vì sửa trực tiếp phần tử cũ
-                _allEmployees[index] = new NhanVien
-                {
-                    Id = _editingEmployee.Id,
-                    HoTen = EditFullName.Trim(),
-                    Cccd = EditCitizenId.Trim(),
-                    SoDienThoai = EditPhoneNumber.Trim(),
-                    Username = _editingEmployee.Username,
-                    Role = _editingEmployee.Role
-                };
-                ApplyFilter();
+                HoTen = EditFullName.Trim(),
+                Cccd = EditCitizenId.Trim(),
+                SoDienThoai = EditPhoneNumber.Trim()
+            };
+
+            bool isSuccess = await _apiService.UpdateNhanVienAsync(_editingEmployee.Id, request);
+            if (!isSuccess)
+            {
+                ErrorMessage = "Cập nhật thông tin thất bại. Vui lòng thử lại.";
+                return false;
             }
 
+            await LoadDataAsync();
             return true;
         }
 

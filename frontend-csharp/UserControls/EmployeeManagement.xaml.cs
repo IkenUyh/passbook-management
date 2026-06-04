@@ -63,12 +63,17 @@ namespace frontend_csharp.UserControls
             mainWindow?.HidePopup();
         }
 
-        private void ConfirmAddEmployee_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmAddEmployee_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmAdd())
+            if (await _viewModel.ConfirmAddAsync())
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
-                mainWindow?.HidePopup();
+                mainWindow?.HidePopup(); // 1. Đóng ẩn popup nhập liệu cũ
+
+                // 2. Mở popup hiển thị tài khoản thành công lấy từ Resource
+                var successPopupUI = (FrameworkElement)this.FindResource("AddEmployeeSuccessPopupUI");
+                successPopupUI.DataContext = _viewModel;
+                mainWindow?.ShowPopup(successPopupUI);
             }
         }
 
@@ -96,9 +101,9 @@ namespace frontend_csharp.UserControls
             }
         }
 
-        private void ConfirmEditEmployee_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmEditEmployee_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.ConfirmEdit())
+            if (await _viewModel.ConfirmEditAsync())
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
                 mainWindow?.HidePopup();

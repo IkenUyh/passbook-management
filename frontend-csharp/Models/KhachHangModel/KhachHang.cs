@@ -18,5 +18,7 @@ namespace frontend_csharp.Models.KhachHangModel
 
         [JsonPropertyName("sdt")]
         public string Sdt { get; set; }
+        [JsonPropertyName("totalBooks")]
+        public int TotalBooks { get; set; }
     }
 }
