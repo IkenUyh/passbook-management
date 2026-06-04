@@ -145,7 +145,7 @@ namespace frontend_csharp.ViewModels
             {
                 MaSoTietKiem = _transactionTargetBook.Id,
                 SoTienRut = amount,
-                NgayRut = DateTime.Now
+                NgayRut = DateTime.Now.ToString("yyyy-MM-dd")
             };
 
             bool success = await _apiService.RutTienAsync(request);
