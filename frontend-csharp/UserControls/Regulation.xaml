@@ -8,7 +8,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="850"
-             Background="White">
+             Background="White"
+             Loaded="UserControl_Loaded">
 
     <UserControl.DataContext>
         <vm:RegulationViewModel />
@@ -110,7 +111,7 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseAddTermPopup_Click" Width="100" Margin="0,0,10,0"/>
-                    <Button Style="{StaticResource GreenButtonStyle}" Content="Thêm" Click="CloseAddTermPopup_Click" Width="100"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Thêm" Click="SaveAddTermPopup_Click" Width="100"/>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -205,7 +206,7 @@
                     </StackPanel>
                 </Grid>
 
-                <Button Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Right">
+                <Button Style="{StaticResource GreenButtonStyle}" HorizontalAlignment="Right" Click="BtnLuuThayDoiThamSo_Click">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="ContentSaveOutline" Width="18" Height="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
                         <TextBlock Text="Lưu thay đổi" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
