@@ -96,17 +96,12 @@
 
                 <StackPanel Margin="0,0,0,16">
                     <TextBlock Text="Kỳ hạn (Tháng)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtKyHan" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtLaiSuat" Padding="12,0"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Ghi chú" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtGhiChu" Padding="12,0"/>
+                    <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding LaiSuatMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -125,14 +120,9 @@
                     <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.TenKyHan, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
-                <StackPanel Margin="0,0,0,16">
+                <StackPanel Margin="0,0,0,24">
                     <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
                     <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.LaiSuat, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Ghi chú" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.GhiChu, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -241,7 +231,7 @@
                           BorderThickness="0" 
                           Background="White" 
                           RowBackground="White"
-                          VerticalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Hidden" 
                           HorizontalScrollBarVisibility="Disabled" 
                           IsReadOnly="True"
                           SelectionMode="Single">
@@ -301,7 +291,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Kỳ hạn (Tháng)" Binding="{Binding TenKyHan}" Width="1.5*">
+                        <DataGridTextColumn Header="Kỳ hạn (Tháng)" Binding="{Binding TenKyHan}" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="#111827"/>
@@ -311,17 +301,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Lãi suất (%/năm)" Binding="{Binding LaiSuat}" Width="1.5*">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#111827"/>
-                                    <Setter Property="FontWeight" Value="Medium"/>
-                                    <Setter Property="FontSize" Value="13"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-
-                        <DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}" Width="2*">
+                        <DataGridTextColumn Header="Lãi suất (%/năm)" Binding="{Binding LaiSuat}" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="#111827"/>
