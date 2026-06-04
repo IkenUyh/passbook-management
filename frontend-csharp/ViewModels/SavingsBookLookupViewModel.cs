@@ -109,7 +109,7 @@ namespace frontend_csharp.ViewModels
             {
                 MaSoTietKiem = _transactionTargetBook.Id,
                 SoTienGui = amount,
-                NgayGui = DateTime.Now
+                NgayGui = DateTime.Now.ToString("yyyy-MM-dd")
             };
 
             bool success = await _apiService.GuiTienAsync(request);

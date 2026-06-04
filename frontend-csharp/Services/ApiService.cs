@@ -1,4 +1,5 @@
-﻿using frontend_csharp.Models.Auth;
+﻿using frontend_csharp.Models.AuditLogModel;
+using frontend_csharp.Models.Auth;
 using frontend_csharp.Models.BaoCaoModel;
 using frontend_csharp.Models.GiaoDichModel;
 using frontend_csharp.Models.KhachHangModel;
@@ -97,7 +98,7 @@ namespace frontend_csharp.Services
         {
             try
             {
-                AddAuthHeader(); 
+                AddAuthHeader();
 
                 var response = await _client.GetAsync($"{BaseUrl}v1/so-tiet-kiem");
                 response.EnsureSuccessStatusCode();
@@ -130,6 +131,28 @@ namespace frontend_csharp.Services
             {
                 Console.WriteLine($"Lỗi khi gọi API mở sổ tiết kiệm: {ex.Message}");
                 return false;
+            }
+        }
+
+
+        ///
+        /// Lấy danh sách sổ sắp đáo hạn
+        /// 
+        public async Task<List<SoTietKiem>> GetDanhSachSoSapDaoHanAsync(int soNgayBaoTruoc = 3)
+        {
+            try
+            {
+                AddAuthHeader();
+                var response = await _client.GetAsync($"{BaseUrl}v1/so-tiet-kiem/sap-dao-han?soNgayBaoTruoc={soNgayBaoTruoc}");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<SoTietKiem>>(json, _jsonOptions) ?? new List<SoTietKiem>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi lấy danh sách nhắc đáo hạn: {ex.Message}");
+                return new List<SoTietKiem>();
             }
         }
 
@@ -444,7 +467,7 @@ namespace frontend_csharp.Services
         }
 
         /// 
-        /// Thêm mới hoặc Cập nhật thông tin/lại suất của một loại kỳ hạn (Chỉ ADMIN)
+        /// Thêm mới hoặc Cập nhật thông tin/lại suất của một loại kỳ hạn 
         /// 
         public async Task<bool> SaveLoaiTietKiemAsync(LoaiTietKiemRequest request)
         {
@@ -462,6 +485,31 @@ namespace frontend_csharp.Services
             {
                 Console.WriteLine($"Lỗi lưu loại tiết kiệm: {ex.Message}");
                 return false;
+            }
+        }
+    
+
+    // ==========================================
+        // --- 8. AUDIT LOG ---
+        // ==========================================
+
+        /// 
+        /// Tải toàn bộ lịch sử thao tác của hệ thống 
+        /// 
+        public async Task<List<AuditLog>> GetDanhSachAuditLogAsync()
+        {
+            try
+            {
+                AddAuthHeader();
+                var response = await _client.GetAsync($"{BaseUrl}v1/audit-log");
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<AuditLog>>(json, _jsonOptions) ?? new List<AuditLog>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi lấy nhật ký hệ thống Audit Log: {ex.Message}");
+                return new List<AuditLog>();
             }
         }
     }

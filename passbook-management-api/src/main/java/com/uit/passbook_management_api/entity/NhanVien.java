@@ -7,9 +7,9 @@ import lombok.Data;
 @Entity
 @Table(name = "nhan_vien")
 public class NhanVien {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id // CHỈ GIỮ LẠI @Id
+    @Column(name = "id", length = 20)
+    private String id;
 
     @Column(name = "ho_ten", nullable = false)
     private String hoTen;
