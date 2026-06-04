@@ -39,6 +39,31 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="LogoutBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FF8E8E"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" Padding="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⮪ " FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#FF4B2B"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid Background="Transparent" Margin="15">
@@ -49,8 +74,7 @@
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Column="0" CornerRadius="30,0,0,30"
-                        Background="#1F2937"></Border>
+                <Border Grid.Column="0" CornerRadius="30,0,0,30" Background="#1F2937"></Border>
 
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
@@ -67,12 +91,18 @@
                         </Ellipse>
 
                         <Grid VerticalAlignment="Bottom">
-                            
                         </Grid>
                     </Grid>
 
-                    <uc:SidePanel x:Name="MenuSidePanel" Grid.Row="1" Margin="0 20 0 20"></uc:SidePanel>
+                    <uc:SidePanel x:Name="MenuSidePanel" Grid.Row="1" Margin="0,20,0,80"></uc:SidePanel>
 
+                    <Button Content="Đăng xuất" 
+                            Grid.Row="1"
+                            Style="{StaticResource LogoutBtnStyle}"
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Bottom" 
+                            Margin="25,0,0,25"
+                            Click="LogoutBtn_Click"/>
                 </Grid>
 
                 <Grid Grid.Column="1">
