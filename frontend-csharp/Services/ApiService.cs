@@ -377,7 +377,7 @@ namespace frontend_csharp.Services
         /// 
         /// Thêm mới một nhân viên và cấp tài khoản hệ thống (Chỉ ADMIN)
         /// 
-        public async Task<bool> CreateNhanVienAsync(NhanVienRequest request)
+        public async Task<NhanVienResponse> CreateNhanVienAsync(NhanVienRequest request)
         {
             try
             {
@@ -387,14 +387,58 @@ namespace frontend_csharp.Services
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _client.PostAsync($"{BaseUrl}v1/nhan-vien", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<NhanVienResponse>(responseJson, _jsonOptions);
+                }
+
+                // Nếu backend trả về 400 Bad Request (Ví dụ: trùng CCCD)
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Lỗi nghiệp vụ từ Server: {errorMsg}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi kết nối tới API thêm nhân viên: {ex.Message}");
+                return null;
+            }
+        }
+
+
+
+        /// 
+        /// Cập nhật thông tin cá nhân của nhân viên 
+        /// 
+        public async Task<bool> UpdateNhanVienAsync(string id, CapNhatNhanVienRequest request)
+        {
+            try
+            {
+                AddAuthHeader();
+
+                string json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Gọi phương thức PutAsync và truyền id lên URL Path đúng theo @PutMapping("/{id}") ở backend
+                var response = await _client.PutAsync($"{BaseUrl}v1/nhan-vien/{id}", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    // Đọc log lỗi từ backend quăng về (ví dụ: trùng CCCD) để dễ debug
+                    string errorMsg = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Lỗi từ Server khi sửa nhân viên: {errorMsg}");
+                }
+
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi thêm mới nhân viên: {ex.Message}");
+                Console.WriteLine($"Lỗi kết nối đến API để cập nhật nhân viên: {ex.Message}");
                 return false;
             }
         }
+
 
         // ==========================================
         // --- 7. QUẢN LÝ QUY ĐỊNH & THAM SỐ ---
