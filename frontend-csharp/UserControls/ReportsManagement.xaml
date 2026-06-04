@@ -56,15 +56,14 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="15">
+    <Grid Margin="15" DataContext="{StaticResource ChartViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
 
-        <!-- Doanh số ngày -->
-        <Grid Grid.Row="0" DataContext="{StaticResource ChartViewModel}">
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -78,7 +77,6 @@
                 <TextBlock Text="Doanh số hoạt động ngày" FontSize="16" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Text="Ngày:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#374151"/>
-
                     <DatePicker Width="150" VerticalAlignment="Center" FontSize="13" 
                                 SelectedDate="{Binding SelectedDailyDate, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
@@ -88,7 +86,8 @@
                       HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
                       BorderThickness="0" Background="White" RowBackground="White"
                       ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                      CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
+                      CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True"
+                      Visibility="{Binding DailyContentVisibility}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="60" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
                     <DataGridTextColumn Header="Loại tiết kiệm" Binding="{Binding SavingsType}" FontWeight="SemiBold" Width="1*" IsReadOnly="True" FontSize="13"/>
@@ -110,10 +109,18 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <TextBlock Grid.Row="1" 
+                       Text="Không có dữ liệu" 
+                       FontWeight="Bold" 
+                       FontSize="15" 
+                       Foreground="#9CA3AF" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Visibility="{Binding DailyNoDataVisibility}"/>
         </Grid>
 
-        <!-- Mở / Đóng sổ tháng -->
-        <Grid Grid.Row="2" DataContext="{StaticResource ChartViewModel}">
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -159,21 +166,30 @@
             </Grid>
 
             <Grid Grid.Row="1">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
-                    <Ellipse Width="10" Height="10" Fill="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="Mở sổ" FontSize="11" Foreground="#374151" Margin="0,0,16,0" VerticalAlignment="Center"/>
-                    <Ellipse Width="10" Height="10" Fill="#1F2937" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="Đóng sổ" FontSize="11" Foreground="#374151" VerticalAlignment="Center"/>
-                </StackPanel>
+                <Grid Visibility="{Binding MonthlyContentVisibility}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
+                        <Ellipse Width="10" Height="10" Fill="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Mở sổ" FontSize="11" Foreground="#374151" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                        <Ellipse Width="10" Height="10" Fill="#1F2937" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Đóng sổ" FontSize="11" Foreground="#374151" VerticalAlignment="Center"/>
+                    </StackPanel>
 
-                <lvc:CartesianChart Margin="0,20,0,0"
-                                    LegendPosition="Hidden"
-                                    TooltipPosition="Top"
-                                    Series="{Binding BarSeries}" 
-                                    XAxes="{Binding BarXAxes}" 
-                                    YAxes="{Binding BarYAxes}"/>
+                    <lvc:CartesianChart Margin="0,20,0,0"
+                                        LegendPosition="Hidden"
+                                        TooltipPosition="Top"
+                                        Series="{Binding BarSeries}" 
+                                        XAxes="{Binding BarXAxes}" 
+                                        YAxes="{Binding BarYAxes}"/>
+                </Grid>
+
+                <TextBlock Text="Không có dữ liệu" 
+                           FontWeight="Bold" 
+                           FontSize="15" 
+                           Foreground="#9CA3AF" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Visibility="{Binding MonthlyNoDataVisibility}"/>
             </Grid>
         </Grid>
-
     </Grid>
 </UserControl>
