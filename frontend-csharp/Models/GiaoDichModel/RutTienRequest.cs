@@ -16,6 +16,6 @@ namespace frontend_csharp.Models.GiaoDichModel
 
         // LocalDate ở Java tương ứng với DateTime trong C#
         [JsonPropertyName("ngayRut")]
-        public DateTime NgayRut { get; set; }
+        public String NgayRut { get; set; }
     }
 }
