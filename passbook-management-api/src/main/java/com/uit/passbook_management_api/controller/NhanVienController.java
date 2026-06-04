@@ -1,5 +1,6 @@
 package com.uit.passbook_management_api.controller;
 
+import com.uit.passbook_management_api.dto.request.DoiMatKhauRequest;
 import com.uit.passbook_management_api.dto.request.NhanVienRequest;
 import com.uit.passbook_management_api.service.NhanVienService;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,16 @@ public class NhanVienController {
         try {
             // Service bây giờ sẽ trả về NhanVienResponse chứa username mới sinh và password "123456"
             return ResponseEntity.ok(nhanVienService.themNhanVienMoi(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/doi-mat-khau")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> doiMatKhauTaiKhoan(@RequestBody DoiMatKhauRequest request) {
+        try {
+            return ResponseEntity.ok(nhanVienService.doiMatKhau(request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

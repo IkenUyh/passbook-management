@@ -88,42 +88,43 @@ public class GiaoDichService {
 
         ThamSo thamSo = thamSoRepository.findById(1).orElseThrow();
 
-        // QĐ3: Kiểm tra quy định rút tiền
+        // 1. Tính số ngày đã gửi
+        long soNgayDaGui = ChronoUnit.DAYS.between(stk.getNgayMo(), request.getNgayRut());
+        BigDecimal tienLai = BigDecimal.ZERO;
+
+        // 2. TÍNH LÃI SUẤT & KIỂM TRA ĐIỀU KIỆN KỲ HẠN
         if (stk.getLoaiTietKiem().getKyHan() > 0) {
-            // SỔ CÓ KỲ HẠN
+            // ---> SỔ CÓ KỲ HẠN
             if (request.getNgayRut().isBefore(stk.getNgayDaoHan())) {
                 throw new RuntimeException("Sổ có kỳ hạn chỉ được rút khi đã quá hạn!");
             }
             if (request.getSoTienRut().compareTo(stk.getSoDu()) != 0) {
-                throw new RuntimeException("Sổ có kỳ hạn bắt buộc phải rút toàn bộ số dư!");
+                throw new RuntimeException("Sổ có kỳ hạn bắt buộc phải rút toàn bộ số dư gốc!");
             }
-        } else {
-            // SỔ KHÔNG KỲ HẠN
-            long soNgayDaGui = ChronoUnit.DAYS.between(stk.getNgayMo(), request.getNgayRut());
-            if (soNgayDaGui < thamSo.getSoNgayGuiToiThieu()) {
-                throw new RuntimeException("Sổ không kỳ hạn phải gửi trên " + thamSo.getSoNgayGuiToiThieu() + " ngày mới được rút!");
-            }
-            if (request.getSoTienRut().compareTo(stk.getSoDu()) > 0) {
-                throw new RuntimeException("Số tiền rút vượt quá số dư hiện tại!");
-            }
-        }
-
-        BigDecimal tienLai = BigDecimal.ZERO;
-        long soNgayDaGui = ChronoUnit.DAYS.between(stk.getNgayMo(), request.getNgayRut());
-
-        if (stk.getLoaiTietKiem().getKyHan() > 0) {
-            // Sổ CÓ kỳ hạn: Lãi = Số dư * (Lãi suất / 100) * (Kỳ hạn / 12)
             BigDecimal laiSuat = stk.getLoaiTietKiem().getLaiSuat().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
             BigDecimal thoiGian = BigDecimal.valueOf(stk.getLoaiTietKiem().getKyHan()).divide(BigDecimal.valueOf(12), 4, RoundingMode.HALF_UP);
             tienLai = stk.getSoDu().multiply(laiSuat).multiply(thoiGian);
         } else {
-            // Sổ KHÔNG kỳ hạn: Lãi = Số dư * (Lãi suất / 100) * (Số ngày gửi / 365)
+            // ---> SỔ KHÔNG KỲ HẠN
+            if (soNgayDaGui < thamSo.getSoNgayGuiToiThieu()) {
+                throw new RuntimeException("Sổ không kỳ hạn phải gửi từ " + thamSo.getSoNgayGuiToiThieu() + " ngày trở lên mới được rút!");
+            }
             BigDecimal laiSuat = stk.getLoaiTietKiem().getLaiSuat().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
             BigDecimal thoiGian = BigDecimal.valueOf(soNgayDaGui).divide(BigDecimal.valueOf(365), 4, RoundingMode.HALF_UP);
             tienLai = stk.getSoDu().multiply(laiSuat).multiply(thoiGian);
         }
 
-        // Tạo phiếu rút
+        // 3. CỘNG LÃI VÀO SỐ DƯ GỐC TRƯỚC KHI CHO RÚT
+        stk.setSoDu(stk.getSoDu().add(tienLai));
+
+        // 4. KIỂM TRA SỐ TIỀN RÚT CÓ HỢP LỆ KHÔNG (Chỉ áp dụng cho sổ KHÔNG kỳ hạn)
+        if (stk.getLoaiTietKiem().getKyHan() == 0) {
+            if (request.getSoTienRut().compareTo(stk.getSoDu()) > 0) {
+                throw new RuntimeException("Số tiền rút vượt quá số dư hiện tại (Gốc + Lãi là: " + stk.getSoDu() + "đ)!");
+            }
+        }
+
+        // 5. TẠO PHIẾU RÚT
         PhieuRutTien phieu = new PhieuRutTien();
         phieu.setSoTienRut(request.getSoTienRut());
         phieu.setNgayRut(request.getNgayRut());
@@ -131,10 +132,11 @@ public class GiaoDichService {
         phieu.setKhachHang(stk.getKhachHang());
         phieuRutTienRepository.save(phieu);
 
-        // Cập nhật số dư sổ
+        // 6. TRỪ TIỀN TRONG SỔ
         stk.setSoDu(stk.getSoDu().subtract(request.getSoTienRut()));
 
-        // Tự động đóng sổ nếu rút hết tiền
+        // 7. TỰ ĐỘNG ĐÓNG SỔ NẾU RÚT HẾT TIỀN VỀ 0
+        // Dùng compareTo để so sánh an toàn với BigDecimal
         if (stk.getSoDu().compareTo(BigDecimal.ZERO) == 0) {
             stk.setTrangThai("DA_DONG");
         }

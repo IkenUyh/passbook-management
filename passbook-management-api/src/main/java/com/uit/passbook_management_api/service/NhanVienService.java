@@ -1,11 +1,13 @@
 package com.uit.passbook_management_api.service;
 
+import com.uit.passbook_management_api.dto.request.DoiMatKhauRequest;
 import com.uit.passbook_management_api.dto.request.NhanVienRequest;
 import com.uit.passbook_management_api.dto.response.NhanVienResponse;
 import com.uit.passbook_management_api.entity.AppUser;
 import com.uit.passbook_management_api.entity.NhanVien;
 import com.uit.passbook_management_api.repository.AppUserRepository;
 import com.uit.passbook_management_api.repository.NhanVienRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,5 +110,26 @@ public class NhanVienService {
         }
 
         return words[words.length - 1] + words[0];
+    }
+
+    @Transactional
+    public String doiMatKhau(DoiMatKhauRequest request) {
+        // 1. Lấy username của người đang gọi API từ JWT Token
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 2. Tìm tài khoản trong Database
+        AppUser user = appUserRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản trong hệ thống!"));
+
+        // 3. Kiểm tra mật khẩu cũ có khớp không (dùng BCrypt matches)
+        if (!passwordEncoder.matches(request.getMatKhauCu(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu cũ không chính xác!");
+        }
+
+        // 4. Mã hóa mật khẩu mới và lưu lại
+        user.setPassword(passwordEncoder.encode(request.getMatKhauMoi()));
+        appUserRepository.save(user);
+
+        return "Đổi mật khẩu thành công!";
     }
 }
