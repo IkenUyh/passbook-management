@@ -59,6 +59,14 @@ namespace frontend_csharp.ViewModels
         {
             _apiService = new ApiService();
             SavingsBooks = new ObservableCollection<SoTietKiem>();
+            // Đăng ký lắng nghe sự kiện từ màn hình quản lý khách hàng
+            CustomerManagementViewModel.OnSavingsBookAdded += RefreshData;
+        }
+
+        private void RefreshData()
+        {
+            // Sửa tên hàm gọi cho đúng với hàm thực tế bên dưới
+            _ = LoadDataAsync();
         }
 
         public async Task LoadDataAsync()

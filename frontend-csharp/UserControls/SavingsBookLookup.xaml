@@ -19,7 +19,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="White" CornerRadius="4">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="White" CornerRadius="4">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </ControlTemplate>
@@ -328,7 +329,24 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding TrangThai}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock FontSize="11" FontWeight="SemiBold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding TrangThai}"/>
+                                            <Setter Property="Foreground" Value="#EF4444"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TrangThai}" Value="DANG_HOAT_DONG">
+                                                    <Setter Property="Text" Value="Hoạt động"/>
+                                                    <Setter Property="Foreground" Value="#10B981"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding TrangThai}" Value="DA_DONG">
+                                                    <Setter Property="Text" Value="Đã đóng"/>
+                                                    <Setter Property="Foreground" Value="#EF4444"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -385,8 +403,7 @@
                                 <Grid Margin="0 -10 0 0">
                                     <TextBlock Text="{Binding KhachHang.Ten}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
 
-                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" 
-                                            HorizontalAlignment="Right" Click="SettingsButton_Click">
+                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" HorizontalAlignment="Right" Click="SettingsButton_Click">
                                         <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
                                         <Button.ContextMenu>
                                             <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
@@ -424,7 +441,24 @@
                                 </StackPanel>
 
                                 <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="8,3" HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding TrangThai}" FontSize="11" FontWeight="SemiBold" Foreground="#374151"/>
+                                    <TextBlock FontSize="11" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="{Binding TrangThai}"/>
+                                                <Setter Property="Foreground" Value="#EF4444"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TrangThai}" Value="DANG_HOAT_DONG">
+                                                        <Setter Property="Text" Value="Hoạt động"/>
+                                                        <Setter Property="Foreground" Value="#10B981"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding TrangThai}" Value="DA_DONG">
+                                                        <Setter Property="Text" Value="Đã đóng"/>
+                                                        <Setter Property="Foreground" Value="#EF4444"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Border>
                             </StackPanel>
                         </Border>
