@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/nhan-vien")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class NhanVienController {
 
     private final NhanVienService nhanVienService;
@@ -20,14 +20,15 @@ public class NhanVienController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> xemDanhSachNhanVien() {
         return ResponseEntity.ok(nhanVienService.layDanhSachNhanVien());
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addNhanVien(@RequestBody NhanVienRequest request) {
         try {
-            // Service bây giờ sẽ trả về NhanVienResponse chứa username mới sinh và password "123456"
             return ResponseEntity.ok(nhanVienService.themNhanVienMoi(request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
