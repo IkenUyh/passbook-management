@@ -1,4 +1,4 @@
-﻿using frontend_csharp.Models.QuyDinhModel;
+using frontend_csharp.Models.QuyDinhModel;
 using frontend_csharp.Services;
 using System;
 using System.Windows;
@@ -26,11 +26,13 @@ namespace frontend_csharp.UserControls
         {
             if (this.DataContext is ViewModels.RegulationViewModel viewModel)
             {
+                viewModel.GeneralErrorMessage = string.Empty;
+
                 if (viewModel.RegulationInfo.TienGuiToiThieu <= 0 ||
                     viewModel.RegulationInfo.TienGuiThemToiThieu <= 0 ||
                     viewModel.RegulationInfo.ThoiGianGuiToiThieuNgay <= 0)
                 {
-                    MessageBox.Show("Các giá trị quy định (Tiền gửi, Thời gian) phải là số lớn hơn 0!", "Dữ liệu không hợp lệ", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    viewModel.GeneralErrorMessage = "Các giá trị quy định (Tiền gửi, Thời gian) phải là số lớn hơn 0!";
                     return;
                 }
 
@@ -52,6 +54,12 @@ namespace frontend_csharp.UserControls
             if (mainWindow != null)
             {
                 var popupUI = (FrameworkElement)this.FindResource("AddTermPopupUI");
+                if (this.DataContext is ViewModels.RegulationViewModel viewModel)
+                {
+                    viewModel.AddTermErrorMessage = string.Empty;
+                    viewModel.KyHanMoi = "";
+                    viewModel.LaiSuatMoi = "";
+                }
                 popupUI.DataContext = this.DataContext;
                 mainWindow.ShowPopup(popupUI);
             }
@@ -71,22 +79,24 @@ namespace frontend_csharp.UserControls
         {
             var viewModel = this.DataContext as ViewModels.RegulationViewModel;
             if (viewModel == null) return;
+            
+            viewModel.AddTermErrorMessage = string.Empty;
 
             if (string.IsNullOrWhiteSpace(viewModel.KyHanMoi) || string.IsNullOrWhiteSpace(viewModel.LaiSuatMoi))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin Kỳ hạn và Lãi suất!", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                viewModel.AddTermErrorMessage = "Vui lòng nhập đầy đủ thông tin Kỳ hạn và Lãi suất!";
                 return;
             }
 
             if (!int.TryParse(viewModel.KyHanMoi.Trim(), out int kyHan) || kyHan < 0)
             {
-                MessageBox.Show("Kỳ hạn không hợp lệ! Vui lòng nhập SỐ (nhập 0 cho 'Không kỳ hạn').", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                viewModel.AddTermErrorMessage = "Kỳ hạn không hợp lệ! Vui lòng nhập SỐ (nhập 0 cho 'Không kỳ hạn').";
                 return;
             }
 
             if (!decimal.TryParse(viewModel.LaiSuatMoi.Trim(), out decimal laiSuat) || laiSuat <= 0)
             {
-                MessageBox.Show("Lãi suất không hợp lệ! Vui lòng nhập số lớn hơn 0.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                viewModel.AddTermErrorMessage = "Lãi suất không hợp lệ! Vui lòng nhập số lớn hơn 0.";
                 return;
             }
 
@@ -129,6 +139,7 @@ namespace frontend_csharp.UserControls
 
             if (kyHan != null && viewModel != null)
             {
+                viewModel.EditTermErrorMessage = string.Empty;
                 viewModel.KyHanDangSua = kyHan;
 
                 var mainWindow = (MainWindow)Window.GetWindow(this);
@@ -157,6 +168,8 @@ namespace frontend_csharp.UserControls
 
             if (viewModel != null && viewModel.KyHanDangSua != null)
             {
+                viewModel.EditTermErrorMessage = string.Empty;
+
                 string inputKyHan = viewModel.KyHanDangSua.TenKyHan?.Trim();
                 int parsedKyHan = -1;
 
@@ -171,7 +184,7 @@ namespace frontend_csharp.UserControls
                 }
                 else
                 {
-                    MessageBox.Show("Kỳ hạn không hợp lệ! Vui lòng nhập số tháng hoặc để chữ 'Không kỳ hạn'.", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    viewModel.EditTermErrorMessage = "Kỳ hạn không hợp lệ! Vui lòng nhập số tháng hoặc để chữ 'Không kỳ hạn'.";
                     return;
                 }
 
@@ -180,7 +193,7 @@ namespace frontend_csharp.UserControls
 
                 if (viewModel.KyHanDangSua.LaiSuat <= 0)
                 {
-                    MessageBox.Show("Lãi suất phải là số lớn hơn 0!", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    viewModel.EditTermErrorMessage = "Lãi suất phải là số lớn hơn 0!";
                     return;
                 }
 

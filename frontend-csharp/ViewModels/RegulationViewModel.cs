@@ -1,4 +1,4 @@
-﻿using frontend_csharp.Models.QuyDinhModel;
+using frontend_csharp.Models.QuyDinhModel;
 using frontend_csharp.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -40,6 +40,28 @@ namespace frontend_csharp.ViewModels
         {
             get => _laiSuatMoi;
             set { _laiSuatMoi = value; OnPropertyChanged(); }
+        }
+
+        // --- ERROR MESSAGES ---
+        private string _generalErrorMessage;
+        public string GeneralErrorMessage
+        {
+            get => _generalErrorMessage;
+            set { _generalErrorMessage = value; OnPropertyChanged(); }
+        }
+
+        private string _addTermErrorMessage;
+        public string AddTermErrorMessage
+        {
+            get => _addTermErrorMessage;
+            set { _addTermErrorMessage = value; OnPropertyChanged(); }
+        }
+
+        private string _editTermErrorMessage;
+        public string EditTermErrorMessage
+        {
+            get => _editTermErrorMessage;
+            set { _editTermErrorMessage = value; OnPropertyChanged(); }
         }
         // ----------------------------------------------
 
