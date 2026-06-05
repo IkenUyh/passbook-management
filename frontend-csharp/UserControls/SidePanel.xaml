@@ -144,8 +144,8 @@
                                     <BeginStoryboard x:Name="Lock_Indicator">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                                                   Storyboard.TargetProperty="Width"
-                                                                                   From="185" To="185" Duration="0:0:0.3" />
+                                                                         Storyboard.TargetProperty="Width"
+                                                                         From="185" To="185" Duration="0:0:0.3" />
 
                                             <ColorAnimation Storyboard.TargetName="ActiveCircle"
                                                             Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
@@ -157,8 +157,8 @@
                                     <BeginStoryboard x:Name="Release_Indicator">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                                  Storyboard.TargetProperty="Width"
-                                                                  From="185" To="160" Duration="0:0:0" />
+                                                             Storyboard.TargetProperty="Width"
+                                                             From="185" To="160" Duration="0:0:0" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                     <BeginStoryboard x:Name="Stop_Indicator">
@@ -218,6 +218,12 @@
                          DataContext="{StaticResource User_Active}"/>
 
             <RadioButton Content="Quy định" Style="{StaticResource SidePanelStyle}"
+                         Checked="Menu_Checked"
+                         CommandParameter="{StaticResource User}" 
+                         Tag="{StaticResource User_Hover}" 
+                         DataContext="{StaticResource User_Active}"/>
+
+            <RadioButton Content="Nhật ký" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource User}" 
                          Tag="{StaticResource User_Hover}" 

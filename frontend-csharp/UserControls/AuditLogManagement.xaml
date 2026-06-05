@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="frontend_csharp.UserControls.AuditLogManagement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="White"
+             d:DesignHeight="640" d:DesignWidth="790">
+    <UserControl.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,15,10,15"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Nhật ký hoạt động hệ thống" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" Name="dgvAuditLogs" AutoGenerateColumns="False" 
+                  ItemsSource="{Binding AuditLogs}" CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" BorderThickness="0" Background="White" RowBackground="White"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Người thực hiện" Binding="{Binding NguoiThucHien}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Hành động" Binding="{Binding HanhDong}" FontWeight="Bold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Chi tiết" Binding="{Binding ChiTiet}" Width="3*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Thời gian" Binding="{Binding ThoiGian, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}" Foreground="#6B7280" Width="1.5*" IsReadOnly="True" FontSize="13"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
