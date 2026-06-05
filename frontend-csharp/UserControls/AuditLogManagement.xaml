@@ -76,9 +76,8 @@
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" BorderThickness="0" Background="White" RowBackground="White"
                   CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã số" Binding="{Binding Id}" Width="80" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Người thực hiện" Binding="{Binding NguoiThucHien}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Hành động" Binding="{Binding HanhDong}" FontWeight="Bold" Width="1.5*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Thực hiện" Binding="{Binding NguoiThucHien}" FontWeight="SemiBold" Width="100" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Hành động" Binding="{Binding HanhDong}" FontWeight="Bold" Width="170" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Chi tiết" Binding="{Binding ChiTiet}" Width="3*" IsReadOnly="True" FontSize="13"/>
                 <DataGridTextColumn Header="Thời gian" Binding="{Binding ThoiGian, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}" Foreground="#6B7280" Width="1.5*" IsReadOnly="True" FontSize="13"/>
             </DataGrid.Columns>
