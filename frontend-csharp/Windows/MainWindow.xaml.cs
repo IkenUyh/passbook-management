@@ -19,6 +19,7 @@ namespace frontend_csharp
         private readonly CustomerManagement _customerManagement;
         private readonly Regulation _regulation;
         private readonly ReportsManagement _reportsManagement;
+        private readonly AuditLogManagement _auditLogManagement;
 
         public MainWindow()
         {
@@ -31,6 +32,7 @@ namespace frontend_csharp
             _customerManagement = new CustomerManagement();
             _regulation = new Regulation();
             _reportsManagement = new ReportsManagement();
+            _auditLogManagement = new AuditLogManagement();
 
             // Đăng ký nhận sự kiện từ SidePanel
             MenuSidePanel.OnMenuChanged += MenuSidePanel_OnMenuChanged;
@@ -65,6 +67,9 @@ namespace frontend_csharp
                     break;
                 case "Quy định":
                     MainContent.Content = _regulation;
+                    break;
+                case "Nhật ký":
+                    MainContent.Content = _auditLogManagement;
                     break;
             }
         }
