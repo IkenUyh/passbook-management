@@ -45,6 +45,33 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="CustomChiTietCellStyle" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <ToolTip Background="#1F2937" BorderBrush="#4ADE80" BorderThickness="1" HasDropShadow="True" Padding="12,10">
+                        <ToolTip.Template>
+                            <ControlTemplate TargetType="ToolTip">
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="6" 
+                                        Padding="{TemplateBinding Padding}"
+                                        MaxWidth="400">
+                                    <TextBlock Text="{Binding ChiTiet}" 
+                                               Foreground="White" 
+                                               FontSize="13" 
+                                               TextWrapping="Wrap" 
+                                               LineHeight="18"/>
+                                </Border>
+                            </ControlTemplate>
+                        </ToolTip.Template>
+                    </ToolTip>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="15">
@@ -76,9 +103,12 @@
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" BorderThickness="0" Background="White" RowBackground="White"
                   CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Thực hiện" Binding="{Binding NguoiThucHien}" FontWeight="SemiBold" Width="100" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Hành động" Binding="{Binding HanhDong}" FontWeight="Bold" Width="170" IsReadOnly="True" FontSize="13"/>
-                <DataGridTextColumn Header="Chi tiết" Binding="{Binding ChiTiet}" Width="3*" IsReadOnly="True" FontSize="13"/>
+                <DataGridTextColumn Header="Thực hiện" Binding="{Binding NguoiThucHien}" FontWeight="SemiBold" Width="100" IsReadOnly="True" FontSize="13" CanUserSort="False"/>
+
+                <DataGridTextColumn Header="Hành động" Binding="{Binding HanhDong}" FontWeight="Bold" Width="170" IsReadOnly="True" FontSize="13" CanUserSort="False"/>
+
+                <DataGridTextColumn Header="Chi tiết" Binding="{Binding ChiTiet}" ElementStyle="{StaticResource CustomChiTietCellStyle}" Width="3*" IsReadOnly="True" FontSize="13" CanUserSort="False"/>
+
                 <DataGridTextColumn Header="Thời gian" Binding="{Binding ThoiGian, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}" Foreground="#6B7280" Width="1.5*" IsReadOnly="True" FontSize="13"/>
             </DataGrid.Columns>
         </DataGrid>
