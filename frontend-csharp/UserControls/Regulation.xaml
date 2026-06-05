@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="frontend_csharp.UserControls.Regulation"
+<UserControl x:Class="frontend_csharp.UserControls.Regulation"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -93,20 +93,29 @@
         <Border x:Key="AddTermPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm kỳ hạn mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding AddTermErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <StackPanel Margin="0,0,0,16">
                     <TextBlock Text="Kỳ hạn (Tháng)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtKyHan" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtLaiSuat" Padding="12,0"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Ghi chú" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" x:Name="txtGhiChu" Padding="12,0"/>
+                    <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding LaiSuatMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -119,20 +128,29 @@
         <Border x:Key="EditTermPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Chỉnh sửa kỳ hạn" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding EditTermErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <StackPanel Margin="0,0,0,16">
                     <TextBlock Text="Kỳ hạn (Tháng)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
                     <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.TenKyHan, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
-                <StackPanel Margin="0,0,0,16">
+                <StackPanel Margin="0,0,0,24">
                     <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
                     <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.LaiSuat, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Ghi chú" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.GhiChu, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -153,6 +171,20 @@
         <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0">
             <StackPanel>
                 <TextBlock Text="Quy định chung" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,0,0,24" Foreground="#111827"/>
+                <TextBlock Text="{Binding GeneralErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <Grid Margin="0,0,0,24">
                     <Grid.ColumnDefinitions>
@@ -241,7 +273,7 @@
                           BorderThickness="0" 
                           Background="White" 
                           RowBackground="White"
-                          VerticalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Hidden" 
                           HorizontalScrollBarVisibility="Disabled" 
                           IsReadOnly="True"
                           SelectionMode="Single">
@@ -301,7 +333,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Kỳ hạn (Tháng)" Binding="{Binding TenKyHan}" Width="1.5*">
+                        <DataGridTextColumn Header="Kỳ hạn (Tháng)" Binding="{Binding TenKyHan}" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="#111827"/>
@@ -311,17 +343,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Lãi suất (%/năm)" Binding="{Binding LaiSuat}" Width="1.5*">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#111827"/>
-                                    <Setter Property="FontWeight" Value="Medium"/>
-                                    <Setter Property="FontSize" Value="13"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-
-                        <DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}" Width="2*">
+                        <DataGridTextColumn Header="Lãi suất (%/năm)" Binding="{Binding LaiSuat}" Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="#111827"/>

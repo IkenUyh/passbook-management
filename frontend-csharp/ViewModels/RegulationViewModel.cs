@@ -1,4 +1,4 @@
-﻿using frontend_csharp.Models.QuyDinhModel;
+using frontend_csharp.Models.QuyDinhModel;
 using frontend_csharp.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -26,6 +26,44 @@ namespace frontend_csharp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        // --- CÁC BIẾN DÙNG CHO POPUP THÊM KỲ HẠN MỚI ---
+        private string _kyHanMoi;
+        public string KyHanMoi
+        {
+            get => _kyHanMoi;
+            set { _kyHanMoi = value; OnPropertyChanged(); }
+        }
+
+        private string _laiSuatMoi;
+        public string LaiSuatMoi
+        {
+            get => _laiSuatMoi;
+            set { _laiSuatMoi = value; OnPropertyChanged(); }
+        }
+
+        // --- ERROR MESSAGES ---
+        private string _generalErrorMessage;
+        public string GeneralErrorMessage
+        {
+            get => _generalErrorMessage;
+            set { _generalErrorMessage = value; OnPropertyChanged(); }
+        }
+
+        private string _addTermErrorMessage;
+        public string AddTermErrorMessage
+        {
+            get => _addTermErrorMessage;
+            set { _addTermErrorMessage = value; OnPropertyChanged(); }
+        }
+
+        private string _editTermErrorMessage;
+        public string EditTermErrorMessage
+        {
+            get => _editTermErrorMessage;
+            set { _editTermErrorMessage = value; OnPropertyChanged(); }
+        }
+        // ----------------------------------------------
 
         public RegulationViewModel()
         {
@@ -56,14 +94,14 @@ namespace frontend_csharp.ViewModels
                 int stt = 1;
                 foreach (var item in dsLoaiTietKiem)
                 {
+                    int soThang = item.KyHan ?? 0;
                     DanhSachKyHan.Add(new KyHanModel
                     {
                         STT = stt++,
                         MaLoaiTk = item.MaLoaiTk,
-                        TenKyHan = item.TenLoaiTk,
-                        KyHan = item.KyHan ?? 0,
-                        LaiSuat = (double)item.LaiSuat,
-                        // GhiChu = item.GhiChu 
+                        TenKyHan = soThang == 0 ? "Không kỳ hạn" : soThang.ToString(),
+                        KyHan = soThang,
+                        LaiSuat = (double)item.LaiSuat
                     });
                 }
             }
@@ -88,7 +126,7 @@ namespace frontend_csharp.ViewModels
             var request = new LoaiTietKiemRequest
             {
                 MaLoaiTk = KyHanDangSua.MaLoaiTk,
-                TenLoaiTk = KyHanDangSua.TenKyHan,
+                TenLoaiTk = KyHanDangSua.KyHan == 0 ? "Không kỳ hạn" : KyHanDangSua.KyHan + " Tháng",
                 KyHan = KyHanDangSua.KyHan,
                 LaiSuat = (decimal)KyHanDangSua.LaiSuat
             };
@@ -110,6 +148,5 @@ namespace frontend_csharp.ViewModels
         public string TenKyHan { get; set; }
         public int KyHan { get; set; }
         public double LaiSuat { get; set; }
-        public string GhiChu { get; set; }
     }
 }
