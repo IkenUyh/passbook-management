@@ -9,6 +9,7 @@ import com.uit.passbook_management_api.repository.ThamSoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -34,6 +35,19 @@ public class QuyDinhService {
 
     @Transactional
     public ThamSo capNhatThamSo(CapNhatThamSoRequest request) {
+
+        if (request.getTienGuiBanDauToiThieu() != null && request.getTienGuiBanDauToiThieu().compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Tiền gửi ban đầu tối thiểu không được nhỏ hơn 0!");
+        }
+
+        if (request.getTienGuiThemToiThieu() != null && request.getTienGuiThemToiThieu().compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Tiền gửi thêm tối thiểu không được nhỏ hơn 0!");
+        }
+
+        if (request.getSoNgayGuiToiThieu() != null && request.getSoNgayGuiToiThieu() < 0) {
+            throw new RuntimeException("Số ngày gửi tối thiểu không được nhỏ hơn 0!");
+        }
+
         ThamSo thamSo = xemThamSo();
         thamSo.setTienGuiBanDauToiThieu(request.getTienGuiBanDauToiThieu());
         thamSo.setTienGuiThemToiThieu(request.getTienGuiThemToiThieu());
@@ -54,6 +68,15 @@ public class QuyDinhService {
 
     @Transactional
     public LoaiTietKiem luuLoaiTietKiem(LoaiTietKiemRequest request) {
+
+        if (request.getKyHan() != null && request.getKyHan() < 0) {
+            throw new RuntimeException("Kỳ hạn (tháng) không được nhỏ hơn 0!");
+        }
+
+        if (request.getLaiSuat() != null && request.getLaiSuat().compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Lãi suất không được nhỏ hơn 0%!");
+        }
+
         LoaiTietKiem loaiTk = loaiTietKiemRepository.findById(request.getMaLoaiTk())
                 .orElse(new LoaiTietKiem()); // Nếu không tìm thấy thì tạo mới
 

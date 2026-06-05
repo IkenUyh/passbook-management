@@ -23,13 +23,15 @@ public class NhanVienService {
     private final NhanVienRepository nhanVienRepository;
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditLogService auditLogService;
 
     public NhanVienService(NhanVienRepository nhanVienRepository,
                            AppUserRepository appUserRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, AuditLogService auditLogService) {
         this.nhanVienRepository = nhanVienRepository;
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.auditLogService = auditLogService;
     }
 
     public List<NhanVien> layDanhSachNhanVien() {
@@ -136,21 +138,32 @@ public class NhanVienService {
 
     @Transactional
     public String doiMatKhau(DoiMatKhauRequest request) {
-        // 1. Lấy username của người đang gọi API từ JWT Token
+        // Lấy username của người đang gọi API từ JWT Token trong Context
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 2. Tìm tài khoản trong Database
+        // Tìm tài khoản trong Database
         AppUser user = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản trong hệ thống!"));
 
-        // 3. Kiểm tra mật khẩu cũ có khớp không (dùng BCrypt matches)
+        // Kiểm tra mật khẩu cũ có khớp không
         if (!passwordEncoder.matches(request.getMatKhauCu(), user.getPassword())) {
             throw new RuntimeException("Mật khẩu cũ không chính xác!");
         }
 
-        // 4. Mã hóa mật khẩu mới và lưu lại
+        // 2. BỔ SUNG: Kiểm tra mật khẩu mới có bị trùng mật khẩu cũ không
+        if (passwordEncoder.matches(request.getMatKhauMoi(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+        }
+
+        // Mã hóa mật khẩu mới và lưu lại
         user.setPassword(passwordEncoder.encode(request.getMatKhauMoi()));
         appUserRepository.save(user);
+
+        // 3. BỔ SUNG: Ghi nhận vết vào Audit Log phục vụ kiểm toán bảo mật
+        auditLogService.ghiLog(
+                "ĐỔI MẬT KHẨU",
+                "Tài khoản " + username + " đã tự thay đổi mật khẩu thành công."
+        );
 
         return "Đổi mật khẩu thành công!";
     }

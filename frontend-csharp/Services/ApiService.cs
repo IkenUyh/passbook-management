@@ -440,6 +440,35 @@ namespace frontend_csharp.Services
         }
 
 
+        /// 
+        /// Thay đổi mật khẩu tài khoản đang đăng nhập 
+        /// 
+        public async Task<string> DoiMatKhauAsync(DoiMatKhauRequest request)
+        {
+            try
+            {
+                AddAuthHeader(); 
+
+                string json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _client.PutAsync($"{BaseUrl}v1/nhan-vien/doi-mat-khau", content);
+                string resultMessage = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return "Thành công";
+                }
+
+                // Trả về lý do thất bại từ backend (Ví dụ: "Mật khẩu cũ không chính xác!")
+                return resultMessage;
+            }
+            catch (Exception ex)
+            {
+                return $"Lỗi kết nối API: {ex.Message}";
+            }
+        }
+
+
         // ==========================================
         // --- 7. QUẢN LÝ QUY ĐỊNH & THAM SỐ ---
         // ==========================================
