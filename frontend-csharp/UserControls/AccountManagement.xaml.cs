@@ -33,11 +33,37 @@ namespace frontend_csharp.UserControls
 
             if (isSuccess)
             {
-                MessageBox.Show("Thay đổi mật khẩu hệ thống thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Xóa dữ liệu các ô nhập liệu sau khi thành công
                 PbOldPassword.Clear();
                 PbNewPassword.Clear();
                 PbConfirmPassword.Clear();
+
+                // Lấy đối tượng Window chính để hiển thị Custom Popup thông báo thành công
+                dynamic mainWindow = Window.GetWindow(this);
+                if (mainWindow != null)
+                {
+                    try
+                    {
+                        var successPopupUI = (FrameworkElement)this.FindResource("ChangePasswordSuccessPopupUI");
+                        successPopupUI.DataContext = _viewModel;
+                        mainWindow.ShowPopup(successPopupUI);
+                    }
+                    catch
+                    {
+                        // Phương án dự phòng nếu Window chính không hỗ trợ phương thức ShowPopup
+                        MessageBox.Show("Thay đổi mật khẩu hệ thống thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        /// Sự kiện đóng popup thông báo thành công
+        /// </summary>
+        private void CloseSuccessPopup_Click(object sender, RoutedEventArgs e)
+        {
+            dynamic mainWindow = Window.GetWindow(this);
+            mainWindow?.HidePopup();
         }
     }
 }

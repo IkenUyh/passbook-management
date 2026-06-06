@@ -18,6 +18,11 @@ namespace frontend_csharp.ViewModels
         private string _citizenId;
         private string _errorMessage;
 
+        // Các thuộc tính binding lỗi cho từng ô nhập liệu
+        private string _oldPasswordError;
+        private string _newPasswordError;
+        private string _confirmPasswordError;
+
         public string Username
         {
             get { return _username; }
@@ -27,7 +32,12 @@ namespace frontend_csharp.ViewModels
         public string Role
         {
             get { return _role; }
-            set { _role = value; OnPropertyChanged(); }
+            set
+            {
+                // CONVERT: Chuyển đổi NHAN_VIEN thành Nhân Viên, còn lại (ADMIN) giữ nguyên
+                _role = (value == "NHAN_VIEN") ? "Nhân Viên" : value;
+                OnPropertyChanged();
+            }
         }
 
         public string FullName
@@ -54,14 +64,29 @@ namespace frontend_csharp.ViewModels
             set { _errorMessage = value; OnPropertyChanged(); }
         }
 
+        public string OldPasswordError
+        {
+            get { return _oldPasswordError; }
+            set { _oldPasswordError = value; OnPropertyChanged(); }
+        }
+
+        public string NewPasswordError
+        {
+            get { return _newPasswordError; }
+            set { _newPasswordError = value; OnPropertyChanged(); }
+        }
+
+        public string ConfirmPasswordError
+        {
+            get { return _confirmPasswordError; }
+            set { _confirmPasswordError = value; OnPropertyChanged(); }
+        }
+
         public AccountManagementViewModel()
         {
             _apiService = new ApiService();
         }
 
-        /// <summary>
-        /// Tải thông tin tài khoản cá nhân từ API
-        /// </summary>
         public async Task LoadDataAsync()
         {
             Username = AppSession.LoggedInUsername ?? "N/A";
@@ -69,7 +94,6 @@ namespace frontend_csharp.ViewModels
 
             try
             {
-                // GẮN LẠI API: Gọi trực tiếp endpoint lấy thông tin cá nhân của người đang đăng nhập (/v1/nhan-vien/me)
                 var currentEmployee = await _apiService.GetCurrentProfileAsync();
 
                 if (currentEmployee != null)
@@ -77,16 +101,15 @@ namespace frontend_csharp.ViewModels
                     FullName = currentEmployee.HoTen ?? "Chưa cập nhật";
                     PhoneNumber = currentEmployee.SoDienThoai ?? "Chưa cập nhật";
                     CitizenId = currentEmployee.Cccd ?? "Chưa cập nhật";
+                    ErrorMessage = string.Empty;
 
-                    // Cập nhật lại Username và Role đồng bộ từ Server nếu cần
+                    // Đồng bộ lại thông tin từ Server
                     Username = currentEmployee.Username ?? Username;
                     Role = currentEmployee.Role ?? Role;
-
-                    ErrorMessage = string.Empty;
                 }
                 else
                 {
-                    ErrorMessage = "Không thể tải thông tin hồ sơ cá nhân từ hệ thống.";
+                    ErrorMessage = "Không thể tải thông tin hồ sơ cá nhân.";
                 }
             }
             catch (Exception ex)
@@ -95,21 +118,39 @@ namespace frontend_csharp.ViewModels
             }
         }
 
-        /// <summary>
-        /// Xử lý thay đổi mật khẩu
-        /// </summary>
         public async Task<bool> ConfirmChangePasswordAsync(string oldPassword, string newPassword, string confirmPassword)
         {
-            // Kiểm tra và xác thực dữ liệu tại biên
-            if (string.IsNullOrWhiteSpace(oldPassword) || string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmPassword))
+            // Làm sạch các trạng thái lỗi cũ trước khi kiểm tra lượt mới
+            OldPasswordError = string.Empty;
+            NewPasswordError = string.Empty;
+            ConfirmPasswordError = string.Empty;
+            ErrorMessage = string.Empty;
+
+            bool hasError = false;
+
+            if (string.IsNullOrWhiteSpace(oldPassword))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ tất cả các trường mật khẩu.";
-                return false;
+                OldPasswordError = "Vui lòng nhập mật khẩu hiện tại.";
+                hasError = true;
             }
+
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                NewPasswordError = "Vui lòng nhập mật khẩu mới.";
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                ConfirmPasswordError = "Vui lòng xác nhận mật khẩu mới.";
+                hasError = true;
+            }
+
+            if (hasError) return false;
 
             if (newPassword != confirmPassword)
             {
-                ErrorMessage = "Mật khẩu mới và nhập lại mật khẩu không khớp.";
+                ConfirmPasswordError = "Mật khẩu mới và nhập lại mật khẩu không khớp.";
                 return false;
             }
 
@@ -119,17 +160,22 @@ namespace frontend_csharp.ViewModels
                 MatKhauMoi = newPassword
             };
 
-            // Gọi API thay đổi mật khẩu (/v1/nhan-vien/doi-mat-khau)
             string result = await _apiService.DoiMatKhauAsync(request);
 
             if (result == "Thành công")
             {
-                ErrorMessage = string.Empty;
                 return true;
             }
 
-            // Hiển thị thông báo lỗi chi tiết trả về từ Backend
-            ErrorMessage = result;
+            if (result.Contains("Mật khẩu cũ") || result.Contains("hiện tại"))
+            {
+                OldPasswordError = result;
+            }
+            else
+            {
+                ErrorMessage = result;
+            }
+
             return false;
         }
 

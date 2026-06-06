@@ -12,8 +12,6 @@
             <Setter Property="Height" Value="40"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="12,0"/>
-            <Setter Property="BorderBrush" Value="#E5E7EB"/>
-            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="#374151"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Template">
@@ -25,6 +23,51 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="OldPasswordStyle" TargetType="PasswordBox" BasedOn="{StaticResource InputPasswordBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding OldPasswordError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding OldPasswordError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NewPasswordStyle" TargetType="PasswordBox" BasedOn="{StaticResource InputPasswordBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewPasswordError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewPasswordError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ConfirmPasswordStyle" TargetType="PasswordBox" BasedOn="{StaticResource InputPasswordBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ConfirmPasswordError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ConfirmPasswordError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="GreenButtonStyle" TargetType="Button">
@@ -48,29 +91,72 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#EF4444"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Height" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Border x:Key="ChangePasswordSuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Đổi mật khẩu thành công!" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="Thông tin tài khoản hệ thống:" Foreground="#6B7280" FontSize="13" Margin="0,0,0,12" FontStyle="Italic"/>
+
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="Tài khoản đăng nhập:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Text="{Binding Username}" HorizontalAlignment="Right" Foreground="#111827" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+
+                        <Grid>
+                            <TextBlock Text="Quyền hạn hiện tại:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Text="{Binding Role}" HorizontalAlignment="Right" Foreground="#3A5EEA" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="CloseSuccessPopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </UserControl.Resources>
 
-    <Grid Margin="30">
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Tiêu đề lớn -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,25">
-            <TextBlock Text="Thiết lập tài khoản" FontSize="22" FontWeight="Bold" Foreground="#111827"/>
-            <TextBlock Text="Quản lý thông tin hồ sơ nhân viên và bảo mật mật khẩu hệ thống" FontSize="13" Foreground="#6B7280" Margin="0,4,0,0"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Thiết lập tài khoản" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,5"/>
+            <TextBlock Text="Quản lý thông tin hồ sơ nhân viên và bảo mật mật khẩu hệ thống" FontSize="13" Foreground="#6B7280"/>
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.2*"/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Cột trái: Thông tin tài khoản -->
-            <Border Grid.Column="0" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="20" Background="#FBFBFB" VerticalAlignment="Top">
+            <Border Grid.Column="0" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="22" Background="#FBFBFB">
                 <StackPanel>
                     <TextBlock Text="Thông tin cá nhân" FontSize="15" FontWeight="Bold" Foreground="#374151" Margin="0,0,0,15"/>
 
@@ -86,7 +172,7 @@
 
                     <Separator Background="#E5E7EB" Margin="0,5,0,15"/>
 
-                    <Grid Margin="0,0,0,12">
+                    <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="*"/>
@@ -98,7 +184,7 @@
                         </StackPanel>
                     </Grid>
 
-                    <Grid Margin="0,0,0,12">
+                    <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="*"/>
@@ -124,44 +210,34 @@
                 </StackPanel>
             </Border>
 
-            <!-- Cột phải: Đổi mật khẩu -->
-            <StackPanel Grid.Column="2">
-                <TextBlock Text="Thay đổi mật khẩu" FontSize="15" FontWeight="Bold" Foreground="#374151" Margin="0,0,0,5"/>
-                <TextBlock Text="Đảm bảo mật khẩu sử dụng các ký tự an toàn để bảo mật" FontSize="12" Foreground="#6B7280" Margin="0,0,0,15"/>
+            <Border Grid.Column="2" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="22" Background="#FBFBFB">
+                <StackPanel>
+                    <TextBlock Text="Thay đổi mật khẩu" FontSize="15" FontWeight="Bold" Foreground="#374151" Margin="0,0,0,3"/>
+                    <TextBlock Text="Đảm bảo mật khẩu sử dụng ký tự an toàn" FontSize="12" Foreground="#6B7280" Margin="0,0,0,12"/>
 
-                <!-- Thông báo lỗi nghiệp vụ dạng mẫu chung của dự án -->
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                    <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,4,0,12" Height="16"/>
 
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Mật khẩu hiện tại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="PbOldPassword" Style="{StaticResource InputPasswordBoxStyle}"/>
+                    <StackPanel Margin="0,0,0,10">
+                        <TextBlock Text="Mật khẩu hiện tại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                        <PasswordBox x:Name="PbOldPassword" Style="{StaticResource OldPasswordStyle}"/>
+                        <TextBlock Text="{Binding OldPasswordError}" Style="{StaticResource ErrorTextStyle}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,10">
+                        <TextBlock Text="Mật khẩu mới" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                        <PasswordBox x:Name="PbNewPassword" Style="{StaticResource NewPasswordStyle}"/>
+                        <TextBlock Text="{Binding NewPasswordError}" Style="{StaticResource ErrorTextStyle}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock Text="Xác nhận mật khẩu mới" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                        <PasswordBox x:Name="PbConfirmPassword" Style="{StaticResource ConfirmPasswordStyle}"/>
+                        <TextBlock Text="{Binding ConfirmPasswordError}" Style="{StaticResource ErrorTextStyle}"/>
+                    </StackPanel>
+
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Cập nhật mật khẩu" Click="ConfirmChangePassword_Click" Height="40" FontSize="13" FontWeight="SemiBold"/>
                 </StackPanel>
-
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Mật khẩu mới" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="PbNewPassword" Style="{StaticResource InputPasswordBoxStyle}"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Xác nhận mật khẩu mới" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="PbConfirmPassword" Style="{StaticResource InputPasswordBoxStyle}"/>
-                </StackPanel>
-
-                <Button Style="{StaticResource GreenButtonStyle}" Content="Cập nhật mật khẩu" Click="ConfirmChangePassword_Click" Height="40" FontSize="13" FontWeight="SemiBold"/>
-            </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>
