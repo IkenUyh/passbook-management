@@ -3,4 +3,28 @@
     <BitmapImage x:Key="User" UriSource="/Assets/user.jpg"/>
     <BitmapImage x:Key="User_Hover" UriSource="/Assets/user_hover.jpg"/>
     <BitmapImage x:Key="User_Active" UriSource="/Assets/user_active.jpg"/>
+
+    <BitmapImage x:Key="Dashboard" UriSource="/Assets/Dashboard.png"/>
+    <BitmapImage x:Key="Dashboard_Hover" UriSource="/Assets/DashboardHover.png"/>
+    <BitmapImage x:Key="Dashboard_Active" UriSource="/Assets/DashboardActive.png"/>
+
+    <BitmapImage x:Key="Employee" UriSource="/Assets/Employee.png"/>
+    <BitmapImage x:Key="Employee_Hover" UriSource="/Assets/EmployeeHover.png"/>
+    <BitmapImage x:Key="Employee_Active" UriSource="/Assets/EmployeeActive.png"/>
+
+    <BitmapImage x:Key="Lookup" UriSource="/Assets/Lookup.png"/>
+    <BitmapImage x:Key="Lookup_Hover" UriSource="/Assets/LookupHover.png"/>
+    <BitmapImage x:Key="Lookup_Active" UriSource="/Assets/LookupActive.png"/>
+
+    <BitmapImage x:Key="Customer" UriSource="/Assets/Customer.png"/>
+    <BitmapImage x:Key="Customer_Hover" UriSource="/Assets/CustomerHover.png"/>
+    <BitmapImage x:Key="Customer_Active" UriSource="/Assets/CustomerActive.png"/>
+
+    <BitmapImage x:Key="Report" UriSource="/Assets/Report.png"/>
+    <BitmapImage x:Key="Report_Hover" UriSource="/Assets/ReportHover.png"/>
+    <BitmapImage x:Key="Report_Active" UriSource="/Assets/ReportActive.png"/>
+
+    <BitmapImage x:Key="Regulation" UriSource="/Assets/Regulation.png"/>
+    <BitmapImage x:Key="Regulation_Hover" UriSource="/Assets/RegulationHover.png"/>
+    <BitmapImage x:Key="Regulation_Active" UriSource="/Assets/RegulationActive.png"/>
 </ResourceDictionary>
