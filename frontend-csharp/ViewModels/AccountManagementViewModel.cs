@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using frontend_csharp.Models.NhanVienModel;
@@ -60,6 +59,9 @@ namespace frontend_csharp.ViewModels
             _apiService = new ApiService();
         }
 
+        /// <summary>
+        /// Tải thông tin tài khoản cá nhân từ API
+        /// </summary>
         public async Task LoadDataAsync()
         {
             Username = AppSession.LoggedInUsername ?? "N/A";
@@ -67,28 +69,24 @@ namespace frontend_csharp.ViewModels
 
             try
             {
-                var employees = await _apiService.GetDanhSachNhanVienAsync();
-
-                if (employees == null || employees.Count == 0)
-                {
-                    ErrorMessage = "Không thể tải danh sách hoặc tài khoản không có quyền xem thông tin nhân viên.";
-                    return;
-                }
-
-                // Khắc phục lỗi so sánh chuỗi phân biệt hoa thường (Case-Sensitive)
-                var currentEmployee = employees.FirstOrDefault(x =>
-                    string.Equals(x.Username, AppSession.LoggedInUsername, StringComparison.OrdinalIgnoreCase));
+                // GẮN LẠI API: Gọi trực tiếp endpoint lấy thông tin cá nhân của người đang đăng nhập (/v1/nhan-vien/me)
+                var currentEmployee = await _apiService.GetCurrentProfileAsync();
 
                 if (currentEmployee != null)
                 {
                     FullName = currentEmployee.HoTen ?? "Chưa cập nhật";
                     PhoneNumber = currentEmployee.SoDienThoai ?? "Chưa cập nhật";
                     CitizenId = currentEmployee.Cccd ?? "Chưa cập nhật";
+
+                    // Cập nhật lại Username và Role đồng bộ từ Server nếu cần
+                    Username = currentEmployee.Username ?? Username;
+                    Role = currentEmployee.Role ?? Role;
+
                     ErrorMessage = string.Empty;
                 }
                 else
                 {
-                    ErrorMessage = $"Không tìm thấy hồ sơ chi tiết cho tài khoản '{AppSession.LoggedInUsername}'.";
+                    ErrorMessage = "Không thể tải thông tin hồ sơ cá nhân từ hệ thống.";
                 }
             }
             catch (Exception ex)
@@ -97,8 +95,12 @@ namespace frontend_csharp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Xử lý thay đổi mật khẩu
+        /// </summary>
         public async Task<bool> ConfirmChangePasswordAsync(string oldPassword, string newPassword, string confirmPassword)
         {
+            // Kiểm tra và xác thực dữ liệu tại biên
             if (string.IsNullOrWhiteSpace(oldPassword) || string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmPassword))
             {
                 ErrorMessage = "Vui lòng nhập đầy đủ tất cả các trường mật khẩu.";
@@ -117,6 +119,7 @@ namespace frontend_csharp.ViewModels
                 MatKhauMoi = newPassword
             };
 
+            // Gọi API thay đổi mật khẩu (/v1/nhan-vien/doi-mat-khau)
             string result = await _apiService.DoiMatKhauAsync(request);
 
             if (result == "Thành công")
@@ -125,6 +128,7 @@ namespace frontend_csharp.ViewModels
                 return true;
             }
 
+            // Hiển thị thông báo lỗi chi tiết trả về từ Backend
             ErrorMessage = result;
             return false;
         }
