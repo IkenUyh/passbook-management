@@ -229,6 +229,12 @@
                          Tag="{StaticResource User_Hover}" 
                          DataContext="{StaticResource User_Active}"/>
 
+            <RadioButton Content="Tài khoản" Style="{StaticResource SidePanelStyle}"
+                         Checked="Menu_Checked"
+                         CommandParameter="{StaticResource User}" 
+                         Tag="{StaticResource User_Hover}" 
+                         DataContext="{StaticResource User_Active}"/>
+
         </StackPanel>
     </Border>
 </UserControl>
