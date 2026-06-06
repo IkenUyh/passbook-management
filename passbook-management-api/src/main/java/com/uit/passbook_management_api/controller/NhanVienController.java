@@ -48,10 +48,32 @@ public class NhanVienController {
     }
 
     @PutMapping("/doi-mat-khau")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('NHAN_VIEN')")
     public ResponseEntity<?> doiMatKhauTaiKhoan(@RequestBody DoiMatKhauRequest request) {
         try {
             return ResponseEntity.ok(nhanVienService.doiMatKhau(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/reset-mat-khau")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resetMatKhauNhanVien(@PathVariable String id) {
+        try {
+            String ketQua = nhanVienService.resetMatKhau(id);
+            return ResponseEntity.ok(ketQua);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('NHAN_VIEN')")
+    public ResponseEntity<?> xemThongTinCaNhan() {
+        try {
+            return ResponseEntity.ok(nhanVienService.layThongTinCaNhan());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

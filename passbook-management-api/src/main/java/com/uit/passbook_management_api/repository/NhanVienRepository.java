@@ -16,4 +16,6 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, String> {
 
     @Query(value = "SELECT id FROM nhan_vien ORDER BY CAST(SUBSTRING(id, 3) AS UNSIGNED) DESC LIMIT 1", nativeQuery = true)
     String findLastId();
+
+    Optional<NhanVien> findByAppUserUsername(String username);
 }
