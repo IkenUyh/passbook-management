@@ -48,6 +48,14 @@ namespace frontend_csharp.ViewModels
             set { _transactionAmount = value; OnPropertyChanged(); }
         }
 
+        // Thuộc tính binding lỗi thành phần cho ô nhập số tiền giao dịch
+        private string _transactionAmountError;
+        public string TransactionAmountError
+        {
+            get => _transactionAmountError;
+            set { _transactionAmountError = value; OnPropertyChanged(); }
+        }
+
         private string _errorMessage;
         public string ErrorMessage
         {
@@ -59,13 +67,11 @@ namespace frontend_csharp.ViewModels
         {
             _apiService = new ApiService();
             SavingsBooks = new ObservableCollection<SoTietKiem>();
-            // Đăng ký lắng nghe sự kiện từ màn hình quản lý khách hàng
             CustomerManagementViewModel.OnSavingsBookAdded += RefreshData;
         }
 
         private void RefreshData()
         {
-            // Sửa tên hàm gọi cho đúng với hàm thực tế bên dưới
             _ = LoadDataAsync();
         }
 
@@ -106,6 +112,7 @@ namespace frontend_csharp.ViewModels
         {
             _transactionTargetBook = savingsBook ?? throw new ArgumentNullException(nameof(savingsBook), "Sổ tiết kiệm không hợp lệ.");
             TransactionAmount = string.Empty;
+            TransactionAmountError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
@@ -127,7 +134,7 @@ namespace frontend_csharp.ViewModels
                 return true;
             }
 
-            ErrorMessage = "Giao dịch gửi thêm tiền thất bại.";
+            ErrorMessage = "Giao dịch gửi thêm tiền vào sổ tiết kiệm thất bại.";
             return false;
         }
 
@@ -135,9 +142,10 @@ namespace frontend_csharp.ViewModels
         {
             if (!ValidateTransaction(out decimal amount)) return false;
 
+            // Kiểm tra nghiệp vụ số tiền rút vượt quá hạn định số dư
             if (amount > _transactionTargetBook.SoDu)
             {
-                ErrorMessage = "Số dư trong sổ không đủ để thực hiện giao dịch rút tiền!";
+                TransactionAmountError = "Số tiền rút vượt quá số dư tài khoản hiện có!";
                 return false;
             }
 
@@ -155,13 +163,16 @@ namespace frontend_csharp.ViewModels
                 return true;
             }
 
-            ErrorMessage = "Giao dịch rút tiền/Tất toán thất bại.";
+            ErrorMessage = "Giao dịch rút tiền hoặc tất toán sổ tiết kiệm thất bại.";
             return false;
         }
 
         private bool ValidateTransaction(out decimal amount)
         {
             amount = 0;
+            TransactionAmountError = string.Empty;
+            ErrorMessage = string.Empty;
+
             if (_transactionTargetBook == null)
             {
                 ErrorMessage = "Không tìm thấy thông tin sổ tiết kiệm mục tiêu!";
@@ -170,17 +181,16 @@ namespace frontend_csharp.ViewModels
 
             if (string.IsNullOrWhiteSpace(TransactionAmount))
             {
-                ErrorMessage = "Vui lòng nhập số tiền thực hiện!";
+                TransactionAmountError = "Vui lòng nhập số tiền thực hiện giao dịch.";
                 return false;
             }
 
-            if (!decimal.TryParse(TransactionAmount, out amount) || amount <= 0)
+            if (!decimal.TryParse(TransactionAmount.Trim(), out amount) || amount <= 0)
             {
-                ErrorMessage = "Số tiền nhập vào không hợp lệ!";
+                TransactionAmountError = "Số tiền nhập vào không hợp lệ (Phải là số dương lớn hơn 0).";
                 return false;
             }
 
-            ErrorMessage = string.Empty;
             return true;
         }
 
