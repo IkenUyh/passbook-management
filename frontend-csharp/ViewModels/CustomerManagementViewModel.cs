@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using frontend_csharp.Services;
 using frontend_csharp.Models.KhachHangModel;
@@ -62,6 +63,28 @@ namespace frontend_csharp.ViewModels
             set { _newPhoneNumber = value; OnPropertyChanged(); }
         }
 
+        // Khai báo lỗi thành phần cho Form thêm mới
+        private string _newFullNameError;
+        public string NewFullNameError
+        {
+            get => _newFullNameError;
+            set { _newFullNameError = value; OnPropertyChanged(); }
+        }
+
+        private string _newCitizenIdError;
+        public string NewCitizenIdError
+        {
+            get => _newCitizenIdError;
+            set { _newCitizenIdError = value; OnPropertyChanged(); }
+        }
+
+        private string _newPhoneNumberError;
+        public string NewPhoneNumberError
+        {
+            get => _newPhoneNumberError;
+            set { _newPhoneNumberError = value; OnPropertyChanged(); }
+        }
+
         private KhachHang _editingCustomer;
 
         private string _editFullName;
@@ -83,6 +106,28 @@ namespace frontend_csharp.ViewModels
         {
             get => _editPhoneNumber;
             set { _editPhoneNumber = value; OnPropertyChanged(); }
+        }
+
+        // Khai báo lỗi thành phần cho Form chỉnh sửa
+        private string _editFullNameError;
+        public string EditFullNameError
+        {
+            get => _editFullNameError;
+            set { _editFullNameError = value; OnPropertyChanged(); }
+        }
+
+        private string _editCitizenIdError;
+        public string EditCitizenIdError
+        {
+            get => _editCitizenIdError;
+            set { _editCitizenIdError = value; OnPropertyChanged(); }
+        }
+
+        private string _editPhoneNumberError;
+        public string EditPhoneNumberError
+        {
+            get => _editPhoneNumberError;
+            set { _editPhoneNumberError = value; OnPropertyChanged(); }
         }
 
         private KhachHang _savingsBookTargetCustomer;
@@ -108,6 +153,14 @@ namespace frontend_csharp.ViewModels
             set { _initialDeposit = value; OnPropertyChanged(); }
         }
 
+        // Khai báo lỗi thành phần cho Form mở sổ
+        private string _initialDepositError;
+        public string InitialDepositError
+        {
+            get => _initialDepositError;
+            set { _initialDepositError = value; OnPropertyChanged(); }
+        }
+
         private string _errorMessage;
         public string ErrorMessage
         {
@@ -128,7 +181,6 @@ namespace frontend_csharp.ViewModels
             {
                 ErrorMessage = string.Empty;
 
-                // Tải song song danh sách khách hàng và sổ tiết kiệm để tối ưu thời gian phản hồi
                 var khachHangTask = _apiService.GetDanhSachKhachHangAsync();
                 var soTietKiemTask = _apiService.GetDanhSachSoTietKiemAsync();
 
@@ -139,7 +191,6 @@ namespace frontend_csharp.ViewModels
 
                 _allCustomers = data ?? new List<KhachHang>();
 
-                // Tính toán số sổ sở hữu động dựa vào Id khách hàng
                 foreach (var customer in _allCustomers)
                 {
                     customer.TotalBooks = danhSachSo.Count(s => s.KhachHang != null && s.KhachHang.Id == customer.Id);
@@ -147,7 +198,6 @@ namespace frontend_csharp.ViewModels
 
                 ApplyFilter();
 
-                // Tải danh mục các loại kỳ hạn tiết kiệm
                 var loaiTkData = await _apiService.GetDanhSachLoaiTietKiemAsync();
                 SavingsTypes = new ObservableCollection<LoaiTietKiem>(loaiTkData ?? new List<LoaiTietKiem>());
 
@@ -187,20 +237,65 @@ namespace frontend_csharp.ViewModels
             NewFullName = string.Empty;
             NewCitizenId = string.Empty;
             NewPhoneNumber = string.Empty;
+
+            NewFullNameError = string.Empty;
+            NewCitizenIdError = string.Empty;
+            NewPhoneNumberError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
         public async Task<bool> ConfirmAddAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewFullName) ||
-                string.IsNullOrWhiteSpace(NewCitizenId) ||
-                string.IsNullOrWhiteSpace(NewPhoneNumber))
+            NewFullNameError = string.Empty;
+            NewCitizenIdError = string.Empty;
+            NewPhoneNumberError = string.Empty;
+            ErrorMessage = string.Empty;
+
+            bool hasError = false;
+
+            if (string.IsNullOrWhiteSpace(NewFullName))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
-                return false;
+                NewFullNameError = "Vui lòng nhập họ và tên khách hàng.";
+                hasError = true;
             }
 
-            ErrorMessage = string.Empty;
+            if (string.IsNullOrWhiteSpace(NewCitizenId))
+            {
+                NewCitizenIdError = "Vui lòng nhập số CCCD.";
+                hasError = true;
+            }
+            else if (!Regex.IsMatch(NewCitizenId.Trim(), @"^\d{12}$"))
+            {
+                NewCitizenIdError = "Số CCCD không hợp lệ (Phải chứa đúng 12 chữ số).";
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewPhoneNumber))
+            {
+                NewPhoneNumberError = "Vui lòng nhập số điện thoại.";
+                hasError = true;
+            }
+            else
+            {
+                string cleanPhone = Regex.Replace(NewPhoneNumber.Trim(), @"[\s\-\(\)]", "");
+                if (!Regex.IsMatch(cleanPhone, @"^\d+$"))
+                {
+                    NewPhoneNumberError = "Số điện thoại chỉ được phép chứa các chữ số.";
+                    hasError = true;
+                }
+                else if (cleanPhone.Length < 10 || cleanPhone.Length > 11)
+                {
+                    NewPhoneNumberError = "Số điện thoại bắt buộc phải từ 10 - 11 chữ số.";
+                    hasError = true;
+                }
+                else if (!cleanPhone.StartsWith("0"))
+                {
+                    NewPhoneNumberError = "Số điện thoại liên hệ phải bắt đầu bằng chữ số 0.";
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return false;
 
             var request = new KhachHangRequest
             {
@@ -217,7 +312,7 @@ namespace frontend_csharp.ViewModels
                 return true;
             }
 
-            ErrorMessage = "Thêm mới khách hàng hệ thống thất bại.";
+            ErrorMessage = "Thêm mới khách hàng thất bại. Vui lòng kiểm tra lại kết nối mạng hoặc trùng lặp CCCD.";
             return false;
         }
 
@@ -227,6 +322,10 @@ namespace frontend_csharp.ViewModels
             EditFullName = customer.Ten;
             EditCitizenId = customer.Cmnd;
             EditPhoneNumber = customer.Sdt;
+
+            EditFullNameError = string.Empty;
+            EditCitizenIdError = string.Empty;
+            EditPhoneNumberError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
@@ -238,15 +337,56 @@ namespace frontend_csharp.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(EditFullName) ||
-                string.IsNullOrWhiteSpace(EditCitizenId) ||
-                string.IsNullOrWhiteSpace(EditPhoneNumber))
+            EditFullNameError = string.Empty;
+            EditCitizenIdError = string.Empty;
+            EditPhoneNumberError = string.Empty;
+            ErrorMessage = string.Empty;
+
+            bool hasError = false;
+
+            if (string.IsNullOrWhiteSpace(EditFullName))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
-                return false;
+                EditFullNameError = "Họ và tên khách hàng không được bỏ trống.";
+                hasError = true;
             }
 
-            ErrorMessage = string.Empty;
+            if (string.IsNullOrWhiteSpace(EditCitizenId))
+            {
+                EditCitizenIdError = "Số định danh CCCD không được bỏ trống.";
+                hasError = true;
+            }
+            else if (!Regex.IsMatch(EditCitizenId.Trim(), @"^\d{12}$"))
+            {
+                EditCitizenIdError = "Số CCCD không hợp lệ (Phải chứa đúng 12 chữ số).";
+                hasError = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(EditPhoneNumber))
+            {
+                EditPhoneNumberError = "Số điện thoại liên lạc không được bỏ trống.";
+                hasError = true;
+            }
+            else
+            {
+                string cleanPhone = Regex.Replace(EditPhoneNumber.Trim(), @"[\s\-\(\)]", "");
+                if (!Regex.IsMatch(cleanPhone, @"^\d+$"))
+                {
+                    EditPhoneNumberError = "Số điện thoại chỉ được phép chứa các chữ số.";
+                    hasError = true;
+                }
+                else if (cleanPhone.Length < 10 || cleanPhone.Length > 11)
+                {
+                    EditPhoneNumberError = "Số điện thoại bắt buộc phải từ 10 - 11 chữ số.";
+                    hasError = true;
+                }
+                else if (!cleanPhone.StartsWith("0"))
+                {
+                    EditPhoneNumberError = "Số điện thoại liên hệ phải bắt đầu bằng chữ số 0.";
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return false;
 
             var request = new KhachHangRequest
             {
@@ -263,7 +403,7 @@ namespace frontend_csharp.ViewModels
                 return true;
             }
 
-            ErrorMessage = "Cập nhật thông tin khách hàng thất bại.";
+            ErrorMessage = "Cập nhật thông tin thất bại. Vui lòng kiểm tra trùng lặp CCCD/SĐT.";
             return false;
         }
 
@@ -275,30 +415,32 @@ namespace frontend_csharp.ViewModels
                 SelectedSavingsType = SavingsTypes.First().MaLoaiTk;
             }
             InitialDeposit = string.Empty;
+            InitialDepositError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
         public async Task<bool> ConfirmAddSavingsBookAsync()
         {
+            InitialDepositError = string.Empty;
+            ErrorMessage = string.Empty;
+
             if (_savingsBookTargetCustomer == null)
             {
-                ErrorMessage = "Không tìm thấy khách hàng cần thêm sổ!";
+                ErrorMessage = "Không tìm thấy khách hàng mục tiêu để mở sổ!";
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(InitialDeposit))
             {
-                ErrorMessage = "Vui lòng nhập số tiền gửi ban đầu!";
+                InitialDepositError = "Vui lòng nhập số tiền gửi ban đầu.";
                 return false;
             }
 
-            if (!decimal.TryParse(InitialDeposit, out decimal depositAmount) || depositAmount <= 0)
+            if (!decimal.TryParse(InitialDeposit.Trim(), out decimal depositAmount) || depositAmount <= 0)
             {
-                ErrorMessage = "Số tiền gửi ban đầu không hợp lệ!";
+                InitialDepositError = "Số tiền gửi ban đầu phải là số dương lớn hơn 0.";
                 return false;
             }
-
-            ErrorMessage = string.Empty;
 
             var request = new MoSoRequest
             {
@@ -313,12 +455,11 @@ namespace frontend_csharp.ViewModels
             if (success)
             {
                 await LoadDataAsync();
-                // Kích hoạt sự kiện thông báo cho màn hình tra cứu
                 OnSavingsBookAdded?.Invoke();
                 return true;
             }
 
-            ErrorMessage = "Mở sổ tiết kiệm thất bại.";
+            ErrorMessage = "Mở sổ tiết kiệm thất bại. Vui lòng kiểm tra quy định số tiền gửi tối thiểu.";
             return false;
         }
 

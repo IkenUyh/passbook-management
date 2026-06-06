@@ -8,6 +8,7 @@
              Background="White"
              d:DesignHeight="640" d:DesignWidth="790">
     <UserControl.Resources>
+        <!-- GIỮ NGUYÊN: Style Input gốc của bạn -->
         <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="40"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -28,6 +29,23 @@
             </Setter>
         </Style>
 
+        <!-- THÊM: Style đổi màu viền khi ô số tiền giao dịch phát sinh lỗi -->
+        <Style x:Key="TransactionAmountStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TransactionAmountError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding TransactionAmountError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- GIỮ NGUYÊN: Các Style Button, Headers, Cells gốc của bạn -->
         <Style x:Key="GreenButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#10B981"/>
             <Setter Property="Foreground" Value="White"/>
@@ -119,62 +137,6 @@
             </Style.Resources>
         </Style>
 
-        <Border x:Key="DepositPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <StackPanel>
-                <TextBlock Text="Gửi thêm tiền vào sổ" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Số tiền gửi thêm (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding TransactionAmount, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="ClosePopup_Click" Width="100" Margin="0,0,10,0"/>
-                    <Button Style="{StaticResource GreenButtonStyle}" Content="Xác nhận" Click="ConfirmDeposit_Click" Width="100"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <Border x:Key="WithdrawPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <StackPanel>
-                <TextBlock Text="Rút tiền từ sổ tiết kiệm" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Số tiền rút (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding TransactionAmount, UpdateSourceTrigger=PropertyChanged}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="ClosePopup_Click" Width="100" Margin="0,0,10,0"/>
-                    <Button Style="{StaticResource GreenButtonStyle}" Content="Xác nhận" Click="ConfirmWithdraw_Click" Width="100"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#6B7280"/>
@@ -230,9 +192,65 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- THÊM: Style Text lỗi ẩn tàng hình giữ không gian cố định -->
+        <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#EF4444"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Height" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- POPUP: GỬI THÊM TIỀN -->
+        <Border x:Key="DepositPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Gửi thêm tiền vào sổ" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10" Height="Auto"/>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số tiền gửi thêm (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource TransactionAmountStyle}" Text="{Binding TransactionAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding TransactionAmountError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="ClosePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Xác nhận" Click="ConfirmDeposit_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- POPUP: RÚT TIỀN / TẤT TOÁN -->
+        <Border x:Key="WithdrawPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Rút tiền từ sổ tiết kiệm" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10" Height="Auto"/>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số tiền rút (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource TransactionAmountStyle}" Text="{Binding TransactionAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding TransactionAmountError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="ClosePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Xác nhận" Click="ConfirmWithdraw_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </UserControl.Resources>
 
     <Grid Margin="15">
+        <!-- GIỮ NGUYÊN BẢN 100%: Toàn bộ Layout và cấu trúc DataGrid gốc của bạn -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -301,6 +319,7 @@
             </Border>
         </Grid>
 
+        <!-- KHÔI PHỤC CHUẨN: Toàn bộ DataGrid dgvSavingsBooks gốc -->
         <DataGrid Grid.Row="1" Name="dgvSavingsBooks" AutoGenerateColumns="False" 
                   ItemsSource="{Binding SavingsBooks}" CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" BorderThickness="0" Background="White" RowBackground="White"
@@ -378,6 +397,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <!-- KHÔI PHỤC CHUẨN: Phần hiển thị Card dạng GridView gốc -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ScrollViewer.Style>
                 <Style TargetType="ScrollViewer">
@@ -402,7 +422,6 @@
                             <StackPanel>
                                 <Grid Margin="0 -10 0 0">
                                     <TextBlock Text="{Binding KhachHang.Ten}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
-
                                     <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tuỳ chọn" HorizontalAlignment="Right" Click="SettingsButton_Click">
                                         <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
                                         <Button.ContextMenu>
@@ -429,12 +448,10 @@
                                     <TextBlock Text="Loại: " FontSize="13" Foreground="#9CA3AF"/>
                                     <TextBlock Text="{Binding LoaiTietKiem.TenLoaiTk}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
                                 </StackPanel>
-
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                    <TextBlock Text="Lãi suất: " FontSize="13" Foreground="#9CA3AF"/>
+                                    <TextBlock Text="Lại suất: " FontSize="13" Foreground="#9CA3AF"/>
                                     <TextBlock Text="{Binding LoaiTietKiem.LaiSuat, StringFormat='{}{0}%/năm'}" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
                                 </StackPanel>
-
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                     <TextBlock Text="Đáo hạn: " FontSize="13" Foreground="#9CA3AF"/>
                                     <TextBlock Text="{Binding NgayDaoHan, StringFormat='{}{0:dd/MM/yyyy}'}" FontSize="13" Foreground="#374151"/>

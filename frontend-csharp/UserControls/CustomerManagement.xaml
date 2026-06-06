@@ -8,6 +8,7 @@
              Background="White"
              d:DesignHeight="640" d:DesignWidth="790">
     <UserControl.Resources>
+        <!-- GIỮ NGUYÊN: Style Input gốc của bạn -->
         <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="40"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -20,7 +21,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border BorderBrush="{TemplateBinding BorderBrush}" 
-                               BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="White" CornerRadius="4">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
@@ -29,6 +30,107 @@
             </Setter>
         </Style>
 
+        <!-- THÊM: Các Style đổi viền đỏ khi có lỗi nhập liệu -->
+        <Style x:Key="NewFullNameStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewFullNameError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewFullNameError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="NewCitizenIdStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewCitizenIdError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewCitizenIdError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="NewPhoneNumberStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewPhoneNumberError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewPhoneNumberError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EditFullNameStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditFullNameError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditFullNameError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EditCitizenIdStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditCitizenIdError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditCitizenIdError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EditPhoneNumberStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditPhoneNumberError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditPhoneNumberError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="InitialDepositStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding InitialDepositError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding InitialDepositError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- GIỮ NGUYÊN: Các Style Button và DataGrid gốc của bạn -->
         <Style x:Key="GreenButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#10B981"/>
             <Setter Property="Foreground" Value="White"/>
@@ -84,10 +186,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="DataGridColumnHeader">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                         BorderThickness="{TemplateBinding BorderThickness}"
-                                Padding="{TemplateBinding Padding}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -139,11 +238,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContextMenu">
-                        <Border Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="8"
-                                SnapsToDevicePixels="True">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" SnapsToDevicePixels="True">
                             <Grid Grid.IsSharedSizeScope="True" Margin="0,4">
                                 <ItemsPresenter />
                             </Grid>
@@ -183,38 +278,45 @@
             </Style.Resources>
         </Style>
 
+        <!-- THÊM: Style Text lỗi ẩn tàng hình giữ không gian cố định -->
+        <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#EF4444"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Height" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- POPUP: THÊM KHÁCH HÀNG MỚI -->
         <Border x:Key="AddCustomerPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm khách hàng mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10" Height="Auto"/>
 
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewFullNameStyle}" Text="{Binding NewFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewFullNameError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
 
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewFullName, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewCitizenIdStyle}" Text="{Binding NewCitizenId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewCitizenIdError}" Style="{StaticResource ErrorTextStyle}"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewCitizenId, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding NewPhoneNumber, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewPhoneNumberStyle}" Text="{Binding NewPhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewPhoneNumberError}" Style="{StaticResource ErrorTextStyle}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -224,38 +326,28 @@
             </StackPanel>
         </Border>
 
+        <!-- POPUP: CHỈNH SỬA THÔNG TIN KHÁCH HÀNG -->
         <Border x:Key="EditCustomerPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Chỉnh sửa thông tin" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10" Height="Auto"/>
 
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditFullNameStyle}" Text="{Binding EditFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditFullNameError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
 
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditFullName, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditCitizenIdStyle}" Text="{Binding EditCitizenId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditCitizenIdError}" Style="{StaticResource ErrorTextStyle}"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Số CCCD" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditCitizenId, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
-                </StackPanel>
-
-                <StackPanel Margin="0,0,0,24">
-                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding EditPhoneNumber, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditPhoneNumberStyle}" Text="{Binding EditPhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditPhoneNumberError}" Style="{StaticResource ErrorTextStyle}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -265,33 +357,21 @@
             </StackPanel>
         </Border>
 
+        <!-- POPUP: THÊM SỔ TIẾT KIỆM MỚI -->
         <Border x:Key="AddSavingsBookPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm sổ tiết kiệm mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10" Height="Auto"/>
 
                 <StackPanel Margin="0,0,0,16">
                     <TextBlock Text="Chọn loại tiết kiệm" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
                     <ComboBox ItemsSource="{Binding SavingsTypes}" DisplayMemberPath="TenLoaiTk" SelectedValuePath="MaLoaiTk" SelectedValue="{Binding SelectedSavingsType}" Height="40" VerticalContentAlignment="Center" Padding="12,0"/>
                 </StackPanel>
 
-                <StackPanel Margin="0,0,0,24">
+                <StackPanel Margin="0,0,0,16">
                     <TextBlock Text="Số tiền gửi ban đầu (VNĐ)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding InitialDeposit, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBox Style="{StaticResource InitialDepositStyle}" Text="{Binding InitialDeposit, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding InitialDepositError}" Style="{StaticResource ErrorTextStyle}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -303,6 +383,7 @@
     </UserControl.Resources>
 
     <Grid>
+        <!-- GIỮ NGUYÊN BẢN 100%: Toàn bộ Layout và cấu trúc DataGrid gốc của bạn -->
         <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -327,7 +408,7 @@
                         </Grid.ColumnDefinitions>
                         <materialDesign:PackIcon Kind="Magnify" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
-                                  FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."
+                                 FontSize="13" Foreground="#374151" Tag="Tìm kiếm khách hàng..."
                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Border>
@@ -381,21 +462,18 @@
                 </Border>
             </Grid>
 
+            <!-- KHÔI PHỤC CHUẨN: DataGrid dgvCustomers gốc -->
             <DataGrid Grid.Row="1" Name="dgvCustomers" ItemsSource="{Binding Customers}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
                       GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
                       BorderThickness="0" Background="White" RowBackground="White"
-                      ScrollViewer.VerticalScrollBarVisibility="Hidden" 
-                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                       CanUserResizeColumns="False"
-                      CanUserReorderColumns="False"
-                      CanUserSortColumns="True">
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                      CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
                 <DataGrid.Style>
                     <Style TargetType="DataGrid">
                         <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
-                            <Trigger Property="Visibility" Value="Visible">
-                            </Trigger>
+                            <Trigger Property="Visibility" Value="Visible"></Trigger>
                             <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
@@ -454,6 +532,7 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+            <!-- KHÔI PHỤC CHUẨN: Phần hiển thị Card dạng GridView gốc -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
