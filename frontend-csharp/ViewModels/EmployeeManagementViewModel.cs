@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using frontend_csharp.Services;
 using frontend_csharp.Models.NhanVienModel;
@@ -60,6 +61,28 @@ namespace frontend_csharp.ViewModels
             set { _newPhoneNumber = value; OnPropertyChanged(); }
         }
 
+        // Add Error Properties
+        private string _newFullNameError;
+        public string NewFullNameError
+        {
+            get => _newFullNameError;
+            set { _newFullNameError = value; OnPropertyChanged(); }
+        }
+
+        private string _newCitizenIdError;
+        public string NewCitizenIdError
+        {
+            get => _newCitizenIdError;
+            set { _newCitizenIdError = value; OnPropertyChanged(); }
+        }
+
+        private string _newPhoneNumberError;
+        public string NewPhoneNumberError
+        {
+            get => _newPhoneNumberError;
+            set { _newPhoneNumberError = value; OnPropertyChanged(); }
+        }
+
         // Properties hiển thị popup kết quả
         private string _newUsername;
         public string NewUsername
@@ -97,6 +120,28 @@ namespace frontend_csharp.ViewModels
         {
             get => _editPhoneNumber;
             set { _editPhoneNumber = value; OnPropertyChanged(); }
+        }
+
+        // Edit Error Properties
+        private string _editFullNameError;
+        public string EditFullNameError
+        {
+            get => _editFullNameError;
+            set { _editFullNameError = value; OnPropertyChanged(); }
+        }
+
+        private string _editCitizenIdError;
+        public string EditCitizenIdError
+        {
+            get => _editCitizenIdError;
+            set { _editCitizenIdError = value; OnPropertyChanged(); }
+        }
+
+        private string _editPhoneNumberError;
+        public string EditPhoneNumberError
+        {
+            get => _editPhoneNumberError;
+            set { _editPhoneNumberError = value; OnPropertyChanged(); }
         }
 
         private string _errorMessage;
@@ -169,20 +214,68 @@ namespace frontend_csharp.ViewModels
             NewFullName = string.Empty;
             NewCitizenId = string.Empty;
             NewPhoneNumber = string.Empty;
+
+            NewFullNameError = string.Empty;
+            NewCitizenIdError = string.Empty;
+            NewPhoneNumberError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
         public async Task<bool> ConfirmAddAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewFullName) ||
-                string.IsNullOrWhiteSpace(NewCitizenId) ||
-                string.IsNullOrWhiteSpace(NewPhoneNumber))
+            // Reset lỗi cũ
+            NewFullNameError = string.Empty;
+            NewCitizenIdError = string.Empty;
+            NewPhoneNumberError = string.Empty;
+            ErrorMessage = string.Empty;
+
+            bool hasError = false;
+
+            if (string.IsNullOrWhiteSpace(NewFullName))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
-                return false;
+                NewFullNameError = "Vui lòng nhập họ và tên.";
+                hasError = true;
             }
 
-            ErrorMessage = string.Empty;
+            // Kiểm tra định dạng CCCD (Đúng 12 số)
+            if (string.IsNullOrWhiteSpace(NewCitizenId))
+            {
+                NewCitizenIdError = "Vui lòng nhập số CCCD.";
+                hasError = true;
+            }
+            else if (!Regex.IsMatch(NewCitizenId.Trim(), @"^\d{12}$"))
+            {
+                NewCitizenIdError = "Số CCCD không hợp lệ (Phải đúng 12 chữ số).";
+                hasError = true;
+            }
+
+            // Kiểm tra định dạng Số điện thoại (10-11 số, bắt đầu bằng số 0)
+            if (string.IsNullOrWhiteSpace(NewPhoneNumber))
+            {
+                NewPhoneNumberError = "Vui lòng nhập số điện thoại.";
+                hasError = true;
+            }
+            else
+            {
+                string cleanPhone = Regex.Replace(NewPhoneNumber.Trim(), @"[\s\-\(\)]", "");
+                if (!Regex.IsMatch(cleanPhone, @"^\d+$"))
+                {
+                    NewPhoneNumberError = "Số điện thoại chỉ được chứa chữ số.";
+                    hasError = true;
+                }
+                else if (cleanPhone.Length < 10 || cleanPhone.Length > 11)
+                {
+                    NewPhoneNumberError = "Số điện thoại phải có từ 10 - 11 chữ số.";
+                    hasError = true;
+                }
+                else if (!cleanPhone.StartsWith("0"))
+                {
+                    NewPhoneNumberError = "Số điện thoại phải bắt đầu từ số 0.";
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return false;
 
             var request = new NhanVienRequest
             {
@@ -195,11 +288,10 @@ namespace frontend_csharp.ViewModels
             var response = await _apiService.CreateNhanVienAsync(request);
             if (response == null)
             {
-                ErrorMessage = "Thêm nhân viên thất bại. Vui lòng kiểm tra trùng lặp dữ liệu SĐT/CCCD.";
+                ErrorMessage = "Thêm nhân viên thất bại. Kiểm tra trùng lặp dữ liệu SĐT/CCCD.";
                 return false;
             }
 
-            // Đồng bộ dữ liệu tài khoản từ Server gửi về để điền vào Popup
             NewUsername = response.Username;
             NewPassword = response.Password;
 
@@ -213,6 +305,10 @@ namespace frontend_csharp.ViewModels
             EditFullName = employee.HoTen;
             EditCitizenId = employee.Cccd;
             EditPhoneNumber = employee.SoDienThoai;
+
+            EditFullNameError = string.Empty;
+            EditCitizenIdError = string.Empty;
+            EditPhoneNumberError = string.Empty;
             ErrorMessage = string.Empty;
         }
 
@@ -224,15 +320,59 @@ namespace frontend_csharp.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(EditFullName) ||
-                string.IsNullOrWhiteSpace(EditCitizenId) ||
-                string.IsNullOrWhiteSpace(EditPhoneNumber))
+            // Reset lỗi cũ
+            EditFullNameError = string.Empty;
+            EditCitizenIdError = string.Empty;
+            EditPhoneNumberError = string.Empty;
+            ErrorMessage = string.Empty;
+
+            bool hasError = false;
+
+            if (string.IsNullOrWhiteSpace(EditFullName))
             {
-                ErrorMessage = "Vui lòng nhập đầy đủ các trường thông tin!";
-                return false;
+                EditFullNameError = "Vui lòng nhập họ và tên.";
+                hasError = true;
             }
 
-            ErrorMessage = string.Empty;
+            // Kiểm tra định dạng CCCD khi sửa
+            if (string.IsNullOrWhiteSpace(EditCitizenId))
+            {
+                EditCitizenIdError = "Vui lòng nhập số CCCD.";
+                hasError = true;
+            }
+            else if (!Regex.IsMatch(EditCitizenId.Trim(), @"^\d{12}$"))
+            {
+                EditCitizenIdError = "Số CCCD không hợp lệ (Phải đúng 12 chữ số).";
+                hasError = true;
+            }
+
+            // Kiểm tra định dạng SĐT khi sửa
+            if (string.IsNullOrWhiteSpace(EditPhoneNumber))
+            {
+                EditPhoneNumberError = "Vui lòng nhập số điện thoại.";
+                hasError = true;
+            }
+            else
+            {
+                string cleanPhone = Regex.Replace(EditPhoneNumber.Trim(), @"[\s\-\(\)]", "");
+                if (!Regex.IsMatch(cleanPhone, @"^\d+$"))
+                {
+                    EditPhoneNumberError = "Số điện thoại chỉ được chứa chữ số.";
+                    hasError = true;
+                }
+                else if (cleanPhone.Length < 10 || cleanPhone.Length > 11)
+                {
+                    EditPhoneNumberError = "Số điện thoại phải có từ 10 - 11 chữ số.";
+                    hasError = true;
+                }
+                else if (!cleanPhone.StartsWith("0"))
+                {
+                    EditPhoneNumberError = "Số điện thoại phải bắt đầu từ số 0.";
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return false;
 
             var request = new CapNhatNhanVienRequest
             {
@@ -244,7 +384,7 @@ namespace frontend_csharp.ViewModels
             bool isSuccess = await _apiService.UpdateNhanVienAsync(_editingEmployee.Id, request);
             if (!isSuccess)
             {
-                ErrorMessage = "Cập nhật thông tin thất bại. Vui lòng thử lại.";
+                ErrorMessage = "Cập nhật thất bại. Kiểm tra trùng lặp dữ liệu SĐT/CCCD.";
                 return false;
             }
 
