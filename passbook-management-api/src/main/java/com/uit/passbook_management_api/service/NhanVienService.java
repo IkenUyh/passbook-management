@@ -167,4 +167,54 @@ public class NhanVienService {
 
         return "Đổi mật khẩu thành công!";
     }
+
+
+
+    @Transactional
+    public String resetMatKhau(String id) {
+        // 1. Kiểm tra hồ sơ nhân viên có tồn tại không
+        NhanVien nv = nhanVienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên có mã: " + id));
+
+        // 2. Lấy tài khoản hệ thống liên kết với nhân viên đó
+        AppUser user = nv.getAppUser();
+        if (user == null) {
+            throw new RuntimeException("Nhân viên này chưa được cấp tài khoản đăng nhập hệ thống!");
+        }
+
+        // 3. Đặt lại mật khẩu về mặc định "123456" (Mã hóa trước khi lưu)
+        String macDinhPassword = "123456";
+        user.setPassword(passwordEncoder.encode(macDinhPassword));
+        appUserRepository.save(user);
+
+        // 4. Lấy tên Admin đang thực hiện lệnh này để ghi vào nhật ký hệ thống
+        String adminUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        auditLogService.ghiLog(
+                "RESET MẬT KHẨU",
+                "Admin [" + adminUsername + "] đã reset mật khẩu của nhân viên " + nv.getHoTen() + " (" + id + ") về mặc định."
+        );
+
+        return "Reset mật khẩu của nhân viên " + id + " về mặc định (123456) thành công!";
+    }
+
+
+    // Thêm hàm này vào file NhanVienService.java của bạn
+    public NhanVienResponse layThongTinCaNhan() {
+        // 1. Lấy username từ JWT Token trong Context bảo mật
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 2. Tìm hồ sơ nhân viên tương ứng
+        NhanVien nv = nhanVienRepository.findByAppUserUsername(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hồ sơ của tài khoản: " + username));
+
+        // 3. Đóng gói trả về dữ liệu sạch cho Frontend hiển thị
+        return NhanVienResponse.builder()
+                .hoTen(nv.getHoTen())
+                .soDienThoai(nv.getSoDienThoai())
+                .cccd(nv.getCccd())
+                .username(username)
+                .password("********") // Giấu mật khẩu
+                .role(nv.getAppUser().getRole())
+                .build();
+    }
 }

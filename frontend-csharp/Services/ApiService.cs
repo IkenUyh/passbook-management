@@ -468,6 +468,52 @@ namespace frontend_csharp.Services
             }
         }
 
+        /// 
+        /// Reset mật khẩu tài khoản cho nhân viên
+        /// 
+        public async Task<string> ResetMatKhauNhanVienAsync(string id)
+        {
+            try
+            {
+                AddAuthHeader(); // Token của ADMIN
+
+                // Gọi PUT tới endpoint: http://localhost:8083/api/v1/nhan-vien/NV1/reset-mat-khau
+                var response = await _client.PutAsync($"{BaseUrl}v1/nhan-vien/{id}/reset-mat-khau", null);
+                string result = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode) return result;
+                return $"Lỗi: {result}";
+            }
+            catch (Exception ex)
+            {
+                return $"Lỗi kết nối mạng: {ex.Message}";
+            }
+        }
+
+
+
+        /// 
+        /// Lấy thông tin tài khoản của chính người đang đăng nhập 
+        /// 
+        public async Task<NhanVienResponse> GetCurrentProfileAsync()
+        {
+            try
+            {
+                AddAuthHeader(); // Gắn token hiện tại vào Header để chứng minh danh tính
+
+                var response = await _client.GetAsync($"{BaseUrl}v1/nhan-vien/me");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<NhanVienResponse>(json, _jsonOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi lấy thông tin cá nhân: {ex.Message}");
+                return null;
+            }
+        }
+
 
         // ==========================================
         // --- 7. QUẢN LÝ QUY ĐỊNH & THAM SỐ ---

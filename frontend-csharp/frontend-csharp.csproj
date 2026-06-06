@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,6 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Customer.png" />
+    <None Remove="Assets\CustomerActive.png" />
+    <None Remove="Assets\CustomerHover.png" />
+    <None Remove="Assets\Employee.png" />
+    <None Remove="Assets\EmployeeActive.png" />
+    <None Remove="Assets\EmployeeHover.png" />
+    <None Remove="Assets\Lookup.png" />
+    <None Remove="Assets\LookupActive.png" />
+    <None Remove="Assets\LookupHover.png" />
+    <None Remove="Assets\Regulation.png" />
+    <None Remove="Assets\RegulationActive.png" />
+    <None Remove="Assets\RegulationHover.png" />
+    <None Remove="Assets\Report.png" />
+    <None Remove="Assets\ReportActive.png" />
+    <None Remove="Assets\ReportHover.png" />
     <None Remove="Assets\user.jpg" />
     <None Remove="Assets\user_active.jpg" />
     <None Remove="Assets\user_hover.jpg" />
@@ -23,6 +38,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Customer.png" />
+    <Resource Include="Assets\CustomerActive.png" />
+    <Resource Include="Assets\CustomerHover.png" />
+    <Resource Include="Assets\Employee.png" />
+    <Resource Include="Assets\EmployeeActive.png" />
+    <Resource Include="Assets\EmployeeHover.png" />
+    <Resource Include="Assets\Lookup.png" />
+    <Resource Include="Assets\LookupActive.png" />
+    <Resource Include="Assets\LookupHover.png" />
+    <Resource Include="Assets\Regulation.png" />
+    <Resource Include="Assets\RegulationActive.png" />
+    <Resource Include="Assets\RegulationHover.png" />
+    <Resource Include="Assets\Report.png" />
+    <Resource Include="Assets\ReportActive.png" />
+    <Resource Include="Assets\ReportHover.png" />
     <Resource Include="Assets\user.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -30,6 +60,15 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\user_hover.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\DashboardHover.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\DashboardActive.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Dashboard.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

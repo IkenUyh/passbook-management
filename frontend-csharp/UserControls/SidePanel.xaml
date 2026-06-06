@@ -189,39 +189,39 @@
 
             <RadioButton Content="Trang chủ" Style="{StaticResource SidePanelStyle}" IsChecked="True"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Dashboard}" 
+                         Tag="{StaticResource Dashboard_Hover}" 
+                         DataContext="{StaticResource Dashboard_Active}"/>
 
             <RadioButton Content="Nhân viên" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Employee}" 
+                         Tag="{StaticResource Employee_Hover}" 
+                         DataContext="{StaticResource Employee_Active}"/>
 
             <RadioButton Content="Tra cứu sổ" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Lookup}" 
+                         Tag="{StaticResource Lookup_Hover}" 
+                         DataContext="{StaticResource Lookup_Active}"/>
 
             <RadioButton Content="Khách hàng" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Customer}" 
+                         Tag="{StaticResource Customer_Hover}" 
+                         DataContext="{StaticResource Customer_Active}"/>
 
             <RadioButton Content="Báo cáo" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Report}" 
+                         Tag="{StaticResource Report_Hover}" 
+                         DataContext="{StaticResource Report_Active}"/>
 
             <RadioButton Content="Quy định" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
-                         CommandParameter="{StaticResource User}" 
-                         Tag="{StaticResource User_Hover}" 
-                         DataContext="{StaticResource User_Active}"/>
+                         CommandParameter="{StaticResource Regulation}" 
+                         Tag="{StaticResource Regulation_Hover}" 
+                         DataContext="{StaticResource Regulation_Active}"/>
 
             <RadioButton Content="Nhật ký" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
