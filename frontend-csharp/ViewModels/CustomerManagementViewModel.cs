@@ -193,7 +193,10 @@ namespace frontend_csharp.ViewModels
 
                 foreach (var customer in _allCustomers)
                 {
-                    customer.TotalBooks = danhSachSo.Count(s => s.KhachHang != null && s.KhachHang.Id == customer.Id);
+                    // SỬA TẠI ĐÂY: Chỉ đếm các sổ có trạng thái "DANG_HOAT_DONG"
+                    customer.TotalBooks = danhSachSo.Count(s => s.KhachHang != null &&
+                                                                s.KhachHang.Id == customer.Id &&
+                                                                s.TrangThai == "DANG_HOAT_DONG");
                 }
 
                 ApplyFilter();
