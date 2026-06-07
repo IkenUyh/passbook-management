@@ -68,9 +68,8 @@ namespace frontend_csharp.UserControls
             if (await _viewModel.ConfirmAddAsync())
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
-                mainWindow?.HidePopup(); // 1. Đóng ẩn popup nhập liệu cũ
+                mainWindow?.HidePopup();
 
-                // 2. Mở popup hiển thị tài khoản thành công lấy từ Resource
                 var successPopupUI = (FrameworkElement)this.FindResource("AddEmployeeSuccessPopupUI");
                 successPopupUI.DataContext = _viewModel;
                 mainWindow?.ShowPopup(successPopupUI);
@@ -107,6 +106,34 @@ namespace frontend_csharp.UserControls
             {
                 var mainWindow = Window.GetWindow(this) as MainWindow;
                 mainWindow?.HidePopup();
+            }
+        }
+
+        private void ResetPasswordMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.DataContext is NhanVien employee)
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
+                {
+                    _viewModel.PrepareResetPassword(employee);
+                    var popupUI = (FrameworkElement)this.FindResource("ResetPasswordConfirmPopupUI");
+                    popupUI.DataContext = _viewModel;
+                    mainWindow.ShowPopup(popupUI);
+                }
+            }
+        }
+
+        private async void ConfirmResetPassword_Click(object sender, RoutedEventArgs e)
+        {
+            if (await _viewModel.ConfirmResetPasswordAsync())
+            {
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                mainWindow?.HidePopup();
+
+                var successPopupUI = (FrameworkElement)this.FindResource("ResetPasswordSuccessPopupUI");
+                successPopupUI.DataContext = _viewModel;
+                mainWindow?.ShowPopup(successPopupUI);
             }
         }
     }

@@ -83,7 +83,7 @@ namespace frontend_csharp.ViewModels
             set { _newPhoneNumberError = value; OnPropertyChanged(); }
         }
 
-        // Properties hiển thị popup kết quả
+        // Properties hiển thị popup kết quả thêm mới
         private string _newUsername;
         public string NewUsername
         {
@@ -96,6 +96,28 @@ namespace frontend_csharp.ViewModels
         {
             get => _newPassword;
             set { _newPassword = value; OnPropertyChanged(); }
+        }
+
+        // Properties hiển thị popup reset mật khẩu
+        private string _resetTargetName;
+        public string ResetTargetName
+        {
+            get => _resetTargetName;
+            set { _resetTargetName = value; OnPropertyChanged(); }
+        }
+
+        private string _resetTargetUsername;
+        public string ResetTargetUsername
+        {
+            get => _resetTargetUsername;
+            set { _resetTargetUsername = value; OnPropertyChanged(); }
+        }
+
+        private string _resetNewPassword;
+        public string ResetNewPassword
+        {
+            get => _resetNewPassword;
+            set { _resetNewPassword = value; OnPropertyChanged(); }
         }
 
         // Edit Properties
@@ -223,7 +245,6 @@ namespace frontend_csharp.ViewModels
 
         public async Task<bool> ConfirmAddAsync()
         {
-            // Reset lỗi cũ
             NewFullNameError = string.Empty;
             NewCitizenIdError = string.Empty;
             NewPhoneNumberError = string.Empty;
@@ -237,7 +258,6 @@ namespace frontend_csharp.ViewModels
                 hasError = true;
             }
 
-            // Kiểm tra định dạng CCCD (Đúng 12 số)
             if (string.IsNullOrWhiteSpace(NewCitizenId))
             {
                 NewCitizenIdError = "Vui lòng nhập số CCCD.";
@@ -249,7 +269,6 @@ namespace frontend_csharp.ViewModels
                 hasError = true;
             }
 
-            // Kiểm tra định dạng Số điện thoại (10-11 số, bắt đầu bằng số 0)
             if (string.IsNullOrWhiteSpace(NewPhoneNumber))
             {
                 NewPhoneNumberError = "Vui lòng nhập số điện thoại.";
@@ -320,7 +339,6 @@ namespace frontend_csharp.ViewModels
                 return false;
             }
 
-            // Reset lỗi cũ
             EditFullNameError = string.Empty;
             EditCitizenIdError = string.Empty;
             EditPhoneNumberError = string.Empty;
@@ -334,7 +352,6 @@ namespace frontend_csharp.ViewModels
                 hasError = true;
             }
 
-            // Kiểm tra định dạng CCCD khi sửa
             if (string.IsNullOrWhiteSpace(EditCitizenId))
             {
                 EditCitizenIdError = "Vui lòng nhập số CCCD.";
@@ -346,7 +363,6 @@ namespace frontend_csharp.ViewModels
                 hasError = true;
             }
 
-            // Kiểm tra định dạng SĐT khi sửa
             if (string.IsNullOrWhiteSpace(EditPhoneNumber))
             {
                 EditPhoneNumberError = "Vui lòng nhập số điện thoại.";
@@ -390,6 +406,44 @@ namespace frontend_csharp.ViewModels
 
             await LoadDataAsync();
             return true;
+        }
+
+        public void PrepareResetPassword(NhanVien employee)
+        {
+            _editingEmployee = employee;
+            ResetTargetName = employee.HoTen;
+            ResetTargetUsername = employee.Username;
+            ResetNewPassword = string.Empty;
+            ErrorMessage = string.Empty;
+        }
+
+        public async Task<bool> ConfirmResetPasswordAsync()
+        {
+            if (_editingEmployee == null)
+            {
+                ErrorMessage = "Không tìm thấy thông tin nhân viên!";
+                return false;
+            }
+
+            try
+            {
+                ErrorMessage = string.Empty;
+                string result = await _apiService.ResetMatKhauNhanVienAsync(_editingEmployee.Id);
+
+                if (!string.IsNullOrEmpty(result) && !result.Contains("Lỗi"))
+                {
+                    ResetNewPassword = result; // Lưu toàn bộ nội dung chuỗi thông báo trả về
+                    return true;
+                }
+
+                ErrorMessage = string.IsNullOrEmpty(result) ? "Đặt lại mật khẩu thất bại." : result;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi hệ thống: {ex.Message}";
+                return false;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
