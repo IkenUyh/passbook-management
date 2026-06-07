@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -111,6 +111,7 @@ namespace frontend_csharp.ViewModels
 
         public async Task InitializeAsync()
         {
+            var currentType = _selectedSavingsType;
             var dsLoaiTietKiem = await _apiService.GetDanhSachLoaiTietKiemAsync();
             if (dsLoaiTietKiem != null && dsLoaiTietKiem.Any())
             {
@@ -118,6 +119,12 @@ namespace frontend_csharp.ViewModels
                 types.AddRange(dsLoaiTietKiem.Select(x => x.TenLoaiTk));
                 SavingsTypes = types;
                 OnPropertyChanged(nameof(SavingsTypes));
+                
+                if (!string.IsNullOrEmpty(currentType) && types.Contains(currentType))
+                {
+                    _selectedSavingsType = currentType;
+                    OnPropertyChanged(nameof(SelectedSavingsType));
+                }
             }
 
             await LoadDailyDataAsync(SelectedDailyDate);

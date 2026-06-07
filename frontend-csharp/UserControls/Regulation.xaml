@@ -93,29 +93,44 @@
         <Border x:Key="AddTermPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm kỳ hạn mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-                <TextBlock Text="{Binding AddTermErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
                 <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Kỳ hạn (Tháng)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBlock Text="Kỳ hạn (Tháng) - Nhập 0 cho 'Không kỳ hạn'" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding KyHanMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                <Setter Property="BorderBrush" Value="#EF4444"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding KyHanMoiError}" Value="">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding KyHanMoiError}" Value="{x:Null}">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock Text="{Binding KyHanMoiError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,24">
                     <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding LaiSuatMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBox Text="{Binding LaiSuatMoi, UpdateSourceTrigger=PropertyChanged}" Padding="12,0">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                <Setter Property="BorderBrush" Value="#EF4444"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LaiSuatMoiError}" Value="">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LaiSuatMoiError}" Value="{x:Null}">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock Text="{Binding LaiSuatMoiError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -128,34 +143,73 @@
         <Border x:Key="EditTermPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Chỉnh sửa kỳ hạn" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-                <TextBlock Text="{Binding EditTermErrorMessage}" Foreground="#EF4444" FontSize="12" Margin="0,0,0,10" FontWeight="SemiBold">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
                 <StackPanel Margin="0,0,0,16">
-                    <TextBlock Text="Kỳ hạn (Tháng)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.TenKyHan, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBlock Text="Kỳ hạn (Tháng) - Nhập 0 cho 'Không kỳ hạn'" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding EditKyHan, UpdateSourceTrigger=PropertyChanged}" Padding="12,0">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                <Setter Property="BorderBrush" Value="#EF4444"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding KyHanDangSuaError}" Value="">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding KyHanDangSuaError}" Value="{x:Null}">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock Text="{Binding KyHanDangSuaError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,24">
                     <TextBlock Text="Lãi suất (%/năm)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,8"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}" Text="{Binding KyHanDangSua.LaiSuat, UpdateSourceTrigger=PropertyChanged}" Padding="12,0"/>
+                    <TextBox Text="{Binding EditLaiSuat, UpdateSourceTrigger=PropertyChanged}" Padding="12,0">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                <Setter Property="BorderBrush" Value="#EF4444"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LaiSuatDangSuaError}" Value="">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LaiSuatDangSuaError}" Value="{x:Null}">
+                                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock Text="{Binding LaiSuatDangSuaError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseEditTermPopup_Click" Width="100" Margin="0,0,10,0"/>
                     <Button Style="{StaticResource GreenButtonStyle}" Content="Cập nhật" Click="SaveEditTermPopup_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="SuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding PopupMessage}" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="ClosePopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="ErrorPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="AlertCircle" Foreground="#EF4444" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding PopupMessage}" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Đóng" Click="ClosePopup_Click" Width="120"/>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -203,9 +257,22 @@
                             FontWeight="SemiBold" 
                             Foreground="#111827" 
                             Margin="0,0,0,8"/>
-                        <TextBox 
-                            Style="{StaticResource InputTextBoxStyle}" 
-                            Text="{Binding RegulationInfo.TienGuiToiThieu, StringFormat={}{0:N0}}"/>
+                        <TextBox Text="{Binding RegulationInfo.TienGuiToiThieu, StringFormat={}{0:N0}}">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                    <Setter Property="BorderBrush" Value="#EF4444"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding TienGuiToiThieuError}" Value="">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding TienGuiToiThieuError}" Value="{x:Null}">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBlock Text="{Binding TienGuiToiThieuError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
@@ -216,9 +283,22 @@
                             FontWeight="SemiBold" 
                             Foreground="#111827" 
                             Margin="0,0,0,8"/>
-                        <TextBox 
-                            Style="{StaticResource InputTextBoxStyle}" 
-                            Text="{Binding RegulationInfo.TienGuiThemToiThieu, StringFormat={}{0:N0}}"/>
+                        <TextBox Text="{Binding RegulationInfo.TienGuiThemToiThieu, StringFormat={}{0:N0}}">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                    <Setter Property="BorderBrush" Value="#EF4444"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding TienGuiThemToiThieuError}" Value="">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding TienGuiThemToiThieuError}" Value="{x:Null}">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBlock Text="{Binding TienGuiThemToiThieuError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="4">
@@ -232,9 +312,22 @@
                                 FontWeight="SemiBold" 
                                 Foreground="#111827"/>
                         </Viewbox>
-                        <TextBox 
-                            Style="{StaticResource InputTextBoxStyle}" 
-                            Text="{Binding RegulationInfo.ThoiGianGuiToiThieuNgay}"/>
+                        <TextBox Text="{Binding RegulationInfo.ThoiGianGuiToiThieuNgay}">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+                                    <Setter Property="BorderBrush" Value="#EF4444"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ThoiGianGuiToiThieuNgayError}" Value="">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ThoiGianGuiToiThieuNgayError}" Value="{x:Null}">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBlock Text="{Binding ThoiGianGuiToiThieuNgayError}" Foreground="#EF4444" FontSize="11" FontStyle="Italic" Height="16" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
 
@@ -356,13 +449,10 @@
                         <DataGridTemplateColumn Header="Thao tác" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,12,0" Cursor="Hand" Foreground="#111827"
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0" Cursor="Hand" Foreground="#111827"
                                                 Click="OpenEditTermPopup_Click">
                                             <materialDesign:PackIcon Kind="Pencil" Width="18" Height="18"/>
-                                        </Button>
-                                        <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" Foreground="#111827">
-                                            <materialDesign:PackIcon Kind="TrashCanOutline" Width="18" Height="18"/>
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
