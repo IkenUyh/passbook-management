@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Account.png" />
+    <None Remove="Assets\AccountActive.png" />
+    <None Remove="Assets\AccountHover.png" />
     <None Remove="Assets\admin_avt.png" />
     <None Remove="Assets\Customer.png" />
     <None Remove="Assets\CustomerActive.png" />
@@ -17,6 +20,9 @@
     <None Remove="Assets\Employee.png" />
     <None Remove="Assets\EmployeeActive.png" />
     <None Remove="Assets\EmployeeHover.png" />
+    <None Remove="Assets\Log.png" />
+    <None Remove="Assets\LogActive.png" />
+    <None Remove="Assets\LogHover.png" />
     <None Remove="Assets\employee_avt.png" />
     <None Remove="Assets\Lookup.png" />
     <None Remove="Assets\LookupActive.png" />
@@ -40,26 +46,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Account.png" />
+    <Resource Include="Assets\AccountHover.png" />
     <Resource Include="Assets\admin_avt.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Customer.png" />
-    <Resource Include="Assets\CustomerActive.png" />
     <Resource Include="Assets\CustomerHover.png" />
     <Resource Include="Assets\Employee.png" />
-    <Resource Include="Assets\EmployeeActive.png" />
     <Resource Include="Assets\EmployeeHover.png" />
+    <Resource Include="Assets\Log.png" />
+    <Resource Include="Assets\LogHover.png" />
     <Resource Include="Assets\employee_avt.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Lookup.png" />
-    <Resource Include="Assets\LookupActive.png" />
     <Resource Include="Assets\LookupHover.png" />
     <Resource Include="Assets\Regulation.png" />
-    <Resource Include="Assets\RegulationActive.png" />
     <Resource Include="Assets\RegulationHover.png" />
     <Resource Include="Assets\Report.png" />
-    <Resource Include="Assets\ReportActive.png" />
     <Resource Include="Assets\ReportHover.png" />
     <Resource Include="Assets\user.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -71,9 +76,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\DashboardHover.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\DashboardActive.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Dashboard.png">

@@ -42,6 +42,27 @@ namespace frontend_csharp.ViewModels
             set { _laiSuatMoi = value; OnPropertyChanged(); }
         }
 
+        private string _editKyHan;
+        public string EditKyHan
+        {
+            get => _editKyHan;
+            set { _editKyHan = value; OnPropertyChanged(); }
+        }
+
+        private string _editLaiSuat;
+        public string EditLaiSuat
+        {
+            get => _editLaiSuat;
+            set { _editLaiSuat = value; OnPropertyChanged(); }
+        }
+
+        private string _popupMessage;
+        public string PopupMessage
+        {
+            get => _popupMessage;
+            set { _popupMessage = value; OnPropertyChanged(); }
+        }
+
         // --- ERROR MESSAGES ---
         private string _generalErrorMessage;
         public string GeneralErrorMessage
@@ -50,18 +71,53 @@ namespace frontend_csharp.ViewModels
             set { _generalErrorMessage = value; OnPropertyChanged(); }
         }
 
-        private string _addTermErrorMessage;
-        public string AddTermErrorMessage
+        private string _tienGuiToiThieuError;
+        public string TienGuiToiThieuError
         {
-            get => _addTermErrorMessage;
-            set { _addTermErrorMessage = value; OnPropertyChanged(); }
+            get => _tienGuiToiThieuError;
+            set { _tienGuiToiThieuError = value; OnPropertyChanged(); }
         }
 
-        private string _editTermErrorMessage;
-        public string EditTermErrorMessage
+        private string _tienGuiThemToiThieuError;
+        public string TienGuiThemToiThieuError
         {
-            get => _editTermErrorMessage;
-            set { _editTermErrorMessage = value; OnPropertyChanged(); }
+            get => _tienGuiThemToiThieuError;
+            set { _tienGuiThemToiThieuError = value; OnPropertyChanged(); }
+        }
+
+        private string _thoiGianGuiToiThieuNgayError;
+        public string ThoiGianGuiToiThieuNgayError
+        {
+            get => _thoiGianGuiToiThieuNgayError;
+            set { _thoiGianGuiToiThieuNgayError = value; OnPropertyChanged(); }
+        }
+
+        private string _kyHanMoiError;
+        public string KyHanMoiError
+        {
+            get => _kyHanMoiError;
+            set { _kyHanMoiError = value; OnPropertyChanged(); }
+        }
+
+        private string _laiSuatMoiError;
+        public string LaiSuatMoiError
+        {
+            get => _laiSuatMoiError;
+            set { _laiSuatMoiError = value; OnPropertyChanged(); }
+        }
+
+        private string _kyHanDangSuaError;
+        public string KyHanDangSuaError
+        {
+            get => _kyHanDangSuaError;
+            set { _kyHanDangSuaError = value; OnPropertyChanged(); }
+        }
+
+        private string _laiSuatDangSuaError;
+        public string LaiSuatDangSuaError
+        {
+            get => _laiSuatDangSuaError;
+            set { _laiSuatDangSuaError = value; OnPropertyChanged(); }
         }
         // ----------------------------------------------
 
