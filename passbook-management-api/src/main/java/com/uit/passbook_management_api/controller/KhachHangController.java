@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/khach-hang")
-@PreAuthorize("hasRole('NHAN_VIEN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class KhachHangController {
 
     private final KhachHangService khachHangService;

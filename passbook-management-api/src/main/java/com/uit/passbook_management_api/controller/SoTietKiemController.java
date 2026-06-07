@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/so-tiet-kiem")
-@PreAuthorize("hasRole('NHAN_VIEN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class SoTietKiemController {
 
     private final SoTietKiemService soTietKiemService;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/giao-dich")
-@PreAuthorize("hasRole('NHAN_VIEN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class GiaoDichController {
 
     private final GiaoDichService giaoDichService;
