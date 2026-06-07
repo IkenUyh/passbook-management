@@ -1,0 +1,1 @@
+ALTER TABLE so_tiet_kiem ADD COLUMN ngay_dong DATE DEFAULT NULL;

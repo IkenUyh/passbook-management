@@ -14,35 +14,50 @@ import java.util.List;
 @Repository
 public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, String> {
 
-    // Truy vấn Báo Cáo Doanh Số Ngày
+    // =========================================================================
+    // 1. TRUY VẤN BÁO CÁO DOANH SỐ NGÀY (FR5)
+    // Tối ưu: Đã bỏ GROUP BY lớp ngoài cùng để tương thích hoàn toàn với only_full_group_by
+    // =========================================================================
     @Query(value = """
         SELECT 
             ltk.ma_loai_tk AS maLoaiTk,
             ltk.ten_loai_tk AS loaiTietKiem,
-            COALESCE(SUM(pg.so_tien_gui), 0) AS tongThu,
-            COALESCE(SUM(pr.so_tien_rut), 0) AS tongChi,
-            (COALESCE(SUM(pg.so_tien_gui), 0) - COALESCE(SUM(pr.so_tien_rut), 0)) AS chenhLech
+            COALESCE(p_thu.tong_thu, 0) AS tongThu,
+            COALESCE(p_chi.tong_chi, 0) AS tongChi,
+            (COALESCE(p_thu.tong_thu, 0) - COALESCE(p_chi.tong_chi, 0)) AS chenhLech
         FROM loai_tiet_kiem ltk
-        LEFT JOIN so_tiet_kiem stk ON ltk.ma_loai_tk = stk.ma_loai_tk
-        LEFT JOIN phieu_gui_tien pg ON stk.id = pg.ma_so_tiet_kiem AND pg.ngay_gui = :ngay
-        LEFT JOIN phieu_rut_tien pr ON stk.id = pr.ma_so_tiet_kiem AND pr.ngay_rut = :ngay
-        GROUP BY ltk.ten_loai_tk
+        LEFT JOIN (
+            SELECT stk.ma_loai_tk, SUM(pg.so_tien_gui) AS tong_thu 
+            FROM phieu_gui_tien pg
+            JOIN so_tiet_kiem stk ON pg.ma_so_tiet_kiem = stk.id
+            WHERE pg.ngay_gui = :ngay 
+            GROUP BY stk.ma_loai_tk
+        ) p_thu ON ltk.ma_loai_tk = p_thu.ma_loai_tk
+        LEFT JOIN (
+            SELECT stk.ma_loai_tk, SUM(pr.so_tien_rut) AS tong_chi 
+            FROM phieu_rut_tien pr
+            JOIN so_tiet_kiem stk ON pr.ma_so_tiet_kiem = stk.id
+            WHERE pr.ngay_rut = :ngay 
+            GROUP BY stk.ma_loai_tk
+        ) p_chi ON ltk.ma_loai_tk = p_chi.ma_loai_tk
     """, nativeQuery = true)
     List<BaoCaoNgayDTO> lapBaoCaoNgay(@Param("ngay") LocalDate ngay);
 
-    // Truy vấn Báo Cáo Đóng/Mở Sổ Tháng
+    // =========================================================================
+    // 2. TRUY VẤN BÁO CÁO ĐÓNG/MỞ SỔ THÁNG (FR5)
+    // Hàm này giữ nguyên vì các cột SELECT đều nằm trong GROUP BY hoặc hàm COUNT
+    // =========================================================================
     @Query(value = """
         SELECT 
             ltk.ma_loai_tk AS maLoaiTk,
             ltk.ten_loai_tk AS loaiTietKiem,
             COUNT(DISTINCT CASE WHEN MONTH(stk.ngay_mo) = :thang AND YEAR(stk.ngay_mo) = :nam THEN stk.id END) AS soSoMo,
-            COUNT(DISTINCT CASE WHEN stk.trang_thai = 'DA_DONG' AND MONTH(pr.ngay_rut) = :thang AND YEAR(pr.ngay_rut) = :nam THEN stk.id END) AS soSoDong,
+            COUNT(DISTINCT CASE WHEN MONTH(stk.ngay_dong) = :thang AND YEAR(stk.ngay_dong) = :nam THEN stk.id END) AS soSoDong,
             (COUNT(DISTINCT CASE WHEN MONTH(stk.ngay_mo) = :thang AND YEAR(stk.ngay_mo) = :nam THEN stk.id END) - 
-             COUNT(DISTINCT CASE WHEN stk.trang_thai = 'DA_DONG' AND MONTH(pr.ngay_rut) = :thang AND YEAR(pr.ngay_rut) = :nam THEN stk.id END)) AS chenhLech
+             COUNT(DISTINCT CASE WHEN MONTH(stk.ngay_dong) = :thang AND YEAR(stk.ngay_dong) = :nam THEN stk.id END)) AS chenhLech
         FROM loai_tiet_kiem ltk
         LEFT JOIN so_tiet_kiem stk ON ltk.ma_loai_tk = stk.ma_loai_tk
-        LEFT JOIN phieu_rut_tien pr ON stk.id = pr.ma_so_tiet_kiem
-        GROUP BY ltk.ten_loai_tk
+        GROUP BY ltk.ma_loai_tk, ltk.ten_loai_tk
     """, nativeQuery = true)
     List<BaoCaoThangDTO> lapBaoCaoThang(@Param("thang") int thang, @Param("nam") int nam);
 }
