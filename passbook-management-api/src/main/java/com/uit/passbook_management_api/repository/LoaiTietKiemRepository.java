@@ -16,6 +16,7 @@ public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, Stri
 
     // =========================================================================
     // 1. TRUY VẤN BÁO CÁO DOANH SỐ NGÀY (FR5)
+    // Tối ưu: Đã bỏ GROUP BY lớp ngoài cùng để tương thích hoàn toàn với only_full_group_by
     // =========================================================================
     @Query(value = """
         SELECT 
@@ -39,12 +40,12 @@ public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, Stri
             WHERE pr.ngay_rut = :ngay 
             GROUP BY stk.ma_loai_tk
         ) p_chi ON ltk.ma_loai_tk = p_chi.ma_loai_tk
-        GROUP BY ltk.ma_loai_tk, ltk.ten_loai_tk
     """, nativeQuery = true)
     List<BaoCaoNgayDTO> lapBaoCaoNgay(@Param("ngay") LocalDate ngay);
 
     // =========================================================================
     // 2. TRUY VẤN BÁO CÁO ĐÓNG/MỞ SỔ THÁNG (FR5)
+    // Hàm này giữ nguyên vì các cột SELECT đều nằm trong GROUP BY hoặc hàm COUNT
     // =========================================================================
     @Query(value = """
         SELECT 
