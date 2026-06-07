@@ -212,7 +212,7 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,20" />
 
-                        <TextBlock Text="Hệ Thống Quản Lý"
+                        <TextBlock Text="Quản Lý Sổ Tiết Kiệm"
                                    FontSize="16"
                                    FontWeight="SemiBold"
                                    Foreground="#333"
