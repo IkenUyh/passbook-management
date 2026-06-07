@@ -1,5 +1,6 @@
 package com.uit.passbook_management_api.repository;
 
+import com.uit.passbook_management_api.dto.response.BaoCaoMoDongNgayDTO;
 import com.uit.passbook_management_api.entity.LoaiTietKiem;
 import com.uit.passbook_management_api.dto.response.BaoCaoNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoThangDTO;
@@ -16,7 +17,6 @@ public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, Stri
 
     // =========================================================================
     // 1. TRUY VẤN BÁO CÁO DOANH SỐ NGÀY (FR5)
-    // Tối ưu: Đã bỏ GROUP BY lớp ngoài cùng để tương thích hoàn toàn với only_full_group_by
     // =========================================================================
     @Query(value = """
         SELECT 
@@ -45,7 +45,6 @@ public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, Stri
 
     // =========================================================================
     // 2. TRUY VẤN BÁO CÁO ĐÓNG/MỞ SỔ THÁNG (FR5)
-    // Hàm này giữ nguyên vì các cột SELECT đều nằm trong GROUP BY hoặc hàm COUNT
     // =========================================================================
     @Query(value = """
         SELECT 
@@ -60,4 +59,21 @@ public interface LoaiTietKiemRepository extends JpaRepository<LoaiTietKiem, Stri
         GROUP BY ltk.ma_loai_tk, ltk.ten_loai_tk
     """, nativeQuery = true)
     List<BaoCaoThangDTO> lapBaoCaoThang(@Param("thang") int thang, @Param("nam") int nam);
+
+    // =========================================================================
+    // 3. TRUY VẤN BÁO CÁO SỐ LƯỢNG SỔ MỞ/ĐÓNG TRONG NGÀY
+    // =========================================================================
+    @Query(value = """
+        SELECT 
+            ltk.ma_loai_tk AS maLoaiTk,
+            ltk.ten_loai_tk AS loaiTietKiem,
+            COUNT(DISTINCT CASE WHEN stk.ngay_mo = :ngay THEN stk.id END) AS soSoMo,
+            COUNT(DISTINCT CASE WHEN stk.ngay_dong = :ngay THEN stk.id END) AS soSoDong,
+            (COUNT(DISTINCT CASE WHEN stk.ngay_mo = :ngay THEN stk.id END) - 
+             COUNT(DISTINCT CASE WHEN stk.ngay_dong = :ngay THEN stk.id END)) AS chenhLech
+        FROM loai_tiet_kiem ltk
+        LEFT JOIN so_tiet_kiem stk ON ltk.ma_loai_tk = stk.ma_loai_tk
+        GROUP BY ltk.ma_loai_tk, ltk.ten_loai_tk
+    """, nativeQuery = true)
+    List<BaoCaoMoDongNgayDTO> lapBaoCaoMoDongNgay(@Param("ngay") LocalDate ngay);
 }

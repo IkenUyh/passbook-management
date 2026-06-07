@@ -324,6 +324,34 @@ namespace frontend_csharp.Services
             }
         }
 
+
+
+        /// 
+        /// Lấy báo cáo số lượng sổ mở và đóng trong một ngày 
+        /// 
+        public async Task<List<BaoCaoMoDongNgayResponse>> GetBaoCaoMoDongNgayAsync(DateTime ngay)
+        {
+            try
+            {
+                AddAuthHeader(); 
+                string ngayQuery = ngay.ToString("yyyy-MM-dd");
+
+                var response = await _client.GetAsync($"{BaseUrl}v1/bao-cao/mo-dong-ngay?ngay={ngayQuery}");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<BaoCaoMoDongNgayResponse>>(json, _jsonOptions)
+                       ?? new List<BaoCaoMoDongNgayResponse>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi gọi API báo cáo mở đóng ngày: {ex.Message}");
+                return new List<BaoCaoMoDongNgayResponse>(); 
+            }
+        }
+
+
+
         ///
         /// Lấy báo cáo tình hình đóng/mở sổ theo tháng và năm
         /// 
