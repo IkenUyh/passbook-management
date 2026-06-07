@@ -1,4 +1,5 @@
 using frontend_csharp.ViewModels;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -6,6 +7,8 @@ namespace frontend_csharp.UserControls
 {
     public partial class ReportsManagement : UserControl
     {
+        private bool _isLoaded = false;
+
         public ReportsManagement()
         {
             InitializeComponent();
@@ -14,13 +17,17 @@ namespace frontend_csharp.UserControls
 
         private async void ReportsManagement_Loaded(object sender, RoutedEventArgs e)
         {
-            var viewModel = this.Resources["ChartViewModel"] as ReportsManagementViewModel;
-
-            if (viewModel != null)
+            if (_isLoaded)
             {
-                await viewModel.InitializeAsync();
-                viewModel.PlayAnimation();
+                var viewModel = this.Resources["ChartViewModel"] as ReportsManagementViewModel;
+                if (viewModel != null)
+                {
+                    viewModel.PlayAnimation();
+                }
+                return;
             }
+
+            _isLoaded = true;
         }
     }
 }
