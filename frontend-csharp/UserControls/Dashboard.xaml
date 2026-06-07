@@ -165,7 +165,7 @@
                                                 <ColumnDefinition Width="100"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Text="{Binding KhachHang.Ten}" FontSize="12"/>
-                                            <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="12" TextAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="12" TextAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding Id}" Background="Transparent" ToolTipService.InitialShowDelay="50" ToolTipService.ShowDuration="10000"/>
                                             <TextBlock Grid.Column="2" Text="{Binding SoDu, StringFormat='{}{0:N0}đ'}" FontSize="12" TextAlignment="Right"/>
                                         </Grid>
                                         <Border Height="1" Background="#F0F0F0"/>

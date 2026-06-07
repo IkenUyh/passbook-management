@@ -107,7 +107,7 @@ namespace frontend_csharp
             switch (menuName)
             {
                 case "Trang chủ":
-                    MainContent.Content = _dashboard;
+                    MainContent.Content = new Dashboard();
                     break;
                 case "Nhân viên":
                     MainContent.Content = _employeeManagement;
@@ -119,7 +119,7 @@ namespace frontend_csharp
                     MainContent.Content = _customerManagement;
                     break;
                 case "Báo cáo":
-                    MainContent.Content = _reportsManagement;
+                    MainContent.Content = new ReportsManagement();
                     break;
                 case "Quy định":
                     MainContent.Content = _regulation;

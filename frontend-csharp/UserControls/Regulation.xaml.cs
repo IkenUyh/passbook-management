@@ -33,19 +33,28 @@ namespace frontend_csharp.UserControls
 
                 bool hasError = false;
 
-                if (viewModel.RegulationInfo.TienGuiToiThieu <= 0)
+                decimal tienGuiToiThieu = 0;
+                if (string.IsNullOrWhiteSpace(viewModel.TienGuiToiThieuText) ||
+                    !decimal.TryParse(viewModel.TienGuiToiThieuText.Replace(",", "").Replace(".", "").Trim(), out tienGuiToiThieu) ||
+                    tienGuiToiThieu <= 0)
                 {
                     viewModel.TienGuiToiThieuError = "Vui lòng nhập số tiền lớn hơn 0";
                     hasError = true;
                 }
 
-                if (viewModel.RegulationInfo.TienGuiThemToiThieu <= 0)
+                decimal tienGuiThem = 0;
+                if (string.IsNullOrWhiteSpace(viewModel.TienGuiThemToiThieuText) ||
+                    !decimal.TryParse(viewModel.TienGuiThemToiThieuText.Replace(",", "").Replace(".", "").Trim(), out tienGuiThem) ||
+                    tienGuiThem <= 0)
                 {
                     viewModel.TienGuiThemToiThieuError = "Vui lòng nhập số tiền lớn hơn 0";
                     hasError = true;
                 }
 
-                if (viewModel.RegulationInfo.ThoiGianGuiToiThieuNgay < 0)
+                int thoiGian = 0;
+                if (string.IsNullOrWhiteSpace(viewModel.ThoiGianGuiToiThieuNgayText) ||
+                    !int.TryParse(viewModel.ThoiGianGuiToiThieuNgayText.Trim(), out thoiGian) ||
+                    thoiGian < 0)
                 {
                     viewModel.ThoiGianGuiToiThieuNgayError = "Thời gian gửi không được là số âm";
                     hasError = true;
@@ -53,12 +62,22 @@ namespace frontend_csharp.UserControls
 
                 if (hasError)
                 {
+                    viewModel.TienGuiToiThieuText = viewModel.RegulationInfo.TienGuiToiThieu.ToString("N0");
+                    viewModel.TienGuiThemToiThieuText = viewModel.RegulationInfo.TienGuiThemToiThieu.ToString("N0");
+                    viewModel.ThoiGianGuiToiThieuNgayText = viewModel.RegulationInfo.ThoiGianGuiToiThieuNgay.ToString();
                     return;
                 }
+
+                viewModel.RegulationInfo.TienGuiToiThieu = tienGuiToiThieu;
+                viewModel.RegulationInfo.TienGuiThemToiThieu = tienGuiThem;
+                viewModel.RegulationInfo.ThoiGianGuiToiThieuNgay = thoiGian;
 
                 bool result = await viewModel.SaveThamSoAsync();
                 if (result)
                 {
+                    viewModel.TienGuiToiThieuText = tienGuiToiThieu.ToString("N0");
+                    viewModel.TienGuiThemToiThieuText = tienGuiThem.ToString("N0");
+                    viewModel.ThoiGianGuiToiThieuNgayText = thoiGian.ToString();
                     ShowMessagePopup("Cập nhật quy định chung thành công!", true);
                 }
                 else

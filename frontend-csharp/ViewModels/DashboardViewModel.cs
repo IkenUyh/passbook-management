@@ -81,22 +81,24 @@ namespace frontend_csharp.ViewModels
             var danhSachSo = await apiService.GetDanhSachSoTietKiemAsync();
             if (danhSachSo != null)
             {
-                var dangMo = danhSachSo.Count(s => !string.Equals(s.TrangThai, "Đã đóng", StringComparison.OrdinalIgnoreCase));
+                var dangMo = danhSachSo.Count(s => !string.Equals(s.TrangThai, "DA_DONG", StringComparison.OrdinalIgnoreCase));
                 
                 var topMoiNhat = danhSachSo.OrderByDescending(s => s.NgayMo).Take(7).ToList();
+
+                var topSapDaoHan = danhSachSo
+                    .Where(s => !string.Equals(s.TrangThai, "DA_DONG", StringComparison.OrdinalIgnoreCase) && 
+                                s.NgayDaoHan.HasValue && 
+                                s.NgayDaoHan.Value.Date >= DateTime.Now.Date && 
+                                s.NgayDaoHan.Value.Date <= DateTime.Now.Date.AddDays(7))
+                    .OrderBy(s => s.NgayDaoHan.Value)
+                    .Take(5)
+                    .ToList();
 
                 App.Current.Dispatcher.Invoke(() => {
                     SoLuongSoDangMo = dangMo;
                     SoMoiNhatList.Clear();
                     foreach (var s in topMoiNhat) SoMoiNhatList.Add(s);
-                });
-            }
-
-            var soSapDaoHan = await apiService.GetDanhSachSoSapDaoHanAsync(7); // 7 days
-            if (soSapDaoHan != null)
-            {
-                var topSapDaoHan = soSapDaoHan.OrderBy(s => s.NgayDaoHan).Take(5).ToList();
-                App.Current.Dispatcher.Invoke(() => {
+                    
                     SoSapDenHanList.Clear();
                     foreach (var s in topSapDaoHan) SoSapDenHanList.Add(s);
                 });
