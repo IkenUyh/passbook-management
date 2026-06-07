@@ -143,6 +143,28 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="RedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#EF4444"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#DC2626"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="GrayButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#F3F4F6"/>
             <Setter Property="Foreground" Value="#374151"/>
@@ -287,7 +309,6 @@
         <Border x:Key="AddEmployeePopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Thêm nhân viên mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-
                 <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
                 <StackPanel Margin="0,0,0,10">
@@ -318,7 +339,6 @@
         <Border x:Key="EditEmployeePopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Text="Chỉnh sửa thông tin nhân viên" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
-
                 <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
                 <StackPanel Margin="0,0,0,10">
@@ -356,17 +376,58 @@
                 <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
                     <StackPanel>
                         <TextBlock Text="Thông tin đăng nhập mặc định:" Foreground="#6B7280" FontSize="13" Margin="0,0,0,12" FontStyle="Italic"/>
-
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="Tài khoản:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
-                            <TextBlock Text="{Binding NewUsername}" HorizontalAlignment="Right" Foreground="#111827" FontWeight="Bold" FontSize="13"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Tài khoản:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding NewUsername}" HorizontalAlignment="Right" Foreground="#111827" FontWeight="Bold" FontSize="13"/>
                         </Grid>
-
                         <Grid>
-                            <TextBlock Text="Mật khẩu:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
-                            <TextBlock Text="{Binding NewPassword}" HorizontalAlignment="Right" Foreground="#10B981" FontWeight="Bold" FontSize="13"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Mật khẩu:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding NewPassword}" HorizontalAlignment="Right" Foreground="#10B981" FontWeight="Bold" FontSize="13"/>
                         </Grid>
                     </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="CloseEmployeePopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="ResetPasswordConfirmPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Xác nhận cấp lại mật khẩu" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <TextBlock Foreground="#374151" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,24">
+                    <Run Text="Bạn có chắc chắn muốn cấp lại mật khẩu mặc định cho nhân viên "/>
+                    <Run Text="{Binding ResetTargetName}" FontWeight="Bold" Foreground="#EF4444"/>
+                    <Run Text=" không?"/>
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseEmployeePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource RedButtonStyle}" Content="Xác nhận" Click="ConfirmResetPassword_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="ResetPasswordSuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Đặt lại thành công!" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
+                    <TextBlock Text="{Binding ResetNewPassword}" Foreground="#10B981" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
                 </Border>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -490,6 +551,11 @@
                                                 <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem Header="Reset mật khẩu" Click="ResetPasswordMenu_Click">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Kind="LockReset" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
@@ -530,6 +596,11 @@
                                                 <MenuItem Header="Sửa thông tin" Click="EditEmployeeMenu_Click">
                                                     <MenuItem.Icon>
                                                         <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Reset mật khẩu" Click="ResetPasswordMenu_Click">
+                                                    <MenuItem.Icon>
+                                                        <materialDesign:PackIcon Kind="LockReset" Width="16" Height="16"/>
                                                     </MenuItem.Icon>
                                                 </MenuItem>
                                             </ContextMenu>
