@@ -1,5 +1,6 @@
 package com.uit.passbook_management_api.controller;
 
+import com.uit.passbook_management_api.dto.response.BaoCaoMoDongNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoThangDTO;
 import com.uit.passbook_management_api.service.BaoCaoService;
@@ -25,6 +26,11 @@ public class BaoCaoController {
     public ResponseEntity<List<BaoCaoNgayDTO>> xemBaoCaoNgay(@RequestParam("ngay") LocalDate ngay) {
         // Vừa tính toán trả về, vừa lưu âm thầm vào Database
         return ResponseEntity.ok(baoCaoService.chotBaoCaoNgay(ngay));
+    }
+
+    @GetMapping("/mo-dong-ngay")
+    public ResponseEntity<List<BaoCaoMoDongNgayDTO>> xemBaoCaoMoDongNgay(@RequestParam("ngay") LocalDate ngay) {
+        return ResponseEntity.ok(baoCaoService.xemBaoCaoMoDongNgay(ngay));
     }
 
     @GetMapping("/thang")

@@ -1,5 +1,6 @@
 package com.uit.passbook_management_api.service;
 
+import com.uit.passbook_management_api.dto.response.BaoCaoMoDongNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoNgayDTO;
 import com.uit.passbook_management_api.dto.response.BaoCaoThangDTO;
 import com.uit.passbook_management_api.entity.*;
@@ -68,5 +69,11 @@ public class BaoCaoService {
         }
 
         return dsBaoCao;
+    }
+
+        @Transactional
+        public List<BaoCaoMoDongNgayDTO> xemBaoCaoMoDongNgay(LocalDate ngay) {
+        // Gọi repository lấy dữ liệu thống kê số lượng sổ đóng/mở trong ngày
+        return loaiTietKiemRepository.lapBaoCaoMoDongNgay(ngay);
     }
 }
