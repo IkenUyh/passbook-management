@@ -3,6 +3,9 @@
     <BitmapImage x:Key="User" UriSource="/Assets/user.jpg"/>
     <BitmapImage x:Key="User_Hover" UriSource="/Assets/user_hover.jpg"/>
     <BitmapImage x:Key="User_Active" UriSource="/Assets/user_active.jpg"/>
+    
+    <BitmapImage x:Key="Employee_Avt" UriSource="/Assets/employee_avt.png"/>
+    <BitmapImage x:Key="Admin_Avt" UriSource="/Assets/admin_avt.png"/>
 
     <BitmapImage x:Key="Dashboard" UriSource="/Assets/Dashboard.png"/>
     <BitmapImage x:Key="Dashboard_Hover" UriSource="/Assets/DashboardHover.png"/>

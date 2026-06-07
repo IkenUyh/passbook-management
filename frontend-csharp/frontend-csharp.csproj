@@ -10,12 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\admin_avt.png" />
     <None Remove="Assets\Customer.png" />
     <None Remove="Assets\CustomerActive.png" />
     <None Remove="Assets\CustomerHover.png" />
     <None Remove="Assets\Employee.png" />
     <None Remove="Assets\EmployeeActive.png" />
     <None Remove="Assets\EmployeeHover.png" />
+    <None Remove="Assets\employee_avt.png" />
     <None Remove="Assets\Lookup.png" />
     <None Remove="Assets\LookupActive.png" />
     <None Remove="Assets\LookupHover.png" />
@@ -38,12 +40,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\admin_avt.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Customer.png" />
     <Resource Include="Assets\CustomerActive.png" />
     <Resource Include="Assets\CustomerHover.png" />
     <Resource Include="Assets\Employee.png" />
     <Resource Include="Assets\EmployeeActive.png" />
     <Resource Include="Assets\EmployeeHover.png" />
+    <Resource Include="Assets\employee_avt.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Lookup.png" />
     <Resource Include="Assets\LookupActive.png" />
     <Resource Include="Assets\LookupHover.png" />
