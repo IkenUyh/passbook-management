@@ -257,7 +257,7 @@
                             FontWeight="SemiBold" 
                             Foreground="#111827" 
                             Margin="0,0,0,8"/>
-                        <TextBox Text="{Binding RegulationInfo.TienGuiToiThieu, StringFormat={}{0:N0}}">
+                        <TextBox Text="{Binding TienGuiToiThieuText, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
                                     <Setter Property="BorderBrush" Value="#EF4444"/>
@@ -283,7 +283,7 @@
                             FontWeight="SemiBold" 
                             Foreground="#111827" 
                             Margin="0,0,0,8"/>
-                        <TextBox Text="{Binding RegulationInfo.TienGuiThemToiThieu, StringFormat={}{0:N0}}">
+                        <TextBox Text="{Binding TienGuiThemToiThieuText, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
                                     <Setter Property="BorderBrush" Value="#EF4444"/>
@@ -312,7 +312,7 @@
                                 FontWeight="SemiBold" 
                                 Foreground="#111827"/>
                         </Viewbox>
-                        <TextBox Text="{Binding RegulationInfo.ThoiGianGuiToiThieuNgay}">
+                        <TextBox Text="{Binding ThoiGianGuiToiThieuNgayText, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
                                     <Setter Property="BorderBrush" Value="#EF4444"/>

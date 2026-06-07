@@ -63,6 +63,27 @@ namespace frontend_csharp.ViewModels
             set { _popupMessage = value; OnPropertyChanged(); }
         }
 
+        private string _tienGuiToiThieuText;
+        public string TienGuiToiThieuText
+        {
+            get => _tienGuiToiThieuText;
+            set { _tienGuiToiThieuText = value; OnPropertyChanged(); }
+        }
+
+        private string _tienGuiThemToiThieuText;
+        public string TienGuiThemToiThieuText
+        {
+            get => _tienGuiThemToiThieuText;
+            set { _tienGuiThemToiThieuText = value; OnPropertyChanged(); }
+        }
+
+        private string _thoiGianGuiToiThieuNgayText;
+        public string ThoiGianGuiToiThieuNgayText
+        {
+            get => _thoiGianGuiToiThieuNgayText;
+            set { _thoiGianGuiToiThieuNgayText = value; OnPropertyChanged(); }
+        }
+
         // --- ERROR MESSAGES ---
         private string _generalErrorMessage;
         public string GeneralErrorMessage
@@ -138,6 +159,10 @@ namespace frontend_csharp.ViewModels
                 RegulationInfo.TienGuiToiThieu = thamSo.TienGuiBanDauToiThieu;
                 RegulationInfo.TienGuiThemToiThieu = thamSo.TienGuiThemToiThieu;
                 RegulationInfo.ThoiGianGuiToiThieuNgay = thamSo.SoNgayGuiToiThieu;
+
+                TienGuiToiThieuText = thamSo.TienGuiBanDauToiThieu.ToString("N0");
+                TienGuiThemToiThieuText = thamSo.TienGuiThemToiThieu.ToString("N0");
+                ThoiGianGuiToiThieuNgayText = thamSo.SoNgayGuiToiThieu.ToString();
 
                 OnPropertyChanged(nameof(RegulationInfo));
             }
