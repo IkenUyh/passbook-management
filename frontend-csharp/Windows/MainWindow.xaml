@@ -82,17 +82,13 @@
                         <RowDefinition Height="2.25*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Height="200">
-                        <Ellipse Width="150" Height="150"
-                                 Stroke="White" StrokeThickness="2" Margin="0,-30,0,0">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{StaticResource User}" Stretch="UniformToFill"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
-
-                        <Grid VerticalAlignment="Bottom">
-                        </Grid>
-                    </Grid>
+                    <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,15,0,0">
+                        <Border Width="150" Height="150" CornerRadius="0">
+                            <Image x:Name="AvatarImg" Stretch="UniformToFill"/>
+                        </Border>
+                        <TextBlock x:Name="TxtHoTen" Text="Đang tải..." Foreground="White" FontWeight="Bold" FontSize="15" HorizontalAlignment="Center" Margin="0,10,0,2"/>
+                        <TextBlock x:Name="TxtCccd" Text="..." Foreground="#FF8E8E" FontSize="12" HorizontalAlignment="Center"/>
+                    </StackPanel>
 
                     <uc:SidePanel x:Name="MenuSidePanel" Grid.Row="1" Margin="0,20,0,80"></uc:SidePanel>
 

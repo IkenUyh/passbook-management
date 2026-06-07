@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using frontend_csharp.Services;
 using frontend_csharp.Windows;
 using frontend_csharp.UserControls;
@@ -12,7 +13,6 @@ namespace frontend_csharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        // 1. Khai báo sẵn các biến chứa UserControl
         private readonly Dashboard _dashboard;
         private readonly EmployeeManagement _employeeManagement;
         private readonly SavingsBookLookup _savingsBookLookup;
@@ -21,12 +21,14 @@ namespace frontend_csharp
         private readonly ReportsManagement _reportsManagement;
         private readonly AuditLogManagement _auditLogManagement;
         private readonly AccountManagement _accountManagement;
+        private readonly ApiService _apiService;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // 2. Khởi tạo tất cả UserControl (Load sẵn)
+            _apiService = new ApiService();
+
             _dashboard = new Dashboard();
             _employeeManagement = new EmployeeManagement();
             _savingsBookLookup = new SavingsBookLookup();
@@ -36,20 +38,72 @@ namespace frontend_csharp
             _auditLogManagement = new AuditLogManagement();
             _accountManagement = new AccountManagement();
 
-            // Đăng ký nhận sự kiện từ SidePanel
             MenuSidePanel.OnMenuChanged += MenuSidePanel_OnMenuChanged;
 
-            // Mặc định hiển thị Dashboard khi mở app bằng instance đã tạo
             MainContent.Content = _dashboard;
+
+            this.Loaded += MainWindow_Loaded;
         }
 
-        // Khôi phục lại async void để không block UI thread của SidePanel Animation
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // 1. Hiển thị Avatar ngay lập tức bằng Role có sẵn từ Session mà không cần đợi API phản hồi
+            SetAvatarByRole(AppSession.CurrentRole);
+
+            // 2. Tải các thông tin tên và CCCD bất đồng bộ từ API sau
+            await LoadUserProfileAsync();
+        }
+
+        private void SetAvatarByRole(string role)
+        {
+            try
+            {
+                // Xác định đúng Key của bitmap dựa trên quyền (ADMIN hoặc NHAN_VIEN)
+                string avatarKey = (role == "ADMIN") ? "Admin_Avt" : "Employee_Avt";
+
+                // Tìm kiếm mở rộng ở cả Window và cấp độ Application toàn cục để đảm bảo tìm thấy Bitmap
+                object resource = TryFindResource(avatarKey) ?? Application.Current.TryFindResource(avatarKey);
+
+                if (resource is ImageSource avatarSource)
+                {
+                    AvatarImg.Source = avatarSource;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi gán hình ảnh Avatar: {ex.Message}");
+            }
+        }
+
+        private async Task LoadUserProfileAsync()
+        {
+            try
+            {
+                var profile = await _apiService.GetCurrentProfileAsync();
+                if (profile != null)
+                {
+                    TxtHoTen.Text = profile.HoTen;
+                    TxtCccd.Text = $"CCCD: {profile.Cccd}";
+
+                    // Cập nhật lại một lần nữa nhằm đồng bộ chính xác theo thông tin tài khoản mới nhất
+                    SetAvatarByRole(profile.Role);
+                }
+                else
+                {
+                    TxtHoTen.Text = "Không rõ danh tính";
+                    TxtCccd.Text = "";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi tải thông tin cá nhân: {ex.Message}");
+                TxtHoTen.Text = "Lỗi kết nối";
+                TxtCccd.Text = "";
+            }
+        }
+
         private async void MenuSidePanel_OnMenuChanged(string menuName)
         {
-            // Nhường UI thread 300ms để animation của SidePanel chạy mượt mà không bị block
-            // await Task.Delay(300);
-
-            // 3. Gọi lại các instance đã khởi tạo sẵn thay vì dùng "new"
             switch (menuName)
             {
                 case "Trang chủ":
@@ -79,7 +133,6 @@ namespace frontend_csharp
             }
         }
 
-        // Sự kiện click nút đăng xuất ở góc dưới bên trái
         private void LogoutBtn_Click(object sender, RoutedEventArgs e)
         {
             ExecuteLogout();
@@ -87,15 +140,12 @@ namespace frontend_csharp
 
         private void ExecuteLogout()
         {
-            // 1. Xóa thông tin phiên đăng nhập hiện tại
             AppSession.CurrentToken = null;
             AppSession.LoggedInUsername = null;
 
-            // 2. Khởi tạo và hiển thị lại màn hình LoginWindow
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
 
-            // 3. Đóng màn hình chính hiện tại
             this.Close();
         }
 
