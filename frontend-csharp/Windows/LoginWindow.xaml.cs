@@ -3,18 +3,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using frontend_csharp.Services; // Đã thêm để gọi ApiService
+using frontend_csharp.Services;
 
 namespace frontend_csharp.Windows
 {
     public partial class LoginWindow : Window
     {
-        private readonly ApiService _apiService; // Khai báo ApiService
+        private readonly ApiService _apiService;
 
         public LoginWindow()
         {
             InitializeComponent();
-            _apiService = new ApiService(); // Khởi tạo ApiService
+            _apiService = new ApiService();
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
@@ -22,10 +22,8 @@ namespace frontend_csharp.Windows
             Application.Current.Shutdown();
         }
 
-        // Đã sửa thành async và gọi API
         private async void SignIn_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Tạm khóa nút Đăng nhập để ngăn người dùng bấm nhiều lần (chống double-click)
             var btn = sender as Button;
             if (btn != null) btn.IsEnabled = false;
 
@@ -40,40 +38,42 @@ namespace frontend_csharp.Windows
                     return;
                 }
 
-                // Gọi API đăng nhập
                 var response = await _apiService.LoginAsync(username, password);
 
                 if (response != null && !string.IsNullOrEmpty(response.Token))
                 {
-                    // Đăng nhập thành công -> Lưu token vào Session
                     AppSession.CurrentToken = response.Token;
                     AppSession.LoggedInUsername = response.Username;
 
-                    // Mở màn hình chính và đóng màn hình đăng nhập
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
                     this.Close();
                 }
                 else
                 {
-                    // Đăng nhập thất bại
                     MessageBox.Show("Tài khoản hoặc mật khẩu không chính xác hoặc không thể kết nối tới Server!", "Lỗi Đăng Nhập", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             finally
             {
-                // 2. Mở khóa lại nút Đăng nhập khi đã xử lý xong 
-                // (để nếu người dùng nhập sai thì họ còn bấm lại được)
                 if (btn != null) btn.IsEnabled = true;
             }
         }
 
-        // Sự kiện Quên mật khẩu
-        private void ForgotPassword_Click(object sender, RoutedEventArgs e)
+        private void GithubBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Gọi API xử lý quên mật khẩu tại đây
-            // Ví dụ: Mở một cửa sổ nhập email hoặc gửi yêu cầu reset password đến server
-            MessageBox.Show("Chức năng quên mật khẩu đang được phát triển.");
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://github.com/IkenUyh/passbook-management",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thể mở liên kết: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ShowSignUp_Click(object sender, RoutedEventArgs e)
@@ -93,7 +93,6 @@ namespace frontend_csharp.Windows
             AnimateElement(SignUpTransform, 270);
             AnimateOpacity(SignUpPanel, 1, 1);
 
-            // Đổi màu sang tone Xanh Dương - Tím
             AnimateGradientColors(Color.FromRgb(63, 81, 181), Color.FromRgb(0, 188, 212));
         }
 
@@ -114,7 +113,6 @@ namespace frontend_csharp.Windows
             AnimateElement(SignUpTransform, 0);
             AnimateOpacity(SignUpPanel, 0, 0);
 
-            // Đổi màu về tone Hồng - Cam ban đầu
             AnimateGradientColors(Color.FromRgb(255, 0, 128), Color.FromRgb(255, 140, 0));
         }
 
