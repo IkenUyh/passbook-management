@@ -50,7 +50,7 @@ namespace frontend_csharp
             // 1. Hiển thị Avatar ngay lập tức bằng Role có sẵn từ Session mà không cần đợi API phản hồi
             SetAvatarByRole(AppSession.CurrentRole);
 
-            // 2. Tải các thông tin tên và CCCD bất đồng bộ từ API sau
+            // 2. Tải các thông tin tên và CCCD bất đồng bộ từ API hoặc gán cứng theo Role
             await LoadUserProfileAsync();
         }
 
@@ -79,14 +79,28 @@ namespace frontend_csharp
         {
             try
             {
-                var profile = await _apiService.GetCurrentProfileAsync();
-                if (profile != null)
+                if (AppSession.CurrentRole == "ADMIN")
                 {
-                    TxtHoTen.Text = profile.HoTen;
-                    TxtCccd.Text = $"CCCD: {profile.Cccd}";
-
-                    // Cập nhật lại một lần nữa nhằm đồng bộ chính xác theo thông tin tài khoản mới nhất
-                    SetAvatarByRole(profile.Role);
+                    // Nếu là ADMIN: Hiển thị thông tin cố định, không gọi API tìm danh tính
+                    TxtHoTen.Text = "Quản Trị Viên";
+                    TxtCccd.Text = "IkenUyh/passbook-management";
+                    SetAvatarByRole("ADMIN");
+                }
+                else if (AppSession.CurrentRole == "NHAN_VIEN")
+                {
+                    // Nếu là NHAN_VIEN: Gọi API tìm danh tính người dùng
+                    var profile = await _apiService.GetCurrentProfileAsync();
+                    if (profile != null)
+                    {
+                        TxtHoTen.Text = profile.HoTen;
+                        TxtCccd.Text = $"CCCD: {profile.Cccd}";
+                        SetAvatarByRole(profile.Role);
+                    }
+                    else
+                    {
+                        TxtHoTen.Text = "Không rõ danh tính";
+                        TxtCccd.Text = "";
+                    }
                 }
                 else
                 {
