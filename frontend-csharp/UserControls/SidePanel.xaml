@@ -8,7 +8,6 @@
              d:DesignHeight="800" d:DesignWidth="250">
 
     <UserControl.Resources>
-
         <Style x:Key="SidePanelStyle" TargetType="RadioButton">
             <Setter Property="IsTabStop" Value="False" />
             <Setter Property="Focusable" Value="False" />
@@ -16,99 +15,39 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="border"
-                                Height="40"
-                                Background="Transparent">
-
+                        <Border x:Name="border" Height="40" Background="Transparent">
                             <Grid>
-
-                                <Grid Margin="0,0,20,0" Width="25" Height="25"
-                                      HorizontalAlignment="Right" VerticalAlignment="Center"
-                                      Panel.ZIndex="1">
-                                    <!-- Hidden Image used by Hover/Checked triggers -->
-                                    <Image x:Name="SidePanel_Menu_Image"
-                                           Source="{TemplateBinding CommandParameter}"
-                                           Stretch="Uniform"
-                                           Visibility="Collapsed" />
-                                    <!-- White rectangle masked by the icon shape (default state) -->
-                                    <Rectangle x:Name="SidePanel_Menu_WhiteMask"
-                                               Fill="White"
-                                               Visibility="Visible">
+                                <Grid Margin="0,0,20,0" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" Panel.ZIndex="1">
+                                    <Image x:Name="SidePanel_Menu_Image" Source="{TemplateBinding CommandParameter}" Stretch="Uniform" Visibility="Collapsed" />
+                                    <Rectangle x:Name="SidePanel_Menu_WhiteMask" Fill="White" Visibility="Visible">
                                         <Rectangle.OpacityMask>
                                             <ImageBrush ImageSource="{Binding CommandParameter, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Uniform" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </Grid>
 
-                                <Grid x:Name="TextBlock_Panel"
-                                      Background="Transparent"
-                                      Height="35"
-                                      Width="150"
-                                      Margin="0,0,0,0"
-                                      HorizontalAlignment="Left">
-
-                                    <TextBlock Text="{TemplateBinding Content}"
-                                               FontFamily="Segoe UI Light"
-                                               FontWeight="SemiBold"
-                                               FontSize="17"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Left"
-                                               Margin="10,0,0,0"
-                                               Foreground="#FFFFFF" />
+                                <Grid x:Name="TextBlock_Panel" Background="Transparent" Height="35" Width="150" Margin="0,0,0,0" HorizontalAlignment="Left">
+                                    <TextBlock Text="{TemplateBinding Content}" FontFamily="Segoe UI Light" FontWeight="SemiBold" FontSize="17" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="#FFFFFF" />
                                 </Grid>
 
-                                <Grid x:Name="Sliding_UpperCase_Panel"
-                                      Height="35"
-                                      Width="0"
-                                      Background="Transparent"
-                                      HorizontalAlignment="Left"
-                                      Margin="0,0,0,0">
-
-                                    <Border x:Name="Highlighter"
-                                            Height="35"
-                                            Width="300"
-                                            Background="White"
-                                            CornerRadius="1"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Margin="0,0,15,0" />
-                                    <Ellipse x:Name="ActiveCircle"
-                                             Width="35"
-                                             Height="35"
-                                             Fill="White"
-                                             HorizontalAlignment="Right"
-                                             VerticalAlignment="Center" />
-
-                                    <TextBlock x:Name="UpperCase_Text"
-                                               Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
-                                               FontFamily="Segoe UI Light"
-                                               FontWeight="Bold"
-                                               FontSize="17"
-                                               Foreground="#3A5EEA"
-                                               Margin="10,0,0,0"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center">
-
-                                    </TextBlock>
+                                <Grid x:Name="Sliding_UpperCase_Panel" Height="35" Width="0" Background="Transparent" HorizontalAlignment="Left" Margin="0,0,0,0">
+                                    <Border x:Name="Highlighter" Height="35" Width="300" Background="White" CornerRadius="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0" />
+                                    <Ellipse x:Name="ActiveCircle" Width="35" Height="35" Fill="White" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="UpperCase_Text" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FontFamily="Segoe UI Light" FontWeight="Bold" FontSize="17" Foreground="#3A5EEA" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                 </Grid>
                             </Grid>
-
                         </Border>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.3"/>
                             </Trigger>
-
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="Transparent" />
                                 <Setter TargetName="SidePanel_Menu_WhiteMask" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="SidePanel_Menu_Image" Property="Visibility" Value="Visible" />
-                                <Setter TargetName="SidePanel_Menu_Image"
-                                        Property="Source"
-                                        Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Setter TargetName="SidePanel_Menu_Image" Property="Source" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
                             </Trigger>
-
                             <Trigger Property="IsChecked" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="Transparent" />
                                 <Setter Property="Background" TargetName="Highlighter" Value="#FFFFFF" />
@@ -116,11 +55,8 @@
                                 <Setter Property="FontSize" TargetName="UpperCase_Text" Value="17" />
                                 <Setter TargetName="SidePanel_Menu_WhiteMask" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="SidePanel_Menu_Image" Property="Visibility" Value="Visible" />
-                                <Setter TargetName="SidePanel_Menu_Image"
-                                        Property="Source"
-                                        Value="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Setter TargetName="SidePanel_Menu_Image" Property="Source" Value="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
                             </Trigger>
-
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsMouseOver" Value="True" />
@@ -128,10 +64,7 @@
                                 <MultiTrigger.EnterActions>
                                     <BeginStoryboard x:Name="Start_Uppercase_Indicator">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             DecelerationRatio="0.6"
-                                                             From="0" To="185" Duration="0:0:0.5" />
+                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel" Storyboard.TargetProperty="Width" DecelerationRatio="0.6" From="0" To="185" Duration="0:0:0.5" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                     <RemoveStoryboard BeginStoryboardName="Stop_Indicator" />
@@ -139,16 +72,12 @@
                                 <MultiTrigger.ExitActions>
                                     <BeginStoryboard x:Name="Stop_Uppercase_Indicator">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             DecelerationRatio="0.6"
-                                                             From="185" To="0" Duration="0:0:0.5" />
+                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel" Storyboard.TargetProperty="Width" DecelerationRatio="0.6" From="185" To="0" Duration="0:0:0.5" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                     <RemoveStoryboard BeginStoryboardName="Release_Indicator" />
                                 </MultiTrigger.ExitActions>
                             </MultiTrigger>
-
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsChecked" Value="True" />
@@ -156,93 +85,78 @@
                                 <MultiTrigger.EnterActions>
                                     <BeginStoryboard x:Name="Lock_Indicator">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                                         Storyboard.TargetProperty="Width"
-                                                                         From="185" To="185" Duration="0:0:0.3" />
-
-                                            <ColorAnimation Storyboard.TargetName="ActiveCircle"
-                                                            Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
-                                                            To="LightBlue" Duration="0:0:1" />
+                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel" Storyboard.TargetProperty="Width" From="185" To="185" Duration="0:0:0.3" />
+                                            <ColorAnimation Storyboard.TargetName="ActiveCircle" Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)" To="LightBlue" Duration="0:0:1" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </MultiTrigger.EnterActions>
                                 <MultiTrigger.ExitActions>
                                     <BeginStoryboard x:Name="Release_Indicator">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             From="185" To="160" Duration="0:0:0" />
+                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel" Storyboard.TargetProperty="Width" From="185" To="160" Duration="0:0:0" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                     <BeginStoryboard x:Name="Stop_Indicator">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel"
-                                                             Storyboard.TargetProperty="Width"
-                                                             From="185" To="0" BeginTime="0:0:0" Duration="0:0:0.5" />
-
-                                            <ColorAnimation Storyboard.TargetName="ActiveCircle"
-                                                            Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
-                                                            To="White" Duration="0:0:0.5" />
+                                            <DoubleAnimation Storyboard.TargetName="Sliding_UpperCase_Panel" Storyboard.TargetProperty="Width" From="185" To="0" BeginTime="0:0:0" Duration="0:0:0.5" />
+                                            <ColorAnimation Storyboard.TargetName="ActiveCircle" Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)" To="White" Duration="0:0:0.5" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </MultiTrigger.ExitActions>
                             </MultiTrigger>
-
                         </ControlTemplate.Triggers>
-
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
     </UserControl.Resources>
 
     <Border Background="Transparent" CornerRadius="30">
         <StackPanel Orientation="Vertical" Margin="0,20,0,0" HorizontalAlignment="Left">
 
-            <RadioButton Content="Trang chủ" Style="{StaticResource SidePanelStyle}" IsChecked="True"
+            <RadioButton x:Name="MenuTrangChu" Content="Trang chủ" Style="{StaticResource SidePanelStyle}" IsChecked="True"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Dashboard}" 
                          Tag="{StaticResource Dashboard_Hover}" 
                          DataContext="{StaticResource Dashboard_Active}"/>
 
-            <RadioButton Content="Nhân viên" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuNhanVien" Content="Nhân viên" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Employee}" 
                          Tag="{StaticResource Employee_Hover}" 
                          DataContext="{StaticResource Employee_Active}"/>
 
-            <RadioButton Content="Tra cứu sổ" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuTraCuuSo" Content="Tra cứu sổ" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Lookup}" 
                          Tag="{StaticResource Lookup_Hover}" 
                          DataContext="{StaticResource Lookup_Active}"/>
 
-            <RadioButton Content="Khách hàng" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuKhachHang" Content="Khách hàng" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Customer}" 
                          Tag="{StaticResource Customer_Hover}" 
                          DataContext="{StaticResource Customer_Active}"/>
 
-            <RadioButton Content="Báo cáo" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuBaoCao" Content="Báo cáo" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Report}" 
                          Tag="{StaticResource Report_Hover}" 
                          DataContext="{StaticResource Report_Active}"/>
 
-            <RadioButton Content="Quy định" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuQuyDinh" Content="Quy định" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Regulation}" 
                          Tag="{StaticResource Regulation_Hover}" 
                          DataContext="{StaticResource Regulation_Active}"/>
 
-            <RadioButton Content="Nhật ký" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuNhatKy" Content="Nhật ký" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Log}" 
                          Tag="{StaticResource Log_Hover}" 
                          DataContext="{StaticResource Log_Active}"/>
 
-            <RadioButton Content="Tài khoản" Style="{StaticResource SidePanelStyle}"
+            <RadioButton x:Name="MenuTaiKhoan" Content="Tài khoản" Style="{StaticResource SidePanelStyle}"
                          Checked="Menu_Checked"
                          CommandParameter="{StaticResource Account}" 
                          Tag="{StaticResource Account_Hover}" 
