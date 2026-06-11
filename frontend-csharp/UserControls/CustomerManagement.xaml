@@ -413,12 +413,6 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Column="1" Margin="10,0,0,0" Padding="12,5" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Cursor="Hand" Background="White">
-                    <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Filter" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Bộ lọc" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
 
                 <Button Grid.Column="3" Style="{StaticResource GreenButtonStyle}" Click="OpenAddCustomerPopup_Click" Padding="12,5" Height="34">
                     <StackPanel Orientation="Horizontal">
