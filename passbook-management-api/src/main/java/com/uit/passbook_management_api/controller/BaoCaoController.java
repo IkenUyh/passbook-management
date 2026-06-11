@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/bao-cao")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
 public class BaoCaoController {
 
     private final BaoCaoService baoCaoService;
