@@ -91,7 +91,6 @@ namespace frontend_csharp.ViewModels
                                 s.NgayDaoHan.Value.Date >= DateTime.Now.Date && 
                                 s.NgayDaoHan.Value.Date <= DateTime.Now.Date.AddDays(7))
                     .OrderBy(s => s.NgayDaoHan.Value)
-                    .Take(5)
                     .ToList();
 
                 App.Current.Dispatcher.Invoke(() => {
