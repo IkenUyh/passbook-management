@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>frontend_csharp</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Account.png" />
+    <None Remove="Assets\AccountActive.png" />
+    <None Remove="Assets\AccountHover.png" />
+    <None Remove="Assets\admin_avt.png" />
+    <None Remove="Assets\Customer.png" />
+    <None Remove="Assets\CustomerActive.png" />
+    <None Remove="Assets\CustomerHover.png" />
+    <None Remove="Assets\Employee.png" />
+    <None Remove="Assets\EmployeeActive.png" />
+    <None Remove="Assets\EmployeeHover.png" />
+    <None Remove="Assets\Log.png" />
+    <None Remove="Assets\LogActive.png" />
+    <None Remove="Assets\LogHover.png" />
+    <None Remove="Assets\employee_avt.png" />
+    <None Remove="Assets\Lookup.png" />
+    <None Remove="Assets\LookupActive.png" />
+    <None Remove="Assets\LookupHover.png" />
+    <None Remove="Assets\Regulation.png" />
+    <None Remove="Assets\RegulationActive.png" />
+    <None Remove="Assets\RegulationHover.png" />
+    <None Remove="Assets\Report.png" />
+    <None Remove="Assets\ReportActive.png" />
+    <None Remove="Assets\ReportHover.png" />
+    <None Remove="Assets\user.jpg" />
+    <None Remove="Assets\user_active.jpg" />
+    <None Remove="Assets\user_hover.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.2" />
+    <PackageReference Include="Refit" Version="10.1.6" />
+    <PackageReference Include="RestSharp" Version="114.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Account.png" />
+    <Resource Include="Assets\AccountHover.png" />
+    <Resource Include="Assets\admin_avt.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Customer.png" />
+    <Resource Include="Assets\CustomerHover.png" />
+    <Resource Include="Assets\Employee.png" />
+    <Resource Include="Assets\EmployeeHover.png" />
+    <Resource Include="Assets\Log.png" />
+    <Resource Include="Assets\LogHover.png" />
+    <Resource Include="Assets\employee_avt.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Lookup.png" />
+    <Resource Include="Assets\LookupHover.png" />
+    <Resource Include="Assets\Regulation.png" />
+    <Resource Include="Assets\RegulationHover.png" />
+    <Resource Include="Assets\Report.png" />
+    <Resource Include="Assets\ReportHover.png" />
+    <Resource Include="Assets\user.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\user_active.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\user_hover.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\DashboardHover.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Dashboard.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,52 @@
+package com.uit.passbook_management_api.controller;
+
+import com.uit.passbook_management_api.dto.request.CapNhatThamSoRequest;
+import com.uit.passbook_management_api.dto.request.LoaiTietKiemRequest;
+import com.uit.passbook_management_api.service.QuyDinhService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/quy-dinh")
+@PreAuthorize("hasAnyRole('ADMIN', 'NHAN_VIEN')")
+public class QuyDinhController {
+
+    private final QuyDinhService quyDinhService;
+
+    public QuyDinhController(QuyDinhService quyDinhService) {
+        this.quyDinhService = quyDinhService;
+    }
+
+    // --- API Tham số chung ---
+    @GetMapping("/tham-so")
+    public ResponseEntity<?> layThamSo() {
+        return ResponseEntity.ok(quyDinhService.xemThamSo());
+    }
+
+    @PutMapping("/tham-so")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> capNhatThamSo(@RequestBody CapNhatThamSoRequest request) {
+        try {
+            return ResponseEntity.ok(quyDinhService.capNhatThamSo(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // --- API Loại Tiết Kiệm ---
+    @GetMapping("/loai-tiet-kiem")
+    public ResponseEntity<?> layDanhSachLoaiTietKiem() {
+        return ResponseEntity.ok(quyDinhService.xemDanhSachLoaiTietKiem());
+    }
+
+    @PostMapping("/loai-tiet-kiem")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> themHoacSuaLoaiTietKiem(@RequestBody LoaiTietKiemRequest request) {
+        try {
+            return ResponseEntity.ok(quyDinhService.luuLoaiTietKiem(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}

@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="User" UriSource="/Assets/user.jpg"/>
+    <BitmapImage x:Key="User_Hover" UriSource="/Assets/user_hover.jpg"/>
+    <BitmapImage x:Key="User_Active" UriSource="/Assets/user_active.jpg"/>
+    
+    <BitmapImage x:Key="Employee_Avt" UriSource="/Assets/employee_avt.png"/>
+    <BitmapImage x:Key="Admin_Avt" UriSource="/Assets/admin_avt.png"/>
+
+    <BitmapImage x:Key="Dashboard" UriSource="/Assets/Dashboard.png"/>
+    <BitmapImage x:Key="Dashboard_Hover" UriSource="/Assets/DashboardHover.png"/>
+    <BitmapImage x:Key="Dashboard_Active" UriSource="/Assets/Dashboard.png"/>
+
+    <BitmapImage x:Key="Employee" UriSource="/Assets/Employee.png"/>
+    <BitmapImage x:Key="Employee_Hover" UriSource="/Assets/EmployeeHover.png"/>
+    <BitmapImage x:Key="Employee_Active" UriSource="/Assets/Employee.png"/>
+
+    <BitmapImage x:Key="Lookup" UriSource="/Assets/Lookup.png"/>
+    <BitmapImage x:Key="Lookup_Hover" UriSource="/Assets/LookupHover.png"/>
+    <BitmapImage x:Key="Lookup_Active" UriSource="/Assets/Lookup.png"/>
+
+    <BitmapImage x:Key="Customer" UriSource="/Assets/Customer.png"/>
+    <BitmapImage x:Key="Customer_Hover" UriSource="/Assets/CustomerHover.png"/>
+    <BitmapImage x:Key="Customer_Active" UriSource="/Assets/Customer.png"/>
+
+    <BitmapImage x:Key="Report" UriSource="/Assets/Report.png"/>
+    <BitmapImage x:Key="Report_Hover" UriSource="/Assets/ReportHover.png"/>
+    <BitmapImage x:Key="Report_Active" UriSource="/Assets/Report.png"/>
+
+    <BitmapImage x:Key="Regulation" UriSource="/Assets/Regulation.png"/>
+    <BitmapImage x:Key="Regulation_Hover" UriSource="/Assets/RegulationHover.png"/>
+    <BitmapImage x:Key="Regulation_Active" UriSource="/Assets/Regulation.png"/>
+
+    <BitmapImage x:Key="Log" UriSource="/Assets/Log.png"/>
+    <BitmapImage x:Key="Log_Hover" UriSource="/Assets/LogHover.png"/>
+    <BitmapImage x:Key="Log_Active" UriSource="/Assets/Log.png"/>
+
+    <BitmapImage x:Key="Account" UriSource="/Assets/Account.png"/>
+    <BitmapImage x:Key="Account_Hover" UriSource="/Assets/AccountHover.png"/>
+    <BitmapImage x:Key="Account_Active" UriSource="/Assets/Account.png"/>
+</ResourceDictionary>

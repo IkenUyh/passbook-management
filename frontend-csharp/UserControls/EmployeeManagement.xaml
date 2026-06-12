@@ -1,0 +1,632 @@
+﻿<UserControl x:Class="frontend_csharp.UserControls.EmployeeManagement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="White"
+             d:DesignHeight="640" d:DesignWidth="790">
+    <UserControl.Resources>
+        <Style x:Key="VerticalCenterTextStyle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="InputTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="White" CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NewFullNameStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewFullNameError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewFullNameError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NewCitizenIdStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewCitizenIdError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewCitizenIdError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NewPhoneNumberStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding NewPhoneNumberError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding NewPhoneNumberError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="EditFullNameStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditFullNameError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditFullNameError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="EditCitizenIdStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditCitizenIdError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditCitizenIdError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="EditPhoneNumberStyle" TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}">
+            <Setter Property="BorderBrush" Value="#EF4444"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EditPhoneNumberError}" Value="">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding EditPhoneNumberError}" Value="{x:Null}">
+                    <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GreenButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#10B981"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#059669"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="RedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#EF4444"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#DC2626"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="GrayButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F3F4F6"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E5E7EB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,15,10,15"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                                <materialDesign:PackIcon x:Name="SortIcon" Grid.Column="1" Kind="ArrowUp" Width="14" Height="14" Margin="4,0,0,0" Opacity="0" VerticalAlignment="Center" Foreground="#6B7280"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowUp"/>
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="SortIcon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="SortIcon" Property="Kind" Value="ArrowDown"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModernContextMenuStyle" TargetType="ContextMenu">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" SnapsToDevicePixels="True">
+                            <Grid Grid.IsSharedSizeScope="True" Margin="0,4">
+                                <ItemsPresenter />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="Foreground" Value="#374151"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="MenuItem">
+                                <Border x:Name="BgBorder" Background="Transparent" CornerRadius="6" Margin="4,2" Padding="{TemplateBinding Padding}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="MenuIconGroup"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ContentPresenter x:Name="IconHost" Grid.Column="0" ContentSource="Icon" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BgBorder" Property="Background" Value="#F3F4F6"/>
+                                        <Setter Property="Foreground" Value="#111827"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#EF4444"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Height" Value="16"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+                <Trigger Property="Text" Value="{x:Null}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Border x:Key="AddEmployeePopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Thêm nhân viên mới" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewFullNameStyle}" Text="{Binding NewFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewFullNameError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Số CCCD (12 chữ số)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewCitizenIdStyle}" Text="{Binding NewCitizenId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewCitizenIdError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource NewPhoneNumberStyle}" Text="{Binding NewPhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding NewPhoneNumberError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseEmployeePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Thêm" Click="ConfirmAddEmployee_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="EditEmployeePopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Chỉnh sửa thông tin nhân viên" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Họ và tên" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditFullNameStyle}" Text="{Binding EditFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditFullNameError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,10">
+                    <TextBlock Text="Số CCCD (12 chữ số)" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditCitizenIdStyle}" Text="{Binding EditCitizenId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditCitizenIdError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Số điện thoại" FontSize="13" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,6"/>
+                    <TextBox Style="{StaticResource EditPhoneNumberStyle}" Text="{Binding EditPhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{Binding EditPhoneNumberError}" Style="{StaticResource ErrorTextStyle}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseEmployeePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Lưu" Click="ConfirmEditEmployee_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="AddEmployeeSuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Thêm thành công!" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
+                    <StackPanel>
+                        <TextBlock Text="Thông tin đăng nhập mặc định:" Foreground="#6B7280" FontSize="13" Margin="0,0,0,12" FontStyle="Italic"/>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Tài khoản:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding NewUsername}" HorizontalAlignment="Right" Foreground="#111827" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Mật khẩu:" FontWeight="SemiBold" Foreground="#374151" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding NewPassword}" HorizontalAlignment="Right" Foreground="#10B981" FontWeight="Bold" FontSize="13"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="CloseEmployeePopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="ResetPasswordConfirmPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="Xác nhận cấp lại mật khẩu" FontSize="20" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource ErrorTextStyle}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <TextBlock Foreground="#374151" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,24">
+                    <Run Text="Bạn có chắc chắn muốn cấp lại mật khẩu mặc định cho nhân viên "/>
+                    <Run Text="{Binding ResetTargetName}" FontWeight="Bold" Foreground="#EF4444"/>
+                    <Run Text=" không?"/>
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GrayButtonStyle}" Content="Hủy" Click="CloseEmployeePopup_Click" Width="100" Margin="0,0,10,0"/>
+                    <Button Style="{StaticResource RedButtonStyle}" Content="Xác nhận" Click="ConfirmResetPassword_Click" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border x:Key="ResetPasswordSuccessPopupUI" Width="450" Background="White" CornerRadius="12" Padding="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <materialDesign:PackIcon Kind="CheckCircle" Foreground="#10B981" Width="28" Height="28" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Đặt lại thành công!" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,24">
+                    <TextBlock Text="{Binding ResetNewPassword}" Foreground="#10B981" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource GreenButtonStyle}" Content="Hoàn tất" Click="CloseEmployeePopup_Click" Width="120"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </UserControl.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="10,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Kind="Magnify" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" 
+                             FontSize="13" Foreground="#374151" Tag="Tìm kiếm nhân viên..."
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Border>
+
+
+
+            <Button Grid.Column="3" Style="{StaticResource GreenButtonStyle}" Click="OpenAddEmployeePopup_Click" Padding="12,5" Height="34">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Plus" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" Width="16" Height="16"/>
+                    <TextBlock Text="Thêm nhân viên" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Border Grid.Column="5" BorderBrush="#FFF3F3F3" BorderThickness="1" CornerRadius="8" Padding="8,5" Background="#FFF3F3F3">
+                <ListBox x:Name="ViewToggleListBox" Background="Transparent" BorderThickness="0" SelectionMode="Single" SelectedIndex="0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Border" Padding="5" Background="Transparent" CornerRadius="4">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBoxItem>
+                        <materialDesign:PackIcon Kind="FormatListBulleted" Foreground="#374151" VerticalAlignment="Center"/>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <materialDesign:PackIcon Kind="ViewGrid" Foreground="#374151" VerticalAlignment="Center"/>
+                    </ListBoxItem>
+                </ListBox>
+            </Border>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Name="dgvEmployees" ItemsSource="{Binding Employees}" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" SelectionMode="Single" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" 
+                  BorderThickness="0" Background="White" RowBackground="White"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserSortColumns="True">
+            <DataGrid.Style>
+                <Style TargetType="DataGrid">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã NV" Binding="{Binding Id}" Width="90" Foreground="#9CA3AF" IsReadOnly="True" FontSize="13" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Họ và tên" Binding="{Binding HoTen}" FontWeight="SemiBold" Width="1.5*" IsReadOnly="True" FontSize="13" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Số CCCD" Binding="{Binding Cccd}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+                <DataGridTextColumn Header="Số điện thoại" Binding="{Binding SoDienThoai}" Width="1.2*" IsReadOnly="True" FontSize="13" Foreground="#374151" ElementStyle="{StaticResource VerticalCenterTextStyle}"/>
+
+                <DataGridTemplateColumn Width="40" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" ToolTip="Tùy chọn nhân viên" Click="SettingsButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Button.ContextMenu>
+                                    <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                        <MenuItem Header="Sửa thông tin" Click="EditEmployeeMenu_Click">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Reset mật khẩu" Click="ResetPasswordMenu_Click">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Kind="LockReset" Width="16" Height="16"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ViewToggleListBox, Path=SelectedIndex}" Value="1">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
+
+            <ItemsControl Name="icEmployeesGrid" ItemsSource="{Binding Employees}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" Margin="0,0,-15,0"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,15,15" Width="230" Background="White">
+                            <StackPanel>
+                                <Grid Margin="0,-10,0,0">
+                                    <TextBlock Text="{Binding HoTen}" FontWeight="Bold" FontSize="15" Foreground="#374151" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,25,0"/>
+                                    <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand" HorizontalAlignment="Right" Click="SettingsButton_Click">
+                                        <materialDesign:PackIcon Kind="Settings" Foreground="#374151" VerticalAlignment="Center"/>
+                                        <Button.ContextMenu>
+                                            <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                                <MenuItem Header="Sửa thông tin" Click="EditEmployeeMenu_Click">
+                                                    <MenuItem.Icon>
+                                                        <materialDesign:PackIcon Kind="Pencil" Width="16" Height="16"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Reset mật khẩu" Click="ResetPasswordMenu_Click">
+                                                    <MenuItem.Icon>
+                                                        <materialDesign:PackIcon Kind="LockReset" Width="16" Height="16"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
+                                </Grid>
+
+                                <TextBlock Text="{Binding Id, StringFormat='Mã NV: {0}'}" FontSize="12" Foreground="#9CA3AF" Margin="0,2,0,12"/>
+
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="24"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="CardAccountDetails" Foreground="#9CA3AF" Width="16" Height="16" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Cccd}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="24"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="Phone" Foreground="#9CA3AF" Width="16" Height="16" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SoDienThoai}" FontSize="13" Foreground="#374151" VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
