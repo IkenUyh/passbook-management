@@ -16,4 +16,6 @@ public interface SoTietKiemRepository extends JpaRepository<SoTietKiem, String> 
             "AND s.loaiTietKiem.kyHan > 0 " +
             "AND s.ngayDaoHan BETWEEN :homNay AND :ngayMucTieu")
     List<SoTietKiem> timSoSapDaoHan(@Param("homNay") LocalDate homNay, @Param("ngayMucTieu") LocalDate ngayMucTieu);
+
+    List<SoTietKiem> findByNgayDaoHanAndTrangThai(LocalDate ngayDaoHan, String trangThai);
 }
