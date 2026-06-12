@@ -1,0 +1,1 @@
+UPDATE so_tiet_kiem SET trang_thai = 'DANG_HOAT_DONG' WHERE id LIKE 'STK-TEST-%';

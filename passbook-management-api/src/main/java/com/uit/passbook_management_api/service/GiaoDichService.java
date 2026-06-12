@@ -88,18 +88,14 @@ public class GiaoDichService {
 
         ThamSo thamSo = thamSoRepository.findById(1).orElseThrow();
 
-        // 1. Tính số ngày đã gửi
         long soNgayDaGui = ChronoUnit.DAYS.between(stk.getNgayMo(), request.getNgayRut());
         BigDecimal tienLai = BigDecimal.ZERO;
 
-        // 2. TÍNH LÃI SUẤT & KIỂM TRA ĐIỀU KIỆN KỲ HẠN
+// 1. TÍNH TOÁN TIỀN LÃI (Không check số tiền rút ở đây nữa)
         if (stk.getLoaiTietKiem().getKyHan() > 0) {
             // ---> SỔ CÓ KỲ HẠN
             if (request.getNgayRut().isBefore(stk.getNgayDaoHan())) {
                 throw new RuntimeException("Sổ có kỳ hạn chỉ được rút khi đã quá hạn!");
-            }
-            if (request.getSoTienRut().compareTo(stk.getSoDu()) != 0) {
-                throw new RuntimeException("Sổ có kỳ hạn bắt buộc phải rút toàn bộ số dư gốc!");
             }
             BigDecimal laiSuat = stk.getLoaiTietKiem().getLaiSuat().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
             BigDecimal thoiGian = BigDecimal.valueOf(stk.getLoaiTietKiem().getKyHan()).divide(BigDecimal.valueOf(12), 4, RoundingMode.HALF_UP);
@@ -114,16 +110,23 @@ public class GiaoDichService {
             tienLai = stk.getSoDu().multiply(laiSuat).multiply(thoiGian);
         }
 
-        // 3. CỘNG LÃI VÀO SỐ DƯ GỐC TRƯỚC KHI CHO RÚT
+// 2. CỘNG LÃI VÀO SỐ DƯ GỐC TRƯỚC KHI CHO RÚT
         stk.setSoDu(stk.getSoDu().add(tienLai));
 
-        // 4. KIỂM TRA SỐ TIỀN RÚT CÓ HỢP LỆ KHÔNG (Chỉ áp dụng cho sổ KHÔNG kỳ hạn)
-        if (stk.getLoaiTietKiem().getKyHan() == 0) {
+// 3. KIỂM TRA SỐ TIỀN RÚT CÓ HỢP LỆ KHÔNG (Áp dụng sau khi đã có tổng Gốc + Lãi)
+        if (stk.getLoaiTietKiem().getKyHan() > 0) {
+            // Sổ có kỳ hạn bắt buộc Frontend phải truyền lên ĐÚNG tổng Gốc + Lãi mới cho rút
+            if (request.getSoTienRut().compareTo(stk.getSoDu()) != 0) {
+                throw new RuntimeException("Sổ có kỳ hạn bắt buộc phải rút toàn bộ số dư (Gốc + Lãi là: " + stk.getSoDu() + "đ)!");
+            }
+        } else {
+            // Sổ không kỳ hạn được rút một phần, nhưng không được vượt quá tổng số dư hiện tại
             if (request.getSoTienRut().compareTo(stk.getSoDu()) > 0) {
                 throw new RuntimeException("Số tiền rút vượt quá số dư hiện tại (Gốc + Lãi là: " + stk.getSoDu() + "đ)!");
             }
         }
 
+// Sau bước này, bạn có thể chạy tiếp các bước tạo phiếu rút và trừ tiền như cũ. Dòng tiền sẽ về 0đ và đóng sổ cực kỳ mượt mà!
         // 5. TẠO PHIẾU RÚT
         PhieuRutTien phieu = new PhieuRutTien();
         phieu.setSoTienRut(request.getSoTienRut());

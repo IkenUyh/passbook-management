@@ -18,8 +18,6 @@ public class SoTietKiemService {
     private final KhachHangRepository khachHangRepository;
     private final LoaiTietKiemRepository loaiTietKiemRepository;
     private final ThamSoRepository thamSoRepository;
-
-    // BỔ SUNG 2 REPO NÀY ĐỂ KHỚP VỚI BÁO CÁO TRANG 1
     private final PhieuGuiTienRepository phieuGuiTienRepository;
     private final AuditLogService auditLogService;
 
@@ -37,11 +35,28 @@ public class SoTietKiemService {
         this.auditLogService = auditLogService;
     }
 
-    // Lấy danh sách sổ sắp đáo hạn cho FR8
+    // [MỚI / UPDATE]: Đồng bộ hóa logic lấy danh sách sắp đáo hạn cho cả Controller (WPF) và Job
     public List<SoTietKiem> layDanhSachSapDaoHan(int soNgayBaoTruoc) {
         LocalDate homNay = LocalDate.now();
         LocalDate ngayMucTieu = homNay.plusDays(soNgayBaoTruoc);
         return soTietKiemRepository.timSoSapDaoHan(homNay, ngayMucTieu);
+    }
+
+    // [MỚI]: Hàm dành riêng cho Job xử lý tự động khi đến ĐÚNG ngày đáo hạn hôm nay
+    @Transactional
+    public void xuLySotietKiemDenHanHomNay() {
+        LocalDate homNay = LocalDate.now();
+        List<SoTietKiem> danhSachDenHan = soTietKiemRepository.findByNgayDaoHanAndTrangThai(homNay, "DANG_HOAT_DONG");
+
+        if (!danhSachDenHan.isEmpty()) {
+            for (SoTietKiem stk : danhSachDenHan) {
+                // Logic thực tế: Bạn có thể cập nhật trạng thái hoặc thực hiện tự động gia hạn (quay vòng gốc lãi) tại đây
+                auditLogService.ghiLog("HỆ THỐNG TỰ ĐỘNG", "Xử lý đáo hạn tự động cho sổ: " + stk.getId());
+
+                // Ví dụ tạm thời: Ghi nhận hệ thống đã quét qua
+                System.out.println("[SYSTEM PROCESS] Đang xử lý nghiệp vụ tự động cho sổ: " + stk.getId());
+            }
+        }
     }
 
     // FR4: Tra cứu danh sách sổ
@@ -52,21 +67,17 @@ public class SoTietKiemService {
     // FR1: Mở sổ tiết kiệm
     @Transactional
     public String moSoTietKiem(MoSoRequest request) {
-        // 1. Lấy tham số cấu hình
         ThamSo thamSo = thamSoRepository.findById(1)
                 .orElseThrow(() -> new RuntimeException("Chưa thiết lập tham số hệ thống!"));
 
-        // 2. Validate số tiền tối thiểu
         if (request.getSoTienGuiBanDau().compareTo(thamSo.getTienGuiBanDauToiThieu()) < 0) {
             throw new RuntimeException("Số tiền gửi ban đầu không đạt mức tối thiểu: "
                     + thamSo.getTienGuiBanDauToiThieu() + "đ");
         }
 
-        // 3. Kiểm tra loại tiết kiệm
         LoaiTietKiem loaiTk = loaiTietKiemRepository.findById(request.getLoaiTietKiem())
                 .orElseThrow(() -> new RuntimeException("Loại tiết kiệm không hợp lệ!"));
 
-        // 4. Tìm Khách hàng bằng CMND, nếu chưa có thì tạo mới
         Optional<KhachHang> khOptional = khachHangRepository.findByCmnd(request.getCmnd());
         KhachHang khachHang;
 
@@ -82,7 +93,6 @@ public class SoTietKiemService {
             khachHang = khachHangRepository.save(khachHang);
         }
 
-        // 5. Khởi tạo Sổ tiết kiệm mới
         SoTietKiem stk = new SoTietKiem();
         String maSo = "STK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
@@ -92,7 +102,6 @@ public class SoTietKiemService {
         stk.setSoDu(request.getSoTienGuiBanDau());
         stk.setNgayMo(LocalDate.now());
 
-        // 6. Tính ngày đáo hạn nếu là loại CÓ kỳ hạn
         if (loaiTk.getKyHan() > 0) {
             stk.setNgayDaoHan(LocalDate.now().plusMonths(loaiTk.getKyHan()));
         }
@@ -100,7 +109,6 @@ public class SoTietKiemService {
         stk.setTrangThai("DANG_HOAT_DONG");
         soTietKiemRepository.save(stk);
 
-        // 7. FIX: TẠO PHIẾU GỬI TIỀN BAN ĐẦU (Khớp báo cáo bước 7)
         PhieuGuiTien phieu = new PhieuGuiTien();
         phieu.setSoTienGui(request.getSoTienGuiBanDau());
         phieu.setNgayGui(LocalDate.now());
@@ -108,7 +116,6 @@ public class SoTietKiemService {
         phieu.setKhachHang(khachHang);
         phieuGuiTienRepository.save(phieu);
 
-        // 8. FIX: GHI LOG HỆ THỐNG (Khớp báo cáo bước 9)
         auditLogService.ghiLog("MỞ SỔ", "Mở sổ mới: " + maSo + " | Khách hàng: " + khachHang.getTen() + " | Gửi ban đầu: " + request.getSoTienGuiBanDau() + "đ");
 
         return maSo;
