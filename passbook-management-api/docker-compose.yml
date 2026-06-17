@@ -12,6 +12,11 @@ services:
     volumes:
       - passbook_mysql_data:/var/lib/mysql
     restart: unless-stopped
+    command: --innodb-buffer-pool-size=64M --max-connections=50
+    deploy:
+      resources:
+        limits:
+          memory: 300M
 
   backend-app:
     image: ikenuyh/passbook-backend:latest
@@ -26,6 +31,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=123456
       - JAVA_OPTS=-Xmx256m -Xms128m
+    deploy:
+      resources:
+        limits:
+          memory: 350M
 
 volumes:
   passbook_mysql_data:
